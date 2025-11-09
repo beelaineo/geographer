@@ -3,7 +3,17 @@ import { groq } from "next-sanity";
 const RICH_IMAGE_SELECTION = groq`{
   ...,
   alt,
-  caption
+  caption,
+  asset->{
+    ...,
+    metadata{
+      dimensions{
+        width,
+        height,
+        aspectRatio
+      }
+    }
+  }
 }`;
 
 const RICH_TEXT_SELECTION = groq`[]{
@@ -194,6 +204,11 @@ export const PROJECT_SLUGS_QUERY = groq`
   }
 `;
 
+const PROJECT_COLUMNS_SELECTION = groq`[]{
+  _key,
+  content${RICH_TEXT_SELECTION}
+}`;
+
 export const PROJECTS_QUERY = groq`
   *[_type == "project"] | order(_createdAt desc){
     _id,
@@ -202,7 +217,7 @@ export const PROJECTS_QUERY = groq`
     location,
     dates,
     partners,
-    columns${RICH_TEXT_SELECTION},
+    columns${PROJECT_COLUMNS_SELECTION},
     gallery[]{
       ...${RICH_IMAGE_SELECTION}
     },
@@ -223,7 +238,7 @@ export const PROJECT_BY_SLUG_QUERY = groq`
     location,
     dates,
     partners,
-    columns${RICH_TEXT_SELECTION},
+    columns${PROJECT_COLUMNS_SELECTION},
     gallery[]{
       ...${RICH_IMAGE_SELECTION}
     },

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Image from "next/image";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { cache } from "react";
+import type { PortableTextBlock } from "@portabletext/types";
 
 import {
   PROJECT_BY_SLUG_QUERY,
@@ -11,6 +12,9 @@ import {
   type PROJECT_SLUGS_QUERYResult
 } from "../../../lib/queries";
 import { getClient } from "../../../lib/sanity.client";
+import ProjectGallery from "../../../components/ProjectGallery";
+import RichText from "../../../components/RichText";
+import { getImageDimensions, urlForImageWithWidth } from "../../../lib/sanityImage";
 
 export const revalidate = 180;
 
@@ -59,69 +63,120 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound();
   }
 
+  const metaItems = [
+    { label: "Location", value: data.location },
+    { label: "Dates", value: data.dates },
+    { label: "Partners", value: data.partners }
+  ].filter((item) => item.value);
+
+  const columnEntries = (data.columns ?? []).flatMap((column, index) => {
+    if (!Array.isArray(column?.content) || column.content.length === 0) {
+      return [];
+    }
+
+    return [
+      {
+        key: column._key ?? `column-${index}`,
+        content: column.content as PortableTextBlock[]
+      }
+    ];
+  });
+
+  const additionalImages = (data.images ?? []).filter((image) => image?.asset?._ref || image?.asset?._id);
+  const pressItems = (data.press ?? []).filter((press) => press?.title);
+
   return (
-    <main>
-      <h1>{data.title ?? "Project"}</h1>
-      <p>
-        {[data.location, data.dates, data.partners].filter(Boolean).join(" • ")}
-      </p>
-      {data.columns?.length ? (
-        <section>
-          <h2>Columns</h2>
-          <div style={{ display: "grid", gap: "1rem", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
-            {data.columns.map((column, index) => (
-              <pre key={column?._key ?? index}>{JSON.stringify(column, null, 2)}</pre>
-            ))}
+    <main className="min-h-screen bg-white text-black">
+      <section className="grid gap-12 px-6 pb-16 pt-28 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-20 md:px-12 md:pb-24 md:pt-32">
+        <div className="order-2 flex flex-col gap-12 md:order-1">
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">Project</p>
+              <h1 className="text-4xl leading-none md:text-5xl">{data.title ?? "Project"}</h1>
+            </div>
+            {metaItems.length ? (
+              <dl className="grid gap-4 md:gap-6">
+                {metaItems.map(({ label, value }) => (
+                  <div key={label} className="flex flex-col gap-1 text-sm md:flex-row md:items-start md:gap-6 md:text-xs">
+                    <dt className="font-medium uppercase tracking-[0.2em] text-neutral-500">{label}</dt>
+                    <dd className="text-base leading-relaxed md:text-lg">{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
           </div>
+
+          {columnEntries.length ? (
+            <div className="grid gap-8 md:grid-cols-2 md:gap-12">
+              {columnEntries.map((column) => (
+                <RichText
+                  key={column.key}
+                  value={column.content}
+                  className="space-y-4"
+                />
+              ))}
+            </div>
+          ) : null}
+        </div>
+
+        <div className="order-1 md:order-2">
+          <ProjectGallery images={data.gallery} />
+        </div>
+      </section>
+
+      {additionalImages.length ? (
+        <section className="flex flex-col gap-12 px-6 pb-24 md:px-12">
+          {additionalImages.map((image) => (
+            <figure key={image?._key ?? image?.asset?._ref ?? image?.asset?._id} className="flex flex-col gap-3">
+              <Image
+                src={urlForImageWithWidth(image, 2000).url()}
+                alt={image?.alt ?? ""}
+                {...getImageDimensions(image)}
+                sizes="(min-width: 1024px) 70vw, 100vw"
+                className="h-auto w-full bg-neutral-200 object-cover"
+              />
+              {image?.caption ? (
+                <figcaption className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+                  {image.caption}
+                </figcaption>
+              ) : null}
+            </figure>
+          ))}
         </section>
       ) : null}
-      {data.gallery?.length ? (
-        <section>
-          <h2>Gallery</h2>
-          <ul>
-            {data.gallery.map((image, index) => (
-              <li key={image?._key ?? image?._id ?? index}>{image?.alt ?? "Gallery image"}</li>
-            ))}
+
+      {pressItems.length ? (
+        <section className="px-6 pb-24 md:px-12">
+          <h2 className="mb-6 text-xs uppercase tracking-[0.2em] text-neutral-500">Press</h2>
+          <ul className="space-y-4 text-base md:text-lg">
+            {pressItems.map((pressItem, index) => {
+              const links = [
+                pressItem?.externalLink
+                  ? { label: "View Article", href: pressItem.externalLink }
+                  : null,
+                pressItem?.file?.asset?.url
+                  ? { label: "Download PDF", href: pressItem.file.asset.url }
+                  : null
+              ].filter((link): link is { label: string; href: string } => link !== null);
+
+              return (
+                <li key={pressItem?.title ?? index} className="flex flex-col gap-2">
+                  <span>{pressItem?.title}</span>
+                  {links.length ? (
+                    <span className="flex flex-wrap items-center gap-3 text-sm uppercase tracking-[0.2em] text-neutral-500">
+                      {links.map((link) => (
+                        <a key={link.href} className="underline hover:opacity-70" href={link.href}>
+                          {link.label}
+                        </a>
+                      ))}
+                    </span>
+                  ) : null}
+                </li>
+              );
+            })}
           </ul>
         </section>
       ) : null}
-      {data.images?.length ? (
-        <section>
-          <h2>Additional Images</h2>
-          <ul>
-            {data.images.map((image, index) => (
-              <li key={image?._key ?? image?._id ?? index}>{image?.alt ?? "Project image"}</li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-      {data.press?.length ? (
-        <section>
-          <h2>Press</h2>
-          <ul>
-            {data.press.map((pressItem, index) => (
-              <li key={pressItem?.title ?? index}>
-                <span>{pressItem?.title}</span>
-                {pressItem?.externalLink ? (
-                  <span>
-                    {" "}
-                    — <a href={pressItem.externalLink}>External link</a>
-                  </span>
-                ) : null}
-                {pressItem?.file?.asset?.url ? (
-                  <span>
-                    {" "}
-                    — <a href={pressItem.file.asset.url}>Download PDF</a>
-                  </span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-      <p>
-        <Link href="/projects">Back to projects</Link>
-      </p>
     </main>
   );
 }

@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+
+import { resolveProductionUrl } from "../lib/resolveProductionUrl";
 import type { SITE_SETTINGS_QUERYResult } from "../types/sanity.generated";
 import Logotype from "./Logotype";
 
@@ -11,26 +13,48 @@ type FooterProps = {
 export default function Footer({ siteSettings }: FooterProps) {
   const footerMenu = siteSettings?.footerMenu ?? [];
   return (
-    <footer className="p-10 md:p-12 grid grid-cols-2">
+    <footer className="p-6 md:p-12 grid md:grid-cols-2 fixed bottom-0 left-0 w-full z-10">
       <div className="flex items-center justify-between">
-        <Logotype />
+        <Logotype className="h-6 md:h-8 w-auto" />
         <nav className="flex flex-col gap-1">
-          {footerMenu.map((item) => item && (
-            <Link key={item._key} href={item.linkType === "internal" ? item.internalLink?.slug?.current ?? "/" : item.externalLink ?? "/"} className="leading-none transition hover:opacity-70 uppercase">
-              {item.label}
-            </Link>
-          ))}
+          {footerMenu.map(
+            (item) =>
+              item && (
+                <Link
+                  key={item._key}
+                  href={
+                    item.linkType === "internal"
+                      ? resolveProductionUrl(item.internalLink)
+                      : item.externalLink ?? "/"
+                  }
+                  className="leading-none transition hover:opacity-70 uppercase"
+                >
+                  {item.label}
+                </Link>
+              )
+          )}
         </nav>
       </div>
       <div className="flex justify-end">
         <form
-          className="flex items-end gap-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-            // In a real implementation, handle mailing list signup here.
-          }}
+          name="newsletter-signup"
+          method="POST"
+          data-netlify="true"
+          data-netlify-honeypot="bot-field"
+          className="hidden md:flex items-end gap-2"
         >
+          <input type="hidden" name="form-name" value="newsletter-signup" />
+          <p className="hidden">
+            <label>
+              Don’t fill this out: <input name="bot-field" />
+            </label>
+          </p>
+          <label htmlFor="newsletter-email" className="sr-only">
+            Email address
+          </label>
           <input
+            id="newsletter-email"
+            name="email"
             type="email"
             required
             placeholder="Email"

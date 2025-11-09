@@ -3,6 +3,7 @@ import { draftMode } from "next/headers";
 import { cache } from "react";
 
 import { HOMEPAGE_QUERY, type HOMEPAGE_QUERYResult } from "../lib/queries";
+import AutoplayVideo from "../components/AutoplayVideo";
 import { getClient } from "../lib/sanity.client";
 
 export const revalidate = 60;
@@ -25,25 +26,17 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage() {
   const { isEnabled } = await draftMode();
   const data = await loadHomepage(isEnabled);
+  const firstVideo = data?.videos?.[0];
+  const playbackId = firstVideo?.asset?.playbackId;
 
   return (
-    <main>
-      <h1>{data?.title ?? "Homepage"}</h1>
-      {data?.seo?.description ? (
-        <p>{data.seo.description}</p>
-      ) : (
-        <p>Update the homepage document in Sanity to see content here.</p>
-      )}
-      {data?.videos?.length ? (
-        <section>
-          <h2>Videos</h2>
-          <ul>
-            {data.videos.map((video) => (
-              <li key={video?._key ?? video?._id ?? video?.asset?._ref}>
-                {video?.asset?.playbackId ?? "Mux asset"}
-              </li>
-            ))}
-          </ul>
+    <main className="px-6 md:px-12 flex flex-col justify-center items-center min-h-screen">
+      {playbackId ? (
+        <section className="flex justify-center items-center">
+          <AutoplayVideo
+            playbackId={playbackId}
+            className="block w-full md:w-1/2 h-auto bg-black"
+          />
         </section>
       ) : null}
     </main>
