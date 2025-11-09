@@ -18,16 +18,26 @@ export default function LayoutShell({
   siteSettings
 }: LayoutShellProps) {
   const pathname = usePathname();
-  const shouldHideChrome =
-    !!pathname &&
-    (pathname.includes("/collections") || pathname.includes("/projects"));
+  const isCollectionsOrProjects =
+    !!pathname && (pathname.includes("/collections") || pathname.includes("/projects"));
+  const isAboutPage = pathname === "/about";
 
   return (
     <SiteSettingsProvider siteSettings={siteSettings}>
       <div className="flex min-h-screen flex-col bg-white text-black">
-        {!shouldHideChrome && <Header siteSettings={siteSettings} />}
+        {!isCollectionsOrProjects && (
+          <Header
+            siteSettings={siteSettings}
+            isFixedMobile={!isAboutPage}
+            isFixedDesktop
+          />
+        )}
         <main className="flex-1">{children}</main>
-        {!shouldHideChrome && <Footer siteSettings={siteSettings} />}
+        <Footer
+          siteSettings={siteSettings}
+          isFixedMobile={!isCollectionsOrProjects && !isAboutPage}
+          isFixedDesktop={!isCollectionsOrProjects}
+        />
       </div>
     </SiteSettingsProvider>
   );

@@ -133,11 +133,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       asset: NonNullable<ProjectRichImage>["asset"];
     } => Boolean(image?.asset?._ref || image?.asset?._id)
   );
-  const pressItems = (project.press ?? []).filter((press) => press?.title);
-
   return (
-    <main className="min-h-screen bg-white text-black">
-       <div className="md:mt-[calc(100vh-270px)] flex flex-col md:block">
+    <main className="min-h-screen bg-white text-black md:py-12">
+      <div className="relative flex flex-col md:block md:pt-[calc(100vh-18rem)]">
 
         <header className="order-2 px-6 md:px-12 grid gap-10 md:grid-cols-3">
           <div className="space-y-6">
@@ -163,8 +161,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </header>
 
 
-        <div className="order-1 mb-6 md:mb-0">
-          <ProjectGallery images={project.gallery} />
+        <div className="order-1 mb-6 md:mb-0 md:absolute md:inset-x-0 md:inset-y-12">
+          <ProjectGallery images={project.gallery} className="md:h-full" />
         </div>
 
         {columnEntries.length ? (
@@ -182,7 +180,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </div>
 
       {additionalImages.length ? (
-        <section className="flex flex-col gap-12 px-6 pb-24 md:px-12">
+        <section className="flex flex-col gap-12 px-6 pb-24 md:px-12 max-w-4xl mx-auto my-12">
           {additionalImages.map((image) => (
             <figure key={image?._key ?? image?.asset?._ref ?? image?.asset?._id} className="flex flex-col gap-3">
               <Image
@@ -193,7 +191,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 className="h-auto w-full bg-neutral-200 object-cover"
               />
               {image?.caption ? (
-                <figcaption className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+                <figcaption className="text-sm">
                   {image.caption}
                 </figcaption>
               ) : null}
@@ -202,7 +200,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </section>
       ) : null}
 
-      {pressItems.length ? (
+      {/* {pressItems.length ? (
         <section className="px-6 pb-24 md:px-12">
           <h2 className="mb-6 text-xs uppercase tracking-[0.2em] text-neutral-500">Press</h2>
           <ul className="space-y-4 text-base md:text-lg">
@@ -233,7 +231,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             })}
           </ul>
         </section>
-      ) : null}
+      ) : null} */}
     </main>
   );
 }

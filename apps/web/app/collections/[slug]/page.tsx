@@ -92,7 +92,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
   return (
     <main className="bg-white text-black">
       {heroImage ? (
-        <section className="relative h-[360px] w-full overflow-hidden md:h-[480px] lg:h-[560px]">
+        <section className="relative h-[360px] w-full overflow-hidden md:h-[400px] lg:h-[400px]">
           <Image
             src={heroImage}
             alt={heroAlt}

@@ -9,6 +9,7 @@ import { ABOUT_QUERY, type ABOUT_QUERYResult } from "../../lib/queries";
 import { getClient } from "../../lib/sanity.client";
 import RichText from "../../components/RichText";
 import { getImageDimensions, urlForImageWithWidth } from "../../lib/sanityImage";
+import { SignUpForm } from "../../components/SignUpForm";
 
 export const revalidate = 60;
 
@@ -65,7 +66,7 @@ export default async function AboutPage() {
   const imageTextExists = Boolean(imageText?.length);
 
   return (
-    <main className="px-6 md:px-12 py-32 md:py-0">
+    <main className="px-6 md:px-12 py-2 sm:py-8 md:py-0">
       {hasAboutContent ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-24 min-h-screen">
           {richText?.length ? (
@@ -115,6 +116,12 @@ export default async function AboutPage() {
                           aria-labelledby="about-image-modal-heading"
                           className="relative z-10 max-h-[90vh] w-full max-w-4xl overflow-y-auto bg-white p-12 md:p-24"
                         >
+                          <div className="mb-12">
+                            <RichText
+                              value={imageText}
+                              className="space-y-4 text-2xl"
+                            />
+                          </div>
                           <div className="flex items-center justify-center">
                             <label
                               htmlFor="about-image-modal"
@@ -122,12 +129,6 @@ export default async function AboutPage() {
                             >
                               Close
                             </label>
-                          </div>
-                          <div className="mt-6">
-                            <RichText
-                              value={imageText}
-                              className="space-y-4 text-2xl"
-                            />
                           </div>
                         </div>
                       </div>
@@ -153,6 +154,10 @@ export default async function AboutPage() {
               ) : null}
             </section>
           ) : null}
+          
+          <div className="block md:hidden order-3 md:order-3">
+            <SignUpForm />
+          </div>
 
         </div>
       ) : null}

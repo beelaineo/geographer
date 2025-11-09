@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { getImageDimensions, urlForImageWithWidth } from "../lib/sanityImage";
@@ -38,7 +39,8 @@ export default function ProjectGallery({ images, className }: ProjectGalleryProp
   );
 
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", loop: false });
+  const plugins = useMemo(() => [WheelGesturesPlugin()], []);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", loop: false, dragFree: true }, plugins);
 
   const scrollTo = useCallback(
     (index: number) => {
@@ -73,23 +75,32 @@ export default function ProjectGallery({ images, className }: ProjectGalleryProp
 
   return (
     <div className={rootClassName}>
-      <div className="overflow-hidden border-b border-neutral-500 md:border-none" ref={emblaRef}>
-        <div className="flex md:gap-24">
+      <div className="overflow-hidden border-b border-neutral-500 md:h-full md:border-none" ref={emblaRef}>
+        <div className="flex md:h-full md:gap-12 md:pl-[40vw] md:pr-12">
           {validImages.map((image) => {
             const url = urlForImageWithWidth(image, 1600).url();
             const { width, height } = getImageDimensions(image);
+            const aspectRatio = width && height ? width / height : undefined;
 
             return (
-              <figure key={image._key ?? image.asset?._ref ?? image.asset?._id} className="min-w-0 flex-[0_0_100%]">
-                <Image
-                  src={url}
-                  alt={image.alt ?? ""}
-                  width={width}
-                  height={height}
-                  sizes="(min-width: 768px) 60vw, 100vw"
-                  className="h-auto w-full object-cover md:shadow-lg"
-                  priority={false}
-                />
+              <figure
+                key={image._key ?? image.asset?._ref ?? image.asset?._id}
+                className="min-w-0 flex-[0_0_100%] md:flex md:h-full md:max-h-[80vh] md:flex-[0_0_33vw] md:flex-col md:items-center md:justify-center"
+              >
+                <div
+                  className="flex h-auto w-full items-center justify-center md:h-full md:w-auto md:flex-1 md:max-h-[80vh]"
+                  style={aspectRatio ? { aspectRatio } : undefined}
+                >
+                  <Image
+                    src={url}
+                    alt={image.alt ?? ""}
+                    width={width}
+                    height={height}
+                    sizes="(min-width: 768px) 70vw, 100vw"
+                    className="h-auto w-full object-cover md:h-full md:w-auto md:max-h-[80vh] md:max-w-full md:object-contain md:shadow-lg"
+                    priority={false}
+                  />
+                </div>
                 {image.caption ? (
                   <figcaption className="mt-2 text-xs uppercase tracking-wide text-neutral-500">
                     {image.caption}
