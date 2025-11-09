@@ -1,0 +1,22 @@
+{
+  "name": "geographer",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "clean": "turbo run clean",
+    "predeploy": "pnpm install && pnpm run type-check && pnpm run build --filter=./apps/web"
+  },
+  "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.14.4",
+    "turbo": "^2.5.8",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "packageManager": "pnpm@10.20.0"
+}
