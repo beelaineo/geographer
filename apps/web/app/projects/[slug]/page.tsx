@@ -4,6 +4,7 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import type { PortableTextBlock } from "@portabletext/types";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 import {
   PROJECT_BY_SLUG_QUERY,
@@ -34,14 +35,39 @@ export async function generateStaticParams() {
 }
 
 type ProjectPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
+};
+
+type ProjectRichImage = SanityImageSource & {
+  _id?: string;
+  _key?: string;
+  alt?: string | null;
+  caption?: string | null;
+  asset?: {
+    _id?: string;
+    _ref?: string;
+    url?: string | null;
+    metadata?: {
+      dimensions?: {
+        width?: number | null;
+        height?: number | null;
+        aspectRatio?: number | null;
+      } | null;
+    } | null;
+  } | null;
+};
+
+type ProjectPageData = Omit<NonNullable<PROJECT_BY_SLUG_QUERYResult>, "gallery" | "images"> & {
+  gallery?: Array<ProjectRichImage | null> | null;
+  images?: Array<ProjectRichImage | null> | null;
 };
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const { isEnabled } = await draftMode();
-  const data = await loadProject(params.slug, isEnabled);
+  const { slug } = await params;
+  const data = await loadProject(slug, isEnabled);
 
   if (!data) {
     return {
@@ -49,24 +75,29 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     };
   }
 
+  const project = data as ProjectPageData;
+
   return {
-    title: data.title ?? "Project",
-    description: data.location ?? data.partners ?? undefined
+    title: project.title ?? "Project",
+    description: project.location ?? project.partners ?? undefined
   };
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { isEnabled } = await draftMode();
-  const data = await loadProject(params.slug, isEnabled);
+  const { slug } = await params;
+  const data = await loadProject(slug, isEnabled);
 
   if (!data) {
     notFound();
   }
 
+  const project = data as ProjectPageData;
+
   const metaItems = [
-    { label: "Location", value: data.location },
-    { label: "Dates", value: data.dates },
-    { label: "Partners", value: data.partners }
+    { label: "Location", value: project.location },
+    { label: "Dates", value: project.dates },
+    { label: "Partners", value: project.partners }
   ].filter((item) => item.value);
 
   type Column = {
@@ -84,7 +115,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     return Array.isArray(content) && content.length > 0;
   };
 
-  const columnEntries = (data.columns ?? []).flatMap((column, index) => {
+  const columnEntries = (project.columns ?? []).flatMap((column, index) => {
     if (!hasPortableTextContent(column)) {
       return [];
     }
@@ -97,8 +128,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     ];
   });
 
-  const additionalImages = (data.images ?? []).filter((image) => image?.asset?._ref || image?.asset?._id);
-  const pressItems = (data.press ?? []).filter((press) => press?.title);
+  const additionalImages = (project.images ?? []).filter(
+    (image): image is NonNullable<ProjectPageData["images"]>[number] & {
+      asset: NonNullable<ProjectRichImage>["asset"];
+    } => Boolean(image?.asset?._ref || image?.asset?._id)
+  );
+  const pressItems = (project.press ?? []).filter((press) => press?.title);
 
   return (
     <main className="min-h-screen bg-white text-black">
@@ -107,7 +142,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <header className="order-2 px-6 md:px-12 grid gap-10 md:grid-cols-3">
           <div className="space-y-6">
             <h1 className="text-2xl">
-              {data.title ?? "Untitled project"}
+              {project.title ?? "Untitled project"}
             </h1>
           {metaItems.length ? (
             <dl className="grid md:grid-cols-2 gap-4">
@@ -129,7 +164,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
 
         <div className="order-1 mb-6 md:mb-0">
-          <ProjectGallery images={data.gallery} />
+          <ProjectGallery images={project.gallery} />
         </div>
 
         {columnEntries.length ? (

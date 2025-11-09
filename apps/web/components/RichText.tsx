@@ -15,6 +15,7 @@ type RichTextProps = {
 };
 
 type InternalLinkValue = {
+  _type: "internalLink";
   reference?: {
     _type?: string | null;
     slug?: {
@@ -24,6 +25,7 @@ type InternalLinkValue = {
 };
 
 type ExternalLinkValue = {
+  _type: "link";
   href?: string | null;
   blank?: boolean | null;
 };

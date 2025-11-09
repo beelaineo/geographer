@@ -36,9 +36,9 @@ export async function generateStaticParams() {
 }
 
 type CollectionPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 type CollectionPageData = NonNullable<COLLECTION_BY_SLUG_QUERYResult> & {
@@ -47,7 +47,8 @@ type CollectionPageData = NonNullable<COLLECTION_BY_SLUG_QUERYResult> & {
 
 export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
   const { isEnabled } = await draftMode();
-  const data = await loadCollection(params.slug, isEnabled);
+  const { slug } = await params;
+  const data = await loadCollection(slug, isEnabled);
 
   if (!data) {
     return {
@@ -63,7 +64,8 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
 
 export default async function CollectionPage({ params }: CollectionPageProps) {
   const { isEnabled } = await draftMode();
-  const data = await loadCollection(params.slug, isEnabled);
+  const { slug } = await params;
+  const data = await loadCollection(slug, isEnabled);
 
   if (!data) {
     notFound();

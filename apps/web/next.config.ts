@@ -1,8 +1,10 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   experimental: {
-    serverActions: true
+    serverActions: {
+      allowedOrigins: ["https://*.vercel.sh", "https://*.netlify.app"]
+    }
   },
   images: {
     remotePatterns: [

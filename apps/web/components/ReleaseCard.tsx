@@ -56,7 +56,6 @@ export default function ReleaseCard({ release, className }: ReleaseCardProps) {
       ]
         .filter(Boolean)
         .join(" ")}
-      aria-disabled={isFutureRelease || undefined}
     >
       <div className="relative overflow-hidden bg-neutral-200">
         {imageUrl ? (

@@ -4,13 +4,30 @@ import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
-import type { PROJECT_BY_SLUG_QUERYResult } from "../types/sanity.generated";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { getImageDimensions, urlForImageWithWidth } from "../lib/sanityImage";
 
-type GalleryImage = NonNullable<PROJECT_BY_SLUG_QUERYResult["gallery"]>[number];
+type GalleryImage = SanityImageSource & {
+  _id?: string;
+  _key?: string;
+  alt?: string | null;
+  caption?: string | null;
+  asset?: {
+    _id?: string;
+    _ref?: string;
+    url?: string | null;
+    metadata?: {
+      dimensions?: {
+        width?: number | null;
+        height?: number | null;
+        aspectRatio?: number | null;
+      } | null;
+    } | null;
+  } | null;
+};
 
 type ProjectGalleryProps = {
-  images: GalleryImage[] | null | undefined;
+  images: Array<GalleryImage | null> | null | undefined;
   className?: string;
 };
 
