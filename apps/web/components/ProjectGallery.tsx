@@ -56,8 +56,8 @@ export default function ProjectGallery({ images, className }: ProjectGalleryProp
 
   return (
     <div className={rootClassName}>
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex gap-4">
+      <div className="overflow-hidden border-b border-neutral-500 md:border-none" ref={emblaRef}>
+        <div className="flex md:gap-24">
           {validImages.map((image) => {
             const url = urlForImageWithWidth(image, 1600).url();
             const { width, height } = getImageDimensions(image);
@@ -70,7 +70,7 @@ export default function ProjectGallery({ images, className }: ProjectGalleryProp
                   width={width}
                   height={height}
                   sizes="(min-width: 768px) 60vw, 100vw"
-                  className="h-auto w-full bg-neutral-200 object-cover"
+                  className="h-auto w-full object-cover md:shadow-lg"
                   priority={false}
                 />
                 {image.caption ? (
@@ -84,15 +84,15 @@ export default function ProjectGallery({ images, className }: ProjectGalleryProp
         </div>
       </div>
 
-      <div className="flex items-center justify-center gap-2">
+      <div className="md:hidden flex items-center justify-center gap-2">
         {validImages.map((image, index) => (
           <button
             key={image._key ?? image.asset?._ref ?? image.asset?._id ?? index}
             type="button"
             aria-label={`Go to slide ${index + 1}`}
             onClick={() => scrollTo(index)}
-            className={`h-2.5 w-2.5 rounded-full border border-black transition-opacity ${
-              selectedIndex === index ? "bg-black" : "bg-transparent opacity-40 hover:opacity-70"
+            className={`h-2 w-2 rounded-full border border-neutral-500 transition-opacity ${
+              selectedIndex === index ? "bg-neutral-500" : "bg-transparent opacity-40 hover:opacity-70"
             }`}
           />
         ))}

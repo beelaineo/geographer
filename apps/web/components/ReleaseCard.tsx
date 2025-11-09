@@ -14,6 +14,7 @@ type Release = NonNullable<
 >[number] & {
   cover?: ReleaseImage | null;
   coverAlt?: ReleaseImage | null;
+  release_date?: string | null;
 };
 
 type ReleaseCardProps = {
@@ -26,20 +27,36 @@ export default function ReleaseCard({ release, className }: ReleaseCardProps) {
     return null;
   }
 
-  const href = release.slug?.current ? `/releases/${release.slug.current}` : undefined;
+  const releaseHref = release.slug?.current ? `/releases/${release.slug.current}` : undefined;
   const cover = release.cover ?? release.coverAlt;
   const alt = cover?.alt ?? release.title ?? "Release cover";
   const imageUrl = cover ? urlForImageWithWidth(cover, 668).height(835).url() : null;
+  const releaseDate = release.release_date
+    ? new Date(
+        release.release_date.length <= 10
+          ? `${release.release_date}T00:00:00Z`
+          : release.release_date
+      )
+    : null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const isFutureRelease =
+    releaseDate instanceof Date && !Number.isNaN(releaseDate.valueOf())
+      ? releaseDate.getTime() > today.getTime()
+      : false;
+  const href = isFutureRelease ? undefined : releaseHref;
 
   const content = (
     <article
       className={[
         "flex flex-col items-stretch gap-3",
         "text-lg",
+        isFutureRelease ? "cursor-not-allowed opacity-60 grayscale" : undefined,
         className
       ]
         .filter(Boolean)
         .join(" ")}
+      aria-disabled={isFutureRelease || undefined}
     >
       <div className="relative overflow-hidden bg-neutral-200">
         {imageUrl ? (
@@ -58,8 +75,18 @@ export default function ReleaseCard({ release, className }: ReleaseCardProps) {
           </div>
         )}
       </div>
-      <div className="flex justify-between text-xl md:text-2xl">
-        <span>{release.title ?? "Untitled release"}</span>
+      <div className="flex flex-col gap-0 text-xl md:text-2xl pl-2 md:pl-0">
+        <span className="font-medium">{release.title ?? "Untitled release"}</span>
+        {releaseDate ? (
+          <span className="text-sm md:text-lg">
+            Released on{" "}
+            {new Intl.DateTimeFormat("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric"
+            }).format(releaseDate)}
+          </span>
+        ) : null}
       </div>
     </article>
   );

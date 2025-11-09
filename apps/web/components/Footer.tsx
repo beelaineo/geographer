@@ -15,7 +15,9 @@ export default function Footer({ siteSettings }: FooterProps) {
   return (
     <footer className="p-6 md:p-12 grid md:grid-cols-2 fixed bottom-0 left-0 w-full z-10">
       <div className="flex items-center justify-between">
-        <Logotype className="h-6 md:h-8 w-auto" />
+        <Link href="/">
+          <Logotype className="h-6 md:h-8 w-auto" />
+        </Link>
         <nav className="flex flex-col gap-1">
           {footerMenu.map(
             (item) =>

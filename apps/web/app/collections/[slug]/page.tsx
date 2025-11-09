@@ -109,7 +109,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
               {collection.title ?? "Collection"}
             </h1>
           {metaItems.length ? (
-            <dl className="grid grid-cols-2 gap-4">
+            <dl className="grid md:grid-cols-2 gap-4">
               {metaItems.map((item) => (
                 <div
                   key={item.label}

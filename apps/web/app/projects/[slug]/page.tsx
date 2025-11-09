@@ -69,15 +69,30 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     { label: "Partners", value: data.partners }
   ].filter((item) => item.value);
 
+  type Column = {
+    _key?: string;
+    content?: PortableTextBlock[] | null;
+  };
+
+  const hasPortableTextContent = (column: unknown): column is Column & { content: PortableTextBlock[] } => {
+    if (typeof column !== "object" || column === null) {
+      return false;
+    }
+
+    const content = (column as Column).content;
+
+    return Array.isArray(content) && content.length > 0;
+  };
+
   const columnEntries = (data.columns ?? []).flatMap((column, index) => {
-    if (!Array.isArray(column?.content) || column.content.length === 0) {
+    if (!hasPortableTextContent(column)) {
       return [];
     }
 
     return [
       {
         key: column._key ?? `column-${index}`,
-        content: column.content as PortableTextBlock[]
+        content: column.content
       }
     ];
   });
@@ -87,42 +102,49 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <main className="min-h-screen bg-white text-black">
-      <section className="grid gap-12 px-6 pb-16 pt-28 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-20 md:px-12 md:pb-24 md:pt-32">
-        <div className="order-2 flex flex-col gap-12 md:order-1">
-          <div className="space-y-6">
-            <div className="space-y-3">
-              <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">Project</p>
-              <h1 className="text-4xl leading-none md:text-5xl">{data.title ?? "Project"}</h1>
-            </div>
-            {metaItems.length ? (
-              <dl className="grid gap-4 md:gap-6">
-                {metaItems.map(({ label, value }) => (
-                  <div key={label} className="flex flex-col gap-1 text-sm md:flex-row md:items-start md:gap-6 md:text-xs">
-                    <dt className="font-medium uppercase tracking-[0.2em] text-neutral-500">{label}</dt>
-                    <dd className="text-base leading-relaxed md:text-lg">{value}</dd>
-                  </div>
-                ))}
-              </dl>
-            ) : null}
-          </div>
+       <div className="md:mt-[calc(100vh-270px)] flex flex-col md:block">
 
-          {columnEntries.length ? (
-            <div className="grid gap-8 md:grid-cols-2 md:gap-12">
+        <header className="order-2 px-6 md:px-12 grid gap-10 md:grid-cols-3">
+          <div className="space-y-6">
+            <h1 className="text-2xl">
+              {data.title ?? "Untitled project"}
+            </h1>
+          {metaItems.length ? (
+            <dl className="grid md:grid-cols-2 gap-4">
+              {metaItems.map((item) => (
+                <div
+                  key={item.label}
+                  className={`space-y-1${item.label === "Partners" ? " col-span-2" : ""}`}
+                >
+                  <dt className="uppercase text-[10px] tracking-[0.15em]">{item.label}</dt>
+                  <dd className="text-sm">
+                    {item.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
+          </div>
+        </header>
+
+
+        <div className="order-1 mb-6 md:mb-0">
+          <ProjectGallery images={data.gallery} />
+        </div>
+
+        {columnEntries.length ? (
+            <div className="order-3 px-6 md:px-12 mt-8 md:mt-20 md:mr-24 grid gap-8 md:grid-cols-2 md:gap-40">
               {columnEntries.map((column) => (
                 <RichText
                   key={column.key}
                   value={column.content}
-                  className="space-y-4"
+                  className="space-y-4 text-lg"
                 />
               ))}
             </div>
           ) : null}
-        </div>
 
-        <div className="order-1 md:order-2">
-          <ProjectGallery images={data.gallery} />
-        </div>
-      </section>
+      </div>
 
       {additionalImages.length ? (
         <section className="flex flex-col gap-12 px-6 pb-24 md:px-12">

@@ -42,7 +42,7 @@ export default function ReleaseCarousel({
   return (
     <div className={className}>
       <div ref={viewportRef} className="overflow-hidden">
-        <div className="flex gap-6 pb-4">
+        <div className="flex pb-4">
           {releases.map((release, index) => (
             <div
               key={release?._id ?? release?.slug?.current ?? index}
