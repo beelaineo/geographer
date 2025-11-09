@@ -5,7 +5,7 @@ import Link from "next/link";
 import { resolveProductionUrl } from "../lib/resolveProductionUrl";
 import type { SITE_SETTINGS_QUERYResult } from "../types/sanity.generated";
 import Logotype from "./Logotype";
-
+import { SignUpForm } from "./SignUpForm";
 type FooterProps = {
   siteSettings: SITE_SETTINGS_QUERYResult | null;
 };
@@ -38,37 +38,7 @@ export default function Footer({ siteSettings }: FooterProps) {
         </nav>
       </div>
       <div className="flex justify-end">
-        <form
-          name="newsletter-signup"
-          method="POST"
-          data-netlify="true"
-          data-netlify-honeypot="bot-field"
-          className="hidden md:flex items-end gap-2"
-        >
-          <input type="hidden" name="form-name" value="newsletter-signup" />
-          <p className="hidden">
-            <label>
-              Don’t fill this out: <input name="bot-field" />
-            </label>
-          </p>
-          <label htmlFor="newsletter-email" className="sr-only">
-            Email address
-          </label>
-          <input
-            id="newsletter-email"
-            name="email"
-            type="email"
-            required
-            placeholder="Email"
-            className="border-0 border-b border-black focus:outline-none focus:border-black bg-transparent px-0 py-1"
-          />
-          <button
-            type="submit"
-            className="appearance-none bg-transparent border-0 p-0 m-0 cursor-pointer text-black hover:underline uppercase"
-          >
-            Sign Up
-          </button>
-        </form>
+        <SignUpForm />
       </div>
     </footer>
   );
