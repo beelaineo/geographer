@@ -182,6 +182,11 @@ export const COLLECTION_BY_SLUG_QUERY = groq`
     dates,
     partners,
     intro${RICH_TEXT_SELECTION},
+    seo{
+      title,
+      description,
+      image${RICH_IMAGE_SELECTION}
+    },
     releases[]{
       ...,
       _type == "reference" => @->{
@@ -238,6 +243,11 @@ export const PROJECT_BY_SLUG_QUERY = groq`
     location,
     dates,
     partners,
+    seo{
+      title,
+      description,
+      image${RICH_IMAGE_SELECTION}
+    },
     columns${PROJECT_COLUMNS_SELECTION},
     gallery[]{
       ...${RICH_IMAGE_SELECTION}

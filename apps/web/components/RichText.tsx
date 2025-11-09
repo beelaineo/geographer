@@ -30,6 +30,41 @@ type ExternalLinkValue = {
   blank?: boolean | null;
 };
 
+function renderPortableLink({
+  href,
+  blank,
+  children
+}: {
+  href?: string | null;
+  blank?: boolean | null;
+  children: ReactNode;
+}) {
+  const resolvedHref = href ?? "#";
+  const isInternal = resolvedHref.startsWith("/");
+  const shouldOpenInNewTab = blank ?? (!isInternal && resolvedHref.startsWith("http"));
+  const target = shouldOpenInNewTab ? "_blank" : undefined;
+  const rel = shouldOpenInNewTab ? "noopener noreferrer" : undefined;
+
+  if (isInternal) {
+    return (
+      <Link href={resolvedHref} className="underline underline-offset-4 hover:opacity-70">
+        {children}
+      </Link>
+    );
+  }
+
+  return (
+    <a
+      href={resolvedHref}
+      target={target}
+      rel={rel}
+      className="underline underline-offset-4 hover:opacity-70"
+    >
+      {children}
+    </a>
+  );
+}
+
 const components: PortableTextComponents = {
   block: {
     normal: ({ children }: { children?: ReactNode }) => (
@@ -59,21 +94,10 @@ const components: PortableTextComponents = {
         </Link>
       );
     },
-    link: ({ value, children }: PortableTextMarkComponentProps<ExternalLinkValue>) => {
-      const href = value?.href ?? "#";
-      const target = href.startsWith("http") ? "_blank" : undefined;
-
-      return (
-        <a
-          href={href}
-          target={target}
-          rel={target === "_blank" ? "noopener noreferrer" : undefined}
-          className="underline underline-offset-4 hover:opacity-70"
-        >
-          {children}
-        </a>
-      );
-    }
+    link: ({ value, children }: PortableTextMarkComponentProps<ExternalLinkValue>) =>
+      renderPortableLink({ href: value?.href, blank: value?.blank, children }),
+    externalLink: ({ value, children }: PortableTextMarkComponentProps<ExternalLinkValue>) =>
+      renderPortableLink({ href: value?.href, blank: value?.blank, children })
   }
 };
 
@@ -81,6 +105,8 @@ export default function RichText({ value, className }: RichTextProps) {
   if (!value?.length) {
     return null;
   }
+
+  console.log('rich text value', value);
 
   return (
     <div className={className}>

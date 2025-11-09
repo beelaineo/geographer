@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { draftMode } from "next/headers";
 
@@ -5,13 +6,26 @@ import {
   PROJECTS_QUERY,
   type PROJECTS_QUERYResult
 } from "../../lib/queries";
-import { getClient } from "../../lib/sanity.client";
-
-export const revalidate = 180;
+import { fetchSiteSettings } from "../../lib/siteSettings";
+import { fetchSanityQuery } from "../../lib/sanity.fetch";
+import { buildMetadata, type SanitySeoPayload } from "../../lib/seo";
 
 async function loadProjects(previewEnabled: boolean) {
-  const client = getClient({ preview: previewEnabled });
-  return client.fetch<PROJECTS_QUERYResult>(PROJECTS_QUERY);
+  return fetchSanityQuery<PROJECTS_QUERYResult>(PROJECTS_QUERY, {
+    tags: ["sanity:project:list"],
+    preview: previewEnabled
+  });
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { isEnabled } = await draftMode();
+  const siteSettings = await fetchSiteSettings(isEnabled);
+  const siteSeo = siteSettings?.seo as SanitySeoPayload;
+
+  return buildMetadata({
+    siteSeo,
+    title: "Projects"
+  });
 }
 
 export default async function ProjectsPage() {

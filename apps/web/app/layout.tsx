@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import type { ReactNode } from "react";
 import localFont from "next/font/local";
 
 import "./globals.css";
 import LayoutShell from "../components/LayoutShell";
 import { fetchSiteSettings } from "../lib/siteSettings";
+import { buildMetadata } from "../lib/seo";
 
 const junicode = localFont({
   src: [
@@ -24,16 +26,23 @@ const junicode = localFont({
   adjustFontFallback: "Times New Roman"
 });
 
-export const metadata: Metadata = {
-  title: "Geographer",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { isEnabled } = await draftMode();
+  const siteSettings = await fetchSiteSettings(isEnabled);
+
+  return buildMetadata({
+    siteSeo: siteSettings?.seo,
+    title: "Geographer"
+  });
+}
 
 export default async function RootLayout({
   children
 }: {
   children: ReactNode;
 }) {
-  const siteSettings = await fetchSiteSettings();
+  const { isEnabled } = await draftMode();
+  const siteSettings = await fetchSiteSettings(isEnabled);
 
   return (
     <html lang="en" className={junicode.variable}>

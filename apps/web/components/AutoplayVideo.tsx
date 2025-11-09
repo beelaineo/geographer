@@ -23,6 +23,9 @@ type AutoplayVideoProps = {
   className?: string;
 };
 
+const RESUME_ATTEMPT_DELAYS = [0, 150, 300, 600, 1000];
+const MAX_RESUME_ATTEMPTS = RESUME_ATTEMPT_DELAYS.length;
+
 export default function AutoplayVideo({ playbackId, className }: AutoplayVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const lastPlaybackTimeRef = useRef(0);
@@ -53,37 +56,84 @@ export default function AutoplayVideo({ playbackId, className }: AutoplayVideoPr
       return;
     }
 
-    const updateLastPlaybackTime = () => {
-      lastPlaybackTimeRef.current = video.currentTime;
-    };
-
-    const resumeFromLastKnownTime = () => {
+    const clearResumeTimeout = () => {
       if (resumeTimeoutRef.current !== null) {
         window.clearTimeout(resumeTimeoutRef.current);
         resumeTimeoutRef.current = null;
       }
+    };
+
+    const scheduleResumeAttempt = (attempt: number) => {
+      if (attempt >= MAX_RESUME_ATTEMPTS) {
+        return;
+      }
+
+      clearResumeTimeout();
+
+      const delay = RESUME_ATTEMPT_DELAYS[Math.min(attempt, RESUME_ATTEMPT_DELAYS.length - 1)];
+      resumeTimeoutRef.current = window.setTimeout(() => {
+        resumeTimeoutRef.current = null;
+        performResumeAttempt(attempt);
+      }, delay);
+    };
+
+    const performResumeAttempt = (attempt: number) => {
+      const currentVideo = videoRef.current;
+      if (!currentVideo) {
+        return;
+      }
 
       const targetTime = lastPlaybackTimeRef.current;
-
-      if (!Number.isNaN(targetTime) && Math.abs(video.currentTime - targetTime) > 0.1) {
+      if (!Number.isNaN(targetTime) && Math.abs(currentVideo.currentTime - targetTime) > 0.1) {
         try {
-          video.currentTime = targetTime;
+          currentVideo.currentTime = targetTime;
         } catch {
           // ignore seek failures
         }
       }
 
-      if (video.paused || video.ended) {
-        resumeTimeoutRef.current = window.setTimeout(() => {
-          resumeTimeoutRef.current = null;
-          const playPromise = video.play();
-          if (playPromise && typeof playPromise.then === "function") {
-            playPromise.catch(() => {
-              // autoplay might still be blocked; ignore failures
-            });
-          }
-        }, 0);
+      let playPromise: Promise<void> | void;
+
+      try {
+        playPromise = currentVideo.play();
+      } catch {
+        scheduleResumeAttempt(attempt + 1);
+        return;
       }
+
+      if (playPromise && typeof (playPromise as Promise<void>).then === "function") {
+        (playPromise as Promise<void>)
+          .then(() => {
+            const latestVideo = videoRef.current;
+            if (!latestVideo) {
+              return;
+            }
+
+            if (latestVideo.paused) {
+              scheduleResumeAttempt(attempt + 1);
+            }
+          })
+          .catch(() => {
+            scheduleResumeAttempt(attempt + 1);
+          });
+        return;
+      }
+
+      if (currentVideo.paused) {
+        scheduleResumeAttempt(attempt + 1);
+      }
+    };
+
+    const resumeFromLastKnownTime = () => {
+      scheduleResumeAttempt(0);
+    };
+
+    const updateLastPlaybackTime = () => {
+      const currentVideo = videoRef.current;
+      if (!currentVideo) {
+        return;
+      }
+      lastPlaybackTimeRef.current = currentVideo.currentTime;
     };
 
     const handleFullscreenChange = () => {
@@ -111,6 +161,19 @@ export default function AutoplayVideo({ playbackId, className }: AutoplayVideoPr
       }
     };
 
+    const handlePause = () => {
+      updateLastPlaybackTime();
+
+      const currentVideo = videoRef.current;
+      if (!currentVideo) {
+        return;
+      }
+
+      if (!currentVideo.ended) {
+        resumeFromLastKnownTime();
+      }
+    };
+
     const handleWebkitPresentationModeChanged = () => {
       if (!video.webkitPresentationMode) {
         return;
@@ -128,7 +191,7 @@ export default function AutoplayVideo({ playbackId, className }: AutoplayVideoPr
     };
 
     video.addEventListener("timeupdate", updateLastPlaybackTime);
-    video.addEventListener("pause", updateLastPlaybackTime);
+    video.addEventListener("pause", handlePause);
     video.addEventListener("seeked", updateLastPlaybackTime);
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     video.addEventListener("webkitbeginfullscreen", handleWebkitBeginFullscreen);
@@ -136,12 +199,9 @@ export default function AutoplayVideo({ playbackId, className }: AutoplayVideoPr
     video.addEventListener("webkitpresentationmodechanged", handleWebkitPresentationModeChanged);
 
     return () => {
-      if (resumeTimeoutRef.current !== null) {
-        window.clearTimeout(resumeTimeoutRef.current);
-        resumeTimeoutRef.current = null;
-      }
+      clearResumeTimeout();
       video.removeEventListener("timeupdate", updateLastPlaybackTime);
-      video.removeEventListener("pause", updateLastPlaybackTime);
+      video.removeEventListener("pause", handlePause);
       video.removeEventListener("seeked", updateLastPlaybackTime);
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
       video.removeEventListener("webkitbeginfullscreen", handleWebkitBeginFullscreen);

@@ -1,26 +1,34 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
-import { cache } from "react";
 
 import { HOMEPAGE_QUERY, type HOMEPAGE_QUERYResult } from "../lib/queries";
 import AutoplayVideo from "../components/AutoplayVideo";
-import { getClient } from "../lib/sanity.client";
+import { fetchSiteSettings } from "../lib/siteSettings";
+import { fetchSanityQuery } from "../lib/sanity.fetch";
+import { buildMetadata, type SanitySeoPayload } from "../lib/seo";
 
-export const revalidate = 60;
-
-const loadHomepage = cache(async (previewEnabled: boolean) => {
-  const client = getClient({ preview: previewEnabled });
-  return client.fetch<HOMEPAGE_QUERYResult>(HOMEPAGE_QUERY);
-});
+async function loadHomepage(previewEnabled: boolean) {
+  return fetchSanityQuery<HOMEPAGE_QUERYResult>(HOMEPAGE_QUERY, {
+    tags: ["sanity:homepage"],
+    preview: previewEnabled
+  });
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const { isEnabled } = await draftMode();
-  const data = await loadHomepage(isEnabled);
+  const [data, siteSettings] = await Promise.all([
+    loadHomepage(isEnabled),
+    fetchSiteSettings(isEnabled)
+  ]);
 
-  return {
-    title: data?.seo?.title || data?.title || "Geographer",
-    description: data?.seo?.description
-  };
+  const pageSeo = data?.seo as SanitySeoPayload;
+  const siteSeo = siteSettings?.seo as SanitySeoPayload;
+
+  return buildMetadata({
+    seo: pageSeo,
+    siteSeo,
+    title: data?.title ?? "Geographer"
+  });
 }
 
 export default async function HomePage() {

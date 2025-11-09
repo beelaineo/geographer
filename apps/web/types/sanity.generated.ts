@@ -59,6 +59,7 @@ export type SITE_SETTINGS_QUERYResult = {
   seo?: {
     title?: string | null;
     description?: string | null;
+    image?: { alt?: string | null } | null;
   } | null;
 } | null;
 
@@ -116,6 +117,11 @@ export type COLLECTION_BY_SLUG_QUERYResult = {
       }
     | null
   > | null;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    image?: { alt?: string | null } | null;
+  } | null;
 } | null;
 
 export type PROJECT_SLUGS_QUERYResult = Array<{ slug?: string | null } | null> | null;
@@ -161,5 +167,10 @@ export type PROJECT_BY_SLUG_QUERYResult = {
       }
     | null
   > | null;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    image?: { alt?: string | null } | null;
+  } | null;
 } | null;
 

@@ -3,15 +3,14 @@ import Image from "next/image";
 import type { PortableTextBlock } from "@portabletext/types";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { draftMode } from "next/headers";
-import { cache } from "react";
 
 import { ABOUT_QUERY, type ABOUT_QUERYResult } from "../../lib/queries";
-import { getClient } from "../../lib/sanity.client";
 import RichText from "../../components/RichText";
 import { getImageDimensions, urlForImageWithWidth } from "../../lib/sanityImage";
 import { SignUpForm } from "../../components/SignUpForm";
-
-export const revalidate = 60;
+import { fetchSiteSettings } from "../../lib/siteSettings";
+import { fetchSanityQuery } from "../../lib/sanity.fetch";
+import { buildMetadata, type SanitySeoPayload } from "../../lib/seo";
 
 type AboutImage = {
   alt?: string | null;
@@ -30,19 +29,28 @@ type AboutImage = {
   } | null;
 } | null | undefined;
 
-const loadAbout = cache(async (previewEnabled: boolean) => {
-  const client = getClient({ preview: previewEnabled });
-  return client.fetch<ABOUT_QUERYResult>(ABOUT_QUERY);
-});
+async function loadAbout(previewEnabled: boolean) {
+  return fetchSanityQuery<ABOUT_QUERYResult>(ABOUT_QUERY, {
+    tags: ["sanity:about"],
+    preview: previewEnabled
+  });
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const { isEnabled } = await draftMode();
-  const data = await loadAbout(isEnabled);
+  const [data, siteSettings] = await Promise.all([
+    loadAbout(isEnabled),
+    fetchSiteSettings(isEnabled)
+  ]);
 
-  return {
-    title: data?.seo?.title || "About",
-    description: data?.seo?.description
-  };
+  const aboutSeo = data?.seo as SanitySeoPayload;
+  const siteSeo = siteSettings?.seo as SanitySeoPayload;
+
+  return buildMetadata({
+    seo: aboutSeo,
+    siteSeo,
+    title: "About"
+  });
 }
 
 export default async function AboutPage() {

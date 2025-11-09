@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
-import { cache } from "react";
 import type { PortableTextBlock } from "@portabletext/types";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
@@ -12,21 +11,25 @@ import {
   type PROJECT_BY_SLUG_QUERYResult,
   type PROJECT_SLUGS_QUERYResult
 } from "../../../lib/queries";
-import { getClient } from "../../../lib/sanity.client";
+import { fetchSanityQuery } from "../../../lib/sanity.fetch";
 import ProjectGallery from "../../../components/ProjectGallery";
 import RichText from "../../../components/RichText";
 import { getImageDimensions, urlForImageWithWidth } from "../../../lib/sanityImage";
+import { fetchSiteSettings } from "../../../lib/siteSettings";
+import { buildMetadata, type SanitySeoPayload } from "../../../lib/seo";
 
-export const revalidate = 180;
-
-const loadProject = cache(async (slug: string, previewEnabled: boolean) => {
-  const client = getClient({ preview: previewEnabled });
-  return client.fetch<PROJECT_BY_SLUG_QUERYResult>(PROJECT_BY_SLUG_QUERY, { slug });
-});
+async function loadProject(slug: string, previewEnabled: boolean) {
+  return fetchSanityQuery<PROJECT_BY_SLUG_QUERYResult>(PROJECT_BY_SLUG_QUERY, {
+    params: { slug },
+    tags: [`sanity:project:${slug}`, "sanity:project:list"],
+    preview: previewEnabled
+  });
+}
 
 export async function generateStaticParams() {
-  const client = getClient();
-  const slugs = await client.fetch<PROJECT_SLUGS_QUERYResult>(PROJECT_SLUGS_QUERY);
+  const slugs = await fetchSanityQuery<PROJECT_SLUGS_QUERYResult>(PROJECT_SLUGS_QUERY, {
+    tags: ["sanity:project:list"]
+  });
 
   return (slugs ?? [])
     .map((entry) => entry?.slug)
@@ -60,6 +63,7 @@ type ProjectRichImage = SanityImageSource & {
 };
 
 type ProjectPageData = Omit<NonNullable<PROJECT_BY_SLUG_QUERYResult>, "gallery" | "images"> & {
+  seo?: SanitySeoPayload;
   gallery?: Array<ProjectRichImage | null> | null;
   images?: Array<ProjectRichImage | null> | null;
 };
@@ -67,20 +71,30 @@ type ProjectPageData = Omit<NonNullable<PROJECT_BY_SLUG_QUERYResult>, "gallery" 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const { isEnabled } = await draftMode();
   const { slug } = await params;
-  const data = await loadProject(slug, isEnabled);
+  const [data, siteSettings] = await Promise.all([
+    loadProject(slug, isEnabled),
+    fetchSiteSettings(isEnabled)
+  ]);
+
+  const siteSeo = siteSettings?.seo as SanitySeoPayload;
 
   if (!data) {
-    return {
+    return buildMetadata({
+      siteSeo,
       title: "Project not found"
-    };
+    });
   }
 
   const project = data as ProjectPageData;
+  const projectSeo = project.seo as SanitySeoPayload;
 
-  return {
+  return buildMetadata({
+    seo: projectSeo,
+    siteSeo,
     title: project.title ?? "Project",
-    description: project.location ?? project.partners ?? undefined
-  };
+    description: project.location ?? project.partners ?? undefined,
+    openGraphType: "article"
+  });
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {

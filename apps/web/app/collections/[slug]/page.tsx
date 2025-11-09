@@ -4,7 +4,6 @@ import type { PortableTextBlock } from "@portabletext/types";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
-import { cache } from "react";
 
 import {
   COLLECTION_BY_SLUG_QUERY,
@@ -12,22 +11,26 @@ import {
   type COLLECTION_BY_SLUG_QUERYResult,
   type COLLECTION_SLUGS_QUERYResult
 } from "../../../lib/queries";
-import { getClient } from "../../../lib/sanity.client";
+import { fetchSanityQuery } from "../../../lib/sanity.fetch";
 import { urlForImageWithWidth } from "../../../lib/sanityImage";
 import RichText from "../../../components/RichText";
 import ReleaseCarousel from "../../../components/ReleaseCarousel";
 import ReleaseCard from "../../../components/ReleaseCard";
+import { fetchSiteSettings } from "../../../lib/siteSettings";
+import { buildMetadata, type SanitySeoPayload } from "../../../lib/seo";
 
-export const revalidate = 180;
-
-const loadCollection = cache(async (slug: string, previewEnabled: boolean) => {
-  const client = getClient({ preview: previewEnabled });
-  return client.fetch<COLLECTION_BY_SLUG_QUERYResult>(COLLECTION_BY_SLUG_QUERY, { slug });
-});
+async function loadCollection(slug: string, previewEnabled: boolean) {
+  return fetchSanityQuery<COLLECTION_BY_SLUG_QUERYResult>(COLLECTION_BY_SLUG_QUERY, {
+    params: { slug },
+    tags: [`sanity:collection:${slug}`, "sanity:collection:list"],
+    preview: previewEnabled
+  });
+}
 
 export async function generateStaticParams() {
-  const client = getClient();
-  const slugs = await client.fetch<COLLECTION_SLUGS_QUERYResult>(COLLECTION_SLUGS_QUERY);
+  const slugs = await fetchSanityQuery<COLLECTION_SLUGS_QUERYResult>(COLLECTION_SLUGS_QUERY, {
+    tags: ["sanity:collection:list"]
+  });
 
   return (slugs ?? [])
     .map((entry) => entry?.slug)
@@ -42,24 +45,37 @@ type CollectionPageProps = {
 };
 
 type CollectionPageData = NonNullable<COLLECTION_BY_SLUG_QUERYResult> & {
+  seo?: SanitySeoPayload;
   hero?: (SanityImageSource & { alt?: string | null }) | null;
 };
 
 export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
   const { isEnabled } = await draftMode();
   const { slug } = await params;
-  const data = await loadCollection(slug, isEnabled);
+  const [data, siteSettings] = await Promise.all([
+    loadCollection(slug, isEnabled),
+    fetchSiteSettings(isEnabled)
+  ]);
+
+  const siteSeo = siteSettings?.seo as SanitySeoPayload;
 
   if (!data) {
-    return {
+    return buildMetadata({
+      siteSeo,
       title: "Collection not found"
-    };
+    });
   }
 
-  return {
-    title: data.title ?? "Collection",
-    description: data.location ?? data.partners ?? undefined
-  };
+  const collection = data as CollectionPageData;
+  const collectionSeo = collection.seo as SanitySeoPayload;
+
+  return buildMetadata({
+    seo: collectionSeo,
+    siteSeo,
+    title: collection.title ?? "Collection",
+    description: collection.location ?? collection.partners ?? undefined,
+    openGraphType: "article"
+  });
 }
 
 export default async function CollectionPage({ params }: CollectionPageProps) {

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { draftMode } from "next/headers";
 
@@ -5,13 +6,26 @@ import {
   COLLECTIONS_QUERY,
   type COLLECTIONS_QUERYResult
 } from "../../lib/queries";
-import { getClient } from "../../lib/sanity.client";
-
-export const revalidate = 180;
+import { fetchSiteSettings } from "../../lib/siteSettings";
+import { fetchSanityQuery } from "../../lib/sanity.fetch";
+import { buildMetadata, type SanitySeoPayload } from "../../lib/seo";
 
 async function loadCollections(previewEnabled: boolean) {
-  const client = getClient({ preview: previewEnabled });
-  return client.fetch<COLLECTIONS_QUERYResult>(COLLECTIONS_QUERY);
+  return fetchSanityQuery<COLLECTIONS_QUERYResult>(COLLECTIONS_QUERY, {
+    tags: ["sanity:collection:list"],
+    preview: previewEnabled
+  });
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { isEnabled } = await draftMode();
+  const siteSettings = await fetchSiteSettings(isEnabled);
+  const siteSeo = siteSettings?.seo as SanitySeoPayload;
+
+  return buildMetadata({
+    siteSeo,
+    title: "Collections"
+  });
 }
 
 export default async function CollectionsPage() {
