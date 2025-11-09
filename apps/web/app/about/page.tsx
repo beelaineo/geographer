@@ -122,7 +122,7 @@ export default async function AboutPage() {
                           role="dialog"
                           aria-modal="true"
                           aria-labelledby="about-image-modal-heading"
-                          className="relative z-10 max-h-[90vh] w-full max-w-4xl overflow-y-auto bg-white p-12 md:p-24"
+                          className="relative z-10 max-h-[90vh] w-full max-w-4xl overflow-y-auto bg-white p-6 md:p-24"
                         >
                           <div className="mb-12">
                             <RichText

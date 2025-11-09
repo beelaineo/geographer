@@ -26,6 +26,22 @@ type AutoplayVideoProps = {
 const RESUME_ATTEMPT_DELAYS = [0, 150, 300, 600, 1000];
 const MAX_RESUME_ATTEMPTS = RESUME_ATTEMPT_DELAYS.length;
 
+type HlsInstance = {
+  destroy(): void;
+  attachMedia(media: HTMLMediaElement): void;
+  loadSource(source: string): void;
+  on(event: string, handler: (...args: unknown[]) => void): void;
+};
+
+type HlsConstructor = {
+  new (config?: unknown): HlsInstance;
+  isSupported(): boolean;
+  Events: {
+    MEDIA_ATTACHED: string;
+    ERROR: string;
+  };
+};
+
 export default function AutoplayVideo({ playbackId, className }: AutoplayVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const lastPlaybackTimeRef = useRef(0);
@@ -35,6 +51,90 @@ export default function AutoplayVideo({ playbackId, className }: AutoplayVideoPr
     () => `https://image.mux.com/${playbackId}/thumbnail.png?time=0`,
     [playbackId],
   );
+  const hlsPlaybackUrl = useMemo(
+    () => `https://stream.mux.com/${playbackId}.m3u8`,
+    [playbackId],
+  );
+  const mp4FallbackUrl = useMemo(
+    () => `https://stream.mux.com/${playbackId}/medium.mp4`,
+    [playbackId],
+  );
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) {
+      return;
+    }
+
+    let hlsInstance: HlsInstance | null = null;
+    let cancelled = false;
+
+    const setMp4Fallback = () => {
+      if (video.src !== mp4FallbackUrl) {
+        video.src = mp4FallbackUrl;
+        video.load();
+      }
+    };
+
+    const setup = async () => {
+      const canPlayHlsNatively =
+        video.canPlayType("application/vnd.apple.mpegurl") ||
+        video.canPlayType("application/x-mpegURL");
+
+      if (canPlayHlsNatively) {
+        if (video.src !== hlsPlaybackUrl) {
+          video.src = hlsPlaybackUrl;
+          video.load();
+        }
+        return;
+      }
+
+      const { default: HlsModule } = await import("hls.js");
+      const Hls = HlsModule as HlsConstructor;
+      if (cancelled) {
+        return;
+      }
+
+      if (!Hls.isSupported()) {
+        setMp4Fallback();
+        return;
+      }
+
+      hlsInstance = new Hls({
+        capLevelToPlayerSize: true,
+        maxBufferLength: 30,
+        startPosition: lastPlaybackTimeRef.current || -1,
+      });
+
+      hlsInstance.attachMedia(video);
+      hlsInstance.on(Hls.Events.MEDIA_ATTACHED, () => {
+        if (cancelled) {
+          return;
+        }
+        hlsInstance?.loadSource(hlsPlaybackUrl);
+      });
+
+      hlsInstance.on(Hls.Events.ERROR, (...args) => {
+        const [, data] = args as [unknown, { fatal?: boolean } | undefined];
+        if (data?.fatal) {
+          hlsInstance?.destroy();
+          hlsInstance = null;
+          setMp4Fallback();
+        }
+      });
+    };
+
+    setup().catch(() => {
+      setMp4Fallback();
+    });
+
+    return () => {
+      cancelled = true;
+      if (hlsInstance) {
+        hlsInstance.destroy();
+      }
+    };
+  }, [hlsPlaybackUrl, mp4FallbackUrl]);
 
   useEffect(() => {
     if (!posterUrl) {
@@ -278,10 +378,6 @@ export default function AutoplayVideo({ playbackId, className }: AutoplayVideoPr
       className={["cursor-pointer", className].filter(Boolean).join(" ")}
       onClick={handleClick}
     >
-      <source
-        src={`https://stream.mux.com/${playbackId}.m3u8`}
-        type="application/x-mpegURL"
-      />
       Your browser does not support the video tag.
     </video>
   );

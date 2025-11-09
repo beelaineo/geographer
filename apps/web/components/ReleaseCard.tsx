@@ -78,9 +78,8 @@ export default function ReleaseCard({ release, className }: ReleaseCardProps) {
         <span className="font-medium">{release.title ?? "Untitled release"}</span>
         {releaseDate ? (
           <span className="text-sm md:text-lg">
-            Released on{" "}
             {new Intl.DateTimeFormat("en-US", {
-              month: "short",
+              month: "long",
               day: "numeric",
               year: "numeric"
             }).format(releaseDate)}
