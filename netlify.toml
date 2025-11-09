@@ -1,0 +1,16 @@
+[build]
+  base = "/"
+  command = "corepack enable && corepack prepare pnpm@9.0.0 --activate && pnpm install && turbo run build --filter=./apps/web"
+  publish = "apps/web/.next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  PNPM_VERSION = "9.0.0"
+  NPM_FLAGS = "--version"
+
+[dev]
+  base = "apps/web"
+  command = "pnpm dev"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
