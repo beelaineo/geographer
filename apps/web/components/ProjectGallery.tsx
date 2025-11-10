@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
+import { blurHashToDataURL } from "../lib/sanityImage";
 
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { getImageDimensions, urlForImageWithWidth } from "../lib/sanityImage";
@@ -18,6 +19,7 @@ type GalleryImage = SanityImageSource & {
     _ref?: string;
     url?: string | null;
     metadata?: {
+      blurHash?: string | null;
       dimensions?: {
         width?: number | null;
         height?: number | null;
@@ -81,6 +83,7 @@ export default function ProjectGallery({ images, className }: ProjectGalleryProp
             const url = urlForImageWithWidth(image, 1600).url();
             const { width, height } = getImageDimensions(image);
             const aspectRatio = width && height ? width / height : undefined;
+            const placeholder = image.asset?.metadata?.blurHash ? blurHashToDataURL(image.asset?.metadata?.blurHash, 80, 120) : null;
 
             return (
               <figure
@@ -99,6 +102,8 @@ export default function ProjectGallery({ images, className }: ProjectGalleryProp
                     sizes="(min-width: 768px) 70vw, 100vw"
                     className="h-auto w-full object-cover md:h-full md:w-auto md:max-h-[80vh] md:max-w-full md:object-contain md:shadow-lg"
                     priority={false}
+                    placeholder={placeholder ? "blur" : undefined}
+                    blurDataURL={placeholder ?? undefined}
                   />
                 </div>
                 {image.caption ? (

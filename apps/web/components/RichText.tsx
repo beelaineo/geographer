@@ -106,8 +106,6 @@ export default function RichText({ value, className }: RichTextProps) {
     return null;
   }
 
-  console.log('rich text value', value);
-
   return (
     <div className={className}>
       <PortableText value={value} components={components} />

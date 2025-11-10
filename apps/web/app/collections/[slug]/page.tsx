@@ -12,12 +12,13 @@ import {
   type COLLECTION_SLUGS_QUERYResult
 } from "../../../lib/queries";
 import { fetchSanityQuery } from "../../../lib/sanity.fetch";
-import { urlForImageWithWidth } from "../../../lib/sanityImage";
+import { blurHashToDataURL, urlForImageWithWidth } from "../../../lib/sanityImage";
 import RichText from "../../../components/RichText";
 import ReleaseCarousel from "../../../components/ReleaseCarousel";
 import ReleaseCard from "../../../components/ReleaseCard";
 import { fetchSiteSettings } from "../../../lib/siteSettings";
 import { buildMetadata, type SanitySeoPayload } from "../../../lib/seo";
+import Link from "next/link";
 
 async function loadCollection(slug: string, previewEnabled: boolean) {
   return fetchSanityQuery<COLLECTION_BY_SLUG_QUERYResult>(COLLECTION_BY_SLUG_QUERY, {
@@ -46,7 +47,14 @@ type CollectionPageProps = {
 
 type CollectionPageData = NonNullable<COLLECTION_BY_SLUG_QUERYResult> & {
   seo?: SanitySeoPayload;
-  hero?: (SanityImageSource & { alt?: string | null }) | null;
+  hero?: (SanityImageSource & {
+    alt?: string | null;
+    asset?: {
+      metadata?: {
+        blurHash?: string | null;
+      } | null;
+    } | null;
+  }) | null;
 };
 
 export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
@@ -73,7 +81,6 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
     seo: collectionSeo,
     siteSeo,
     title: collection.title ?? "Collection",
-    description: collection.location ?? collection.partners ?? undefined,
     openGraphType: "article"
   });
 }
@@ -92,16 +99,8 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
   const hero = collection.hero ?? null;
   const heroImage = hero ? urlForImageWithWidth(hero, 2440).height(1760).url() : null;
   const heroAlt = hero?.alt ?? collection.title ?? "Collection hero image";
-
-  const metaItems = [
-    { label: "Location", value: collection.location },
-    { label: "Dates", value: collection.dates },
-    { label: "Partners", value: collection.partners },
-    {
-      label: "Press",
-      value: collection.press?.map((item) => item?.title).filter(Boolean).join(", ")
-    }
-  ].filter((item) => item.value);
+  const heroBlurHash = hero?.asset?.metadata?.blurHash ?? null;
+  const heroPlaceholder = heroBlurHash ? blurHashToDataURL(heroBlurHash, 24, 24) : null;
 
   const releases = (collection.releases ?? []).filter(Boolean);
 
@@ -116,6 +115,8 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
             priority
             className="object-cover object-bottom"
             sizes="100vw"
+            placeholder={heroPlaceholder ? "blur" : undefined}
+            blurDataURL={heroPlaceholder ?? undefined}
           />
         </section>
       ) : null}
@@ -126,21 +127,27 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
             <h1 className="text-2xl">
               {collection.title ?? "Collection"}
             </h1>
-          {metaItems.length ? (
-            <dl className="grid md:grid-cols-2 gap-4">
-              {metaItems.map((item) => (
-                <div
-                  key={item.label}
-                  className={`space-y-1${item.label === "Partners" ? " col-span-2" : ""}`}
-                >
-                  <dt className="uppercase text-[10px] tracking-[0.15em]">{item.label}</dt>
-                  <dd className="text-sm">
-                    {item.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          ) : null}
+            {collection.lines?.length ? (
+              <dl className="grid md:grid-cols-2 gap-4">
+                {collection.lines?.map((item) => (
+                  <div
+                    key={item.label}
+                    className={`space-y-1${item.label === "Partners" ? " col-span-2" : ""}`}
+                  >
+                    <dt className="uppercase text-[10px] tracking-[0.15em]">{item.label}</dt>
+                    <dd className="text-sm">
+                      {item.link ? (
+                        <Link href={item.link} target="_blank" rel="noopener noreferrer">
+                          {item.value}
+                        </Link>
+                      ) : (
+                        item.value
+                      )}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
           </div>
           {collection.intro ? (
             <section className="col-span-2">

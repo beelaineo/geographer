@@ -59,20 +59,35 @@ export const projectType = defineType({
       validation: (rule) => rule.required()
     }),
     defineField({
-      name: "location",
-      title: "Location",
-      type: "string"
-    }),
-    defineField({
-      name: "dates",
-      title: "Dates",
-      type: "string"
-    }),
-    defineField({
-      name: "partners",
-      title: "Partners",
-      type: "string"
-    }),
+      name: "lines",
+      title: "Lines",
+      type: "array",
+      of: [
+        defineArrayMember({
+          name: "line",
+          type: "object",
+          fields: [
+            defineField({
+              name: "label",
+              title: "Label",
+              type: "string",
+              validation: (rule) => rule.required()
+            }),
+            defineField({
+              name: "value",
+              title: "Value",
+              type: "string",
+              validation: (rule) => rule.required()
+            }),
+            defineField({
+              name: "link",
+              title: "Link (optional)",
+              type: "url",
+            })
+          ]
+        })
+      ]
+     }),
     defineField({
       name: "columns",
       title: "Columns",
