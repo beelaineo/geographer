@@ -1,7 +1,0 @@
-{
-  "$schema": "https://www.sanity.io/docs/sanity-typegen-schema.json",
-  "schema": "./schema.json",
-  "path": "../web/**/*.{ts,tsx}",
-  "generates": "../web/types/sanity.generated.ts"
-}
-

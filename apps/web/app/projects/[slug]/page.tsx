@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import type { PortableTextBlock } from "@portabletext/types";
@@ -92,7 +93,6 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     seo: projectSeo,
     siteSeo,
     title: project.title ?? "Project",
-    description: project.location ?? project.partners ?? undefined,
     openGraphType: "article"
   });
 }
@@ -108,11 +108,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   const project = data as ProjectPageData;
 
-  const metaItems = [
-    { label: "Location", value: project.location },
-    { label: "Dates", value: project.dates },
-    { label: "Partners", value: project.partners }
-  ].filter((item) => item.value);
 
   type Column = {
     _key?: string;
@@ -148,7 +143,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     } => Boolean(image?.asset?._ref || image?.asset?._id)
   );
   return (
-    <main className="min-h-screen bg-white text-black md:py-12">
+    <main className="min-h-screen bg-white text-black md:py-12 md:pb-32">
       <div className="relative flex flex-col md:block md:pt-[calc(100vh-18rem)]">
 
         <header className="order-2 px-6 md:px-12 grid gap-10 md:grid-cols-3">
@@ -156,16 +151,22 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <h1 className="text-2xl">
               {project.title ?? "Untitled project"}
             </h1>
-          {metaItems.length ? (
+          {project.lines?.length ? (
             <dl className="grid md:grid-cols-2 gap-4">
-              {metaItems.map((item) => (
+              {project.lines?.map((item) => (
                 <div
                   key={item.label}
                   className={`space-y-1${item.label === "Partners" ? " col-span-2" : ""}`}
                 >
                   <dt className="uppercase text-[10px] tracking-[0.15em]">{item.label}</dt>
                   <dd className="text-sm">
-                    {item.value}
+                    {item.link ? (
+                      <Link href={item.link} target="_blank" rel="noopener noreferrer">
+                        {item.value}
+                      </Link>
+                    ) : (
+                      item.value
+                    )}
                   </dd>
                 </div>
               ))}

@@ -20,6 +20,7 @@ type AboutImage = {
     _id?: string | null;
     url?: string | null;
     metadata?: {
+      blurHash?: string | null;
       dimensions?: {
         width?: number | null;
         height?: number | null;

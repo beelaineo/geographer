@@ -1,12 +1,13 @@
-import { groq } from "next-sanity";
+import { defineQuery } from "groq";
 
-const RICH_IMAGE_SELECTION = groq`{
+const RICH_IMAGE_SELECTION = /* groq */ `{
   ...,
   alt,
   caption,
   asset->{
     ...,
     metadata{
+      blurHash,
       dimensions{
         width,
         height,
@@ -16,7 +17,7 @@ const RICH_IMAGE_SELECTION = groq`{
   }
 }`;
 
-const RICH_TEXT_SELECTION = groq`[]{
+const RICH_TEXT_SELECTION = /* groq */ `[]{
   ...,
   markDefs[]{
     ...,
@@ -32,7 +33,8 @@ const RICH_TEXT_SELECTION = groq`[]{
   }
 }`;
 
-const MENU_ITEM_SELECTION = groq`{
+const MENU_ITEM_SELECTION = /* groq */ `{
+  _key,
   label,
   linkType,
   internalLink->{
@@ -44,7 +46,7 @@ const MENU_ITEM_SELECTION = groq`{
   externalLink
 }`;
 
-const PRESS_ITEM_SELECTION = groq`{
+const PRESS_ITEM_SELECTION = /* groq */ `{
   title,
   externalLink,
   file{
@@ -58,7 +60,7 @@ const PRESS_ITEM_SELECTION = groq`{
   }
 }`;
 
-export const HOMEPAGE_QUERY = groq`
+export const HOMEPAGE_QUERY = defineQuery(`
   *[_type == "homepage"][0]{
     title,
     videos[]{
@@ -76,9 +78,9 @@ export const HOMEPAGE_QUERY = groq`
       image${RICH_IMAGE_SELECTION}
     }
   }
-`;
+`);
 
-export const ABOUT_QUERY = groq`
+export const ABOUT_QUERY = defineQuery(`
   *[_type == "about"][0]{
     richText${RICH_TEXT_SELECTION},
     image${RICH_IMAGE_SELECTION},
@@ -89,9 +91,9 @@ export const ABOUT_QUERY = groq`
       image${RICH_IMAGE_SELECTION}
     }
   }
-`;
+`);
 
-export const SITE_SETTINGS_QUERY = groq`
+export const SITE_SETTINGS_QUERY = defineQuery(`
   *[_type == "siteSettings"][0]{
     mainMenu[]{
       ...${MENU_ITEM_SELECTION}
@@ -105,15 +107,15 @@ export const SITE_SETTINGS_QUERY = groq`
       image${RICH_IMAGE_SELECTION}
     }
   }
-`;
+`);
 
-export const RELEASE_SLUGS_QUERY = groq`
+export const RELEASE_SLUGS_QUERY = defineQuery(`
   *[_type == "release" && defined(slug.current)]{
     "slug": slug.current
   }
-`;
+`);
 
-export const RELEASES_QUERY = groq`
+export const RELEASES_QUERY = defineQuery(`
   *[_type == "release"] | order(release_date desc){
     _id,
     title,
@@ -124,9 +126,9 @@ export const RELEASES_QUERY = groq`
     intro,
     quote
   }
-`;
+`);
 
-export const RELEASE_BY_SLUG_QUERY = groq`
+export const RELEASE_BY_SLUG_QUERY = defineQuery(`
   *[_type == "release" && slug.current == $slug][0]{
     _id,
     title,
@@ -138,23 +140,25 @@ export const RELEASE_BY_SLUG_QUERY = groq`
     quote,
     embed
   }
-`;
+`);
 
-export const COLLECTION_SLUGS_QUERY = groq`
+export const COLLECTION_SLUGS_QUERY = defineQuery(`
   *[_type == "collection" && defined(slug.current)]{
     "slug": slug.current
   }
-`;
+`);
 
-export const COLLECTIONS_QUERY = groq`
+export const COLLECTIONS_QUERY = defineQuery(`
   *[_type == "collection"] | order(_createdAt desc){
     _id,
     title,
     slug,
     hero${RICH_IMAGE_SELECTION},
-    location,
-    dates,
-    partners,
+    lines[]{
+      label,
+      value,
+      link
+    },
     intro${RICH_TEXT_SELECTION},
     releases[]{
       ...,
@@ -170,17 +174,19 @@ export const COLLECTIONS_QUERY = groq`
       ...${PRESS_ITEM_SELECTION}
     }
   }
-`;
+`);
 
-export const COLLECTION_BY_SLUG_QUERY = groq`
+export const COLLECTION_BY_SLUG_QUERY = defineQuery(`
   *[_type == "collection" && slug.current == $slug][0]{
     _id,
     title,
     slug,
     hero${RICH_IMAGE_SELECTION},
-    location,
-    dates,
-    partners,
+    lines[]{
+      label,
+      value,
+      link
+    },
     intro${RICH_TEXT_SELECTION},
     seo{
       title,
@@ -201,27 +207,29 @@ export const COLLECTION_BY_SLUG_QUERY = groq`
       ...${PRESS_ITEM_SELECTION}
     }
   }
-`;
+`);
 
-export const PROJECT_SLUGS_QUERY = groq`
+export const PROJECT_SLUGS_QUERY = defineQuery(`
   *[_type == "project" && defined(slug.current)]{
     "slug": slug.current
   }
-`;
+`);
 
-const PROJECT_COLUMNS_SELECTION = groq`[]{
+const PROJECT_COLUMNS_SELECTION = /* groq */ `[]{
   _key,
   content${RICH_TEXT_SELECTION}
 }`;
 
-export const PROJECTS_QUERY = groq`
+export const PROJECTS_QUERY = defineQuery(`
   *[_type == "project"] | order(_createdAt desc){
     _id,
     title,
     slug,
-    location,
-    dates,
-    partners,
+    lines[]{
+      label,
+      value,
+      link
+    },
     columns${PROJECT_COLUMNS_SELECTION},
     gallery[]{
       ...${RICH_IMAGE_SELECTION}
@@ -233,16 +241,18 @@ export const PROJECTS_QUERY = groq`
       ...${PRESS_ITEM_SELECTION}
     }
   }
-`;
+`);
 
-export const PROJECT_BY_SLUG_QUERY = groq`
+export const PROJECT_BY_SLUG_QUERY = defineQuery(`
   *[_type == "project" && slug.current == $slug][0]{
     _id,
     title,
     slug,
-    location,
-    dates,
-    partners,
+    lines[]{
+      label,
+      value,
+      link
+    },
     seo{
       title,
       description,
@@ -259,7 +269,7 @@ export const PROJECT_BY_SLUG_QUERY = groq`
       ...${PRESS_ITEM_SELECTION}
     }
   }
-`;
+`);
 
 export type {
   HOMEPAGE_QUERYResult,

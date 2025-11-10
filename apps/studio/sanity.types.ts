@@ -187,9 +187,13 @@ export type Collection = {
     caption?: string;
     _type: "richImage";
   };
-  location?: string;
-  dates?: string;
-  partners?: string;
+  lines?: Array<{
+    label?: string;
+    value?: string;
+    link?: string;
+    _type: "line";
+    _key: string;
+  }>;
   intro?: RichText;
   releases?: Array<{
     _ref: string;
@@ -211,9 +215,13 @@ export type Project = {
   _rev: string;
   title?: string;
   slug?: Slug;
-  location?: string;
-  dates?: string;
-  partners?: string;
+  lines?: Array<{
+    label?: string;
+    value?: string;
+    link?: string;
+    _type: "line";
+    _key: string;
+  }>;
   columns?: Array<{
     content?: RichText;
     _type: "column";
