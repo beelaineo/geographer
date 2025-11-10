@@ -24,6 +24,14 @@ export const releaseType = defineType({
       validation: (rule) => rule.required()
     }),
     defineField({
+      name: "published",
+      title: "Published?",
+      description: "If published, the release will be active on the website.",
+      type: "boolean",
+      initialValue: false,
+      validation: (rule) => rule.required()
+    }),
+    defineField({
       name: "release_date",
       title: "Release Date",
       type: "datetime",

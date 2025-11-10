@@ -22,12 +22,16 @@ type ReleaseCarouselProps = {
   releases?: (Release | null)[] | null;
   className?: string;
   trailingSlot?: ReactNode;
+  onCardClick?: (id: string) => void;
+  expandedId?: string | null;
 };
 
 export default function ReleaseCarousel({
   releases,
   className,
-  trailingSlot
+  trailingSlot,
+  onCardClick,
+  expandedId
 }: ReleaseCarouselProps) {
   const [viewportRef] = useEmblaCarousel({
     align: "start",
@@ -48,7 +52,11 @@ export default function ReleaseCarousel({
               key={release?._id ?? release?.slug?.current ?? index}
               className="min-w-[70vw] max-w-[70vw] sm:min-w-[260px] sm:max-w-[260px]"
             >
-              <ReleaseCard release={release} />
+              <ReleaseCard
+                release={release}
+                isExpanded={false}
+                onToggle={onCardClick && release?._id ? () => onCardClick(release._id) : undefined}
+              />
             </div>
           ))}
           {trailingSlot}

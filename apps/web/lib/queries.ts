@@ -121,6 +121,7 @@ export const RELEASES_QUERY = defineQuery(`
     title,
     slug,
     release_date,
+    published,
     cover${RICH_IMAGE_SELECTION},
     coverAlt${RICH_IMAGE_SELECTION},
     intro,
@@ -134,6 +135,7 @@ export const RELEASE_BY_SLUG_QUERY = defineQuery(`
     title,
     slug,
     release_date,
+    published,
     cover${RICH_IMAGE_SELECTION},
     coverAlt${RICH_IMAGE_SELECTION},
     intro,
@@ -167,6 +169,7 @@ export const COLLECTIONS_QUERY = defineQuery(`
         title,
         slug,
         release_date,
+        published,
         cover${RICH_IMAGE_SELECTION}
       }
     },
@@ -200,7 +203,12 @@ export const COLLECTION_BY_SLUG_QUERY = defineQuery(`
         title,
         slug,
         release_date,
-        cover${RICH_IMAGE_SELECTION}
+        published,
+        cover${RICH_IMAGE_SELECTION},
+        coverAlt${RICH_IMAGE_SELECTION},
+        intro,
+        quote,
+        embed
       }
     },
     press[]{

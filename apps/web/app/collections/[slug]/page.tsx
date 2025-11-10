@@ -14,8 +14,7 @@ import {
 import { fetchSanityQuery } from "../../../lib/sanity.fetch";
 import { blurHashToDataURL, urlForImageWithWidth } from "../../../lib/sanityImage";
 import RichText from "../../../components/RichText";
-import ReleaseCarousel from "../../../components/ReleaseCarousel";
-import ReleaseCard from "../../../components/ReleaseCard";
+import CollectionPageClient from "./CollectionPageClient";
 import { fetchSiteSettings } from "../../../lib/siteSettings";
 import { buildMetadata, type SanitySeoPayload } from "../../../lib/seo";
 import Link from "next/link";
@@ -105,7 +104,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
   const releases = (collection.releases ?? []).filter(Boolean);
 
   return (
-    <main className="bg-white text-black">
+    <main className="bg-white text-black pb-16 md:pb-24">
       {heroImage ? (
         <section className="relative h-[360px] w-full overflow-hidden md:h-[400px] lg:h-[400px]">
           <Image
@@ -159,21 +158,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
         ) : null}
         </header>
 
-        {releases.length ? (
-          <section className="my-16">
-            <div className="md:hidden">
-              <ReleaseCarousel releases={releases} />
-            </div>
-            <div className="px-6 md:px-12 hidden md:grid md:grid-cols-4 md:gap-0">
-              {releases.map((release, index) => (
-                <ReleaseCard
-                  key={release?._id ?? release?.slug?.current ?? index}
-                  release={release}
-                />
-              ))}
-            </div>
-          </section>
-        ) : null}
+        <CollectionPageClient releases={releases} />
       </div>
     </main>
   );

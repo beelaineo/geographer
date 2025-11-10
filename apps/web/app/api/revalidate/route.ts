@@ -59,7 +59,10 @@ async function fetchReferencingSlugs(type: "collection" | "project", documentId:
 }
 
 export async function POST(request: NextRequest) {
+  console.log('[Revalidate] Webhook received at:', new Date().toISOString());
+  
   if (!SANITY_REVALIDATE_SECRET) {
+    console.error('[Revalidate] ERROR: Missing SANITY_REVALIDATE_SECRET');
     return NextResponse.json<RevalidationResult>(
       {
         revalidated: false,
@@ -75,6 +78,7 @@ export async function POST(request: NextRequest) {
     "";
 
   if (providedSecret !== SANITY_REVALIDATE_SECRET) {
+    console.warn('[Revalidate] WARN: Invalid secret provided');
     return NextResponse.json<RevalidationResult>(
       {
         revalidated: false,
@@ -83,12 +87,16 @@ export async function POST(request: NextRequest) {
       { status: 401 }
     );
   }
+  
+  console.log('[Revalidate] Authentication successful');
 
   let payload: SanityWebhookPayload;
 
   try {
     payload = await request.json();
-  } catch {
+    console.log('[Revalidate] Payload received:', JSON.stringify(payload, null, 2));
+  } catch (error) {
+    console.error('[Revalidate] ERROR: Invalid JSON payload', error);
     return NextResponse.json<RevalidationResult>(
       {
         revalidated: false,
@@ -103,11 +111,14 @@ export async function POST(request: NextRequest) {
   const docType = document?._type ?? previousDocument?._type;
 
   if (!docType) {
+    console.error('[Revalidate] ERROR: Unable to determine document type');
     return NextResponse.json<RevalidationResult>(
       { revalidated: false, message: "Unable to determine document type from payload" },
       { status: 400 }
     );
   }
+  
+  console.log('[Revalidate] Processing document type:', docType);
 
   const tagsToRevalidate = new Set<string>();
   const primarySlug =
@@ -168,6 +179,7 @@ export async function POST(request: NextRequest) {
       break;
     }
     default: {
+      console.warn(`[Revalidate] WARN: Unhandled Sanity type "${docType}"`);
       return NextResponse.json<RevalidationResult>(
         {
           revalidated: false,
@@ -178,11 +190,14 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  const tagsArray = Array.from(tagsToRevalidate);
+  console.log('[Revalidate] Revalidating tags:', tagsArray);
+  
   tagsToRevalidate.forEach((tag) => revalidateTag(tag));
-
+  
+  console.log('[Revalidate] SUCCESS: Revalidation complete');
   return NextResponse.json<RevalidationResult>({
     revalidated: true,
-    tags: Array.from(tagsToRevalidate)
+    tags: tagsArray
   });
 }
-
