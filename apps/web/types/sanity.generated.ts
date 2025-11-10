@@ -270,6 +270,7 @@ export type Release = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  published?: boolean;
   release_date?: string;
   cover?: {
     asset?: {
@@ -921,12 +922,13 @@ export type RELEASE_SLUGS_QUERYResult = Array<{
   slug: string | null;
 }>;
 // Variable: RELEASES_QUERY
-// Query: *[_type == "release"] | order(release_date desc){    _id,    title,    slug,    release_date,    cover{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    coverAlt{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    intro,    quote  }
+// Query: *[_type == "release"] | order(release_date desc){    _id,    title,    slug,    release_date,    published,    cover{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    coverAlt{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    intro,    quote  }
 export type RELEASES_QUERYResult = Array<{
   _id: string;
   title: string | null;
   slug: Slug | null;
   release_date: string | null;
+  published: boolean | null;
   cover: {
     asset: {
       _id: string;
@@ -1005,12 +1007,13 @@ export type RELEASES_QUERYResult = Array<{
   quote: string | null;
 }>;
 // Variable: RELEASE_BY_SLUG_QUERY
-// Query: *[_type == "release" && slug.current == $slug][0]{    _id,    title,    slug,    release_date,    cover{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    coverAlt{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    intro,    quote,    embed  }
+// Query: *[_type == "release" && slug.current == $slug][0]{    _id,    title,    slug,    release_date,    published,    cover{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    coverAlt{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    intro,    quote,    embed  }
 export type RELEASE_BY_SLUG_QUERYResult = {
   _id: string;
   title: string | null;
   slug: Slug | null;
   release_date: string | null;
+  published: boolean | null;
   cover: {
     asset: {
       _id: string;
@@ -1095,7 +1098,7 @@ export type COLLECTION_SLUGS_QUERYResult = Array<{
   slug: string | null;
 }>;
 // Variable: COLLECTIONS_QUERY
-// Query: *[_type == "collection"] | order(_createdAt desc){    _id,    title,    slug,    hero{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    lines[]{      label,      value,      link    },    intro[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  }},    releases[]{      ...,      _type == "reference" => @->{        _id,        title,        slug,        release_date,        cover{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}      }    },    press[]{      ...{  title,  externalLink,  file{    asset->{      _id,      url,      originalFilename,      size,      mimeType    }  }}    }  }
+// Query: *[_type == "collection"] | order(_createdAt desc){    _id,    title,    slug,    hero{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    lines[]{      label,      value,      link    },    intro[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  }},    releases[]{      ...,      _type == "reference" => @->{        _id,        title,        slug,        release_date,        published,        cover{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}      }    },    press[]{      ...{  title,  externalLink,  file{    asset->{      _id,      url,      originalFilename,      size,      mimeType    }  }}    }  }
 export type COLLECTIONS_QUERYResult = Array<{
   _id: string;
   title: string | null;
@@ -1213,6 +1216,7 @@ export type COLLECTIONS_QUERYResult = Array<{
     title: string | null;
     slug: Slug | null;
     release_date: string | null;
+    published: boolean | null;
     cover: {
       asset: {
         _id: string;
@@ -1266,7 +1270,7 @@ export type COLLECTIONS_QUERYResult = Array<{
   }> | null;
 }>;
 // Variable: COLLECTION_BY_SLUG_QUERY
-// Query: *[_type == "collection" && slug.current == $slug][0]{    _id,    title,    slug,    hero{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    lines[]{      label,      value,      link    },    intro[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  }},    seo{      title,      description,      image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    },    releases[]{      ...,      _type == "reference" => @->{        _id,        title,        slug,        release_date,        cover{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}      }    },    press[]{      ...{  title,  externalLink,  file{    asset->{      _id,      url,      originalFilename,      size,      mimeType    }  }}    }  }
+// Query: *[_type == "collection" && slug.current == $slug][0]{    _id,    title,    slug,    hero{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    lines[]{      label,      value,      link    },    intro[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  }},    seo{      title,      description,      image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    },    releases[]{      ...,      _type == "reference" => @->{        _id,        title,        slug,        release_date,        published,        cover{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},        coverAlt{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},        intro,        quote,        embed      }    },    press[]{      ...{  title,  externalLink,  file{    asset->{      _id,      url,      originalFilename,      size,      mimeType    }  }}    }  }
 export type COLLECTION_BY_SLUG_QUERYResult = {
   _id: string;
   title: string | null;
@@ -1385,6 +1389,7 @@ export type COLLECTION_BY_SLUG_QUERYResult = {
     title: string | null;
     slug: Slug | null;
     release_date: string | null;
+    published: boolean | null;
     cover: {
       asset: {
         _id: string;
@@ -1422,6 +1427,46 @@ export type COLLECTION_BY_SLUG_QUERYResult = {
       caption: string | null;
       _type: "richImage";
     } | null;
+    coverAlt: {
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata: {
+          blurHash: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+            aspectRatio: number | null;
+          } | null;
+        } | null;
+        source?: SanityAssetSourceData;
+      } | null;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string | null;
+      caption: string | null;
+      _type: "richImage";
+    } | null;
+    intro: string | null;
+    quote: string | null;
+    embed: string | null;
   }> | null;
   press: Array<{
     title: string | null;
@@ -1784,11 +1829,11 @@ declare module "@sanity/client" {
     "\n  *[_type == \"about\"][0]{\n    richText[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  }\n},\n    image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    imageText[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": ABOUT_QUERYResult;
     "\n  *[_type == \"siteSettings\"][0]{\n    mainMenu[]{\n      ...{\n  _key,\n  label,\n  linkType,\n  internalLink->{\n    _type,\n    _id,\n    title,\n    slug\n  },\n  externalLink\n}\n    },\n    footerMenu[]{\n      ...{\n  _key,\n  label,\n  linkType,\n  internalLink->{\n    _type,\n    _id,\n    title,\n    slug\n  },\n  externalLink\n}\n    },\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": SITE_SETTINGS_QUERYResult;
     "\n  *[_type == \"release\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": RELEASE_SLUGS_QUERYResult;
-    "\n  *[_type == \"release\"] | order(release_date desc){\n    _id,\n    title,\n    slug,\n    release_date,\n    cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    coverAlt{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    intro,\n    quote\n  }\n": RELEASES_QUERYResult;
-    "\n  *[_type == \"release\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    release_date,\n    cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    coverAlt{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    intro,\n    quote,\n    embed\n  }\n": RELEASE_BY_SLUG_QUERYResult;
+    "\n  *[_type == \"release\"] | order(release_date desc){\n    _id,\n    title,\n    slug,\n    release_date,\n    published,\n    cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    coverAlt{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    intro,\n    quote\n  }\n": RELEASES_QUERYResult;
+    "\n  *[_type == \"release\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    release_date,\n    published,\n    cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    coverAlt{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    intro,\n    quote,\n    embed\n  }\n": RELEASE_BY_SLUG_QUERYResult;
     "\n  *[_type == \"collection\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": COLLECTION_SLUGS_QUERYResult;
-    "\n  *[_type == \"collection\"] | order(_createdAt desc){\n    _id,\n    title,\n    slug,\n    hero{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    lines[]{\n      label,\n      value,\n      link\n    },\n    intro[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  }\n},\n    releases[]{\n      ...,\n      _type == \"reference\" => @->{\n        _id,\n        title,\n        slug,\n        release_date,\n        cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n      }\n    },\n    press[]{\n      ...{\n  title,\n  externalLink,\n  file{\n    asset->{\n      _id,\n      url,\n      originalFilename,\n      size,\n      mimeType\n    }\n  }\n}\n    }\n  }\n": COLLECTIONS_QUERYResult;
-    "\n  *[_type == \"collection\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    hero{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    lines[]{\n      label,\n      value,\n      link\n    },\n    intro[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    },\n    releases[]{\n      ...,\n      _type == \"reference\" => @->{\n        _id,\n        title,\n        slug,\n        release_date,\n        cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n      }\n    },\n    press[]{\n      ...{\n  title,\n  externalLink,\n  file{\n    asset->{\n      _id,\n      url,\n      originalFilename,\n      size,\n      mimeType\n    }\n  }\n}\n    }\n  }\n": COLLECTION_BY_SLUG_QUERYResult;
+    "\n  *[_type == \"collection\"] | order(_createdAt desc){\n    _id,\n    title,\n    slug,\n    hero{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    lines[]{\n      label,\n      value,\n      link\n    },\n    intro[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  }\n},\n    releases[]{\n      ...,\n      _type == \"reference\" => @->{\n        _id,\n        title,\n        slug,\n        release_date,\n        published,\n        cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n      }\n    },\n    press[]{\n      ...{\n  title,\n  externalLink,\n  file{\n    asset->{\n      _id,\n      url,\n      originalFilename,\n      size,\n      mimeType\n    }\n  }\n}\n    }\n  }\n": COLLECTIONS_QUERYResult;
+    "\n  *[_type == \"collection\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    hero{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    lines[]{\n      label,\n      value,\n      link\n    },\n    intro[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    },\n    releases[]{\n      ...,\n      _type == \"reference\" => @->{\n        _id,\n        title,\n        slug,\n        release_date,\n        published,\n        cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n        coverAlt{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n        intro,\n        quote,\n        embed\n      }\n    },\n    press[]{\n      ...{\n  title,\n  externalLink,\n  file{\n    asset->{\n      _id,\n      url,\n      originalFilename,\n      size,\n      mimeType\n    }\n  }\n}\n    }\n  }\n": COLLECTION_BY_SLUG_QUERYResult;
     "\n  *[_type == \"project\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": PROJECT_SLUGS_QUERYResult;
     "\n  *[_type == \"project\"] | order(_createdAt desc){\n    _id,\n    title,\n    slug,\n    lines[]{\n      label,\n      value,\n      link\n    },\n    columns[]{\n  _key,\n  content[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  }\n}\n},\n    gallery[]{\n      ...{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    },\n    images[]{\n      ...{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    },\n    press[]{\n      ...{\n  title,\n  externalLink,\n  file{\n    asset->{\n      _id,\n      url,\n      originalFilename,\n      size,\n      mimeType\n    }\n  }\n}\n    }\n  }\n": PROJECTS_QUERYResult;
     "\n  *[_type == \"project\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    lines[]{\n      label,\n      value,\n      link\n    },\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    },\n    columns[]{\n  _key,\n  content[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  }\n}\n},\n    gallery[]{\n      ...{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    },\n    images[]{\n      ...{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    },\n    press[]{\n      ...{\n  title,\n  externalLink,\n  file{\n    asset->{\n      _id,\n      url,\n      originalFilename,\n      size,\n      mimeType\n    }\n  }\n}\n    }\n  }\n": PROJECT_BY_SLUG_QUERYResult;
