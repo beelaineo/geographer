@@ -101,7 +101,7 @@ export default async function AboutPage() {
                         className="block cursor-zoom-in"
                         aria-label="Expand image details"
                       >
-                        <div className="overflow-hidden w-full md:w-3/4 lg:w-1/2 mx-auto">
+                        <div className="overflow-hidden w-full md:w-3/4 lg:w-1/2 mx-auto p-10 md:p-5">
                           <Image
                             src={imageUrl}
                             alt={imageWithAsset.alt ?? "About page image"}

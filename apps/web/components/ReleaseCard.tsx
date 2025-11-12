@@ -242,7 +242,7 @@ export default function ReleaseCard({
           .filter(Boolean)
           .join(" ")}
       >
-        <span className="text-lg md:text-2xl leading-relaxed">
+        <span className="text-lg md:text-xl leading-relaxed">
           {release.title ?? "Untitled release"}
           {release.intro && isExpanded && !isClosing && (
             <motion.span
@@ -255,7 +255,7 @@ export default function ReleaseCard({
           )}
         </span>
         {releaseDate && !isExpanded ? (
-          <span className="text-sm md:text-lg">
+          <span className="text-sm md:text-base">
             {new Intl.DateTimeFormat("en-US", {
               month: "long",
               day: "numeric",
@@ -324,9 +324,11 @@ export default function ReleaseCard({
           variants={quoteVariants}
           initial="hidden"
           animate="visible"
-          className="text-base md:text-lg text-[#771214] md:max-w-[25vw] md:absolute md:-right-[33vw] md:top-1/2 md:-translate-y-1/2 px-4 md:px-0"
+          className="relative text-base md:text-lg text-[#771214] md:max-w-[25vw] md:absolute md:-right-[33vw] top-5 md:top-1/2 md:-translate-y-1/2 px-10 md:px-0"
         >
+          <span className="absolute -top-2 left-4 md:-left-5 text-4xl leading-none text-[#771214]">&ldquo;</span>
           {release.quote}
+          <span className="absolute -bottom-4 right-4 md:-right-5 text-4xl leading-none text-[#771214]">&rdquo;</span>
         </motion.blockquote>
       )}
     </article>

@@ -59,30 +59,34 @@ export function SignUpForm() {
       <label htmlFor="email" className="sr-only">
         Email address
       </label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        required
-        value={email}
-        onChange={(event) => {
-          setEmail(event.target.value);
-          if (errorMessage) {
-            resetMessages();
-          }
-        }}
-        placeholder="Email"
-        className="w-full md:w-auto border-0 border-b border-black focus:outline-none focus:border-black bg-transparent px-0 py-1"
-        aria-invalid={errorMessage ? "true" : "false"}
-        aria-describedby="newsletter-feedback"
-      />
-      <button
-        type="submit"
-        className="appearance-none bg-transparent border-0 p-0 m-0 cursor-pointer text-black hover:underline uppercase disabled:cursor-not-allowed disabled:opacity-60"
-        disabled={status === "submitting"}
-      >
-        {status === "submitting" ? "Submitting…" : "Submit"}
-      </button>
+      {status !== "success" && status !== "error" && (
+      <>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          value={email}
+          onChange={(event) => {
+            setEmail(event.target.value);
+            if (errorMessage) {
+              resetMessages();
+            }
+          }}
+          placeholder="Email"
+          className="w-full md:w-auto border-0 border-b border-black focus:outline-none focus:border-black bg-transparent px-0 py-1"
+          aria-invalid={errorMessage ? "true" : "false"}
+          aria-describedby="newsletter-feedback"
+        />
+        <button
+          type="submit"
+          className="appearance-none bg-transparent border-0 p-0 m-0 cursor-pointer text-black hover:underline uppercase disabled:cursor-not-allowed disabled:opacity-60"
+          disabled={status === "submitting"}
+        >
+          {status === "submitting" ? "Submitting…" : "Submit"}
+        </button>
+      </>
+      )}
       <span
         id="newsletter-feedback"
         role={errorMessage ? "alert" : undefined}

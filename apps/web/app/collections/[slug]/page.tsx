@@ -145,6 +145,29 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
                     </dd>
                   </div>
                 ))}
+                {collection.press?.length ? (
+                  <div className="col-span-2 space-y-1">
+                    <dt className="uppercase text-[10px] tracking-[0.15em]">Press</dt>
+                    <dd className="text-sm space-x-1">
+                      {collection.press?.map((item, index) => {
+                        const url = item.file?.asset?.url || item.externalLink;
+                        return url ? (
+                          <span key={index}>
+                            <Link href={url} target="_blank" rel="noopener noreferrer">
+                              {item.title}
+                            </Link>
+                            {index < (collection.press?.length ?? 0) - 1 && ", "}
+                          </span>
+                        ) : (
+                          <span key={index}>
+                            {item.title}
+                            {index < (collection.press?.length ?? 0) - 1 && ", "}
+                          </span>
+                        );
+                      })}
+                    </dd>
+                  </div>
+                ) : null}
               </dl>
             ) : null}
           </div>
