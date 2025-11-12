@@ -40,6 +40,8 @@ export default function Footer({
           {footerMenu.map((item, index) => (
             <Link
               key={item._key ?? `${item.label ?? "footer-item"}-${index}`}
+              target={item.linkType === "external" ? "_blank" : undefined}
+              rel={item.linkType === "external" ? "noopener noreferrer" : undefined}
               href={
                 item.linkType === "internal"
                   ? resolveProductionUrl(item.internalLink)

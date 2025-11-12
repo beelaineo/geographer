@@ -34,8 +34,12 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage() {
   const { isEnabled } = await draftMode();
   const data = await loadHomepage(isEnabled);
-  const firstVideo = data?.videos?.[0];
-  const playbackId = firstVideo?.asset?.playbackId;
+  
+  // Select a random video from the array
+  const videos = data?.videos ?? [];
+  const randomIndex = videos.length > 0 ? Math.floor(Math.random() * videos.length) : 0;
+  const randomVideo = videos[randomIndex];
+  const playbackId = randomVideo?.asset?.playbackId;
 
   return (
     <main className="px-6 md:px-12 flex flex-col justify-center items-center min-h-[100dvh]">
