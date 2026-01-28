@@ -47,7 +47,7 @@ export default async function HomePage() {
   return (
     <main className="px-6 md:px-12 flex flex-col justify-center items-center min-h-[100dvh]">
       {playbackId ? (
-        <section className="flex justify-center items-center">
+        <section className="flex justify-center items-center w-full">
           <AutoplayVideo
             playbackId={playbackId}
             className="block w-full md:w-1/2 h-auto bg-black"
