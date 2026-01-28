@@ -7,6 +7,9 @@ import { fetchSiteSettings } from "../lib/siteSettings";
 import { fetchSanityQuery } from "../lib/sanity.fetch";
 import { buildMetadata, type SanitySeoPayload } from "../lib/seo";
 
+// Force dynamic rendering to ensure random video selection on each request
+export const dynamic = 'force-dynamic';
+
 async function loadHomepage(previewEnabled: boolean) {
   return fetchSanityQuery<HOMEPAGE_QUERYResult>(HOMEPAGE_QUERY, {
     tags: ["sanity:homepage"],

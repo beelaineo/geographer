@@ -193,7 +193,10 @@ export async function POST(request: NextRequest) {
   const tagsArray = Array.from(tagsToRevalidate);
   console.log('[Revalidate] Revalidating tags:', tagsArray);
   
-  tagsToRevalidate.forEach((tag) => revalidateTag(tag));
+  // In Next.js 16+, revalidateTag requires a second argument (options)
+  for (const tag of tagsToRevalidate) {
+    await revalidateTag(tag, {});
+  }
   
   console.log('[Revalidate] SUCCESS: Revalidation complete');
   return NextResponse.json<RevalidationResult>({
