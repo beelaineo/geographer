@@ -26,43 +26,45 @@ export const collectionType = defineType({
     defineField({
       name: "hero",
       title: "Hero",
+      description: "Legacy field retained temporarily during redesign transition.",
       type: "richImage",
-      validation: (rule) => rule.required()
     }),
-   defineField({
-    name: "lines",
-    title: "Lines",
-    type: "array",
-    of: [
-      defineArrayMember({
-        name: "line",
-        type: "object",
-        fields: [
-          defineField({
-            name: "label",
-            title: "Label",
-            type: "string",
-            validation: (rule) => rule.required()
-          }),
-          defineField({
-            name: "value",
-            title: "Value",
-            type: "string",
-            validation: (rule) => rule.required()
-          }),
-          defineField({
-            name: "link",
-            title: "Link (optional)",
-            type: "url",
-          })
-        ]
-      })
-    ]
-   }),
+    defineField({
+      name: "lines",
+      title: "Lines",
+      description: "Legacy field retained temporarily during redesign transition.",
+      type: "array",
+      of: [
+        defineArrayMember({
+          name: "line",
+          type: "object",
+          fields: [
+            defineField({
+              name: "label",
+              title: "Label",
+              type: "string",
+              validation: (rule) => rule.required()
+            }),
+            defineField({
+              name: "value",
+              title: "Value",
+              type: "string",
+              validation: (rule) => rule.required()
+            }),
+            defineField({
+              name: "link",
+              title: "Link (optional)",
+              type: "url"
+            })
+          ]
+        })
+      ]
+    }),
     defineField({
       name: "intro",
       title: "Intro",
-      type: "richText"
+      type: "richText",
+      validation: (rule) => rule.required()
     }),
     defineField({
       name: "releases",
@@ -73,13 +75,21 @@ export const collectionType = defineType({
           type: "reference",
           to: [{ type: "release" }]
         })
-      ]
+      ],
+      validation: (rule) => rule.required().min(1)
     }),
     defineField({
       name: "press",
       title: "Press",
+      description: "Legacy field retained temporarily during redesign transition.",
       type: "array",
       of: [defineArrayMember({ type: "pressItem" })]
+    }),
+    defineField({
+      name: "seo",
+      title: "SEO",
+      type: "seo",
+      validation: (rule) => rule.required()
     })
   ],
   preview: {

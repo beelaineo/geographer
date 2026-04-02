@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { internalLinkTargets } from "./internalLinkTargets";
 
 type PortableTextSpan = {
   _type?: string;
@@ -9,14 +10,6 @@ type PortableTextBlock = {
   _type?: string;
   children?: PortableTextSpan[];
 };
-
-const internalLinkTargets = [
-  { type: "about" },
-  { type: "homepage" },
-  { type: "release" },
-  { type: "collection" },
-  { type: "project" }
-];
 
 const richTextDefinition = {
   name: "richText",

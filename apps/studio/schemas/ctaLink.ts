@@ -1,9 +1,10 @@
 import { defineField, defineType } from "sanity";
+
 import { internalLinkTargets } from "./internalLinkTargets";
 
-export const menuItemType = defineType({
-  name: "menuItem",
-  title: "Menu Item",
+export const ctaLinkType = defineType({
+  name: "ctaLink",
+  title: "CTA Link",
   type: "object",
   fields: [
     defineField({
@@ -69,16 +70,13 @@ export const menuItemType = defineType({
       externalLink: "externalLink"
     },
     prepare({ title, linkType, internalTitle, externalLink }) {
-      const subtitle =
-        linkType === "external"
-          ? externalLink
-          : internalTitle || "Internal link";
-
       return {
         title,
-        subtitle
+        subtitle:
+          linkType === "external"
+            ? externalLink || "External link"
+            : internalTitle || "Internal link"
       };
     }
   }
 });
-

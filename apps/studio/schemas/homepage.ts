@@ -8,23 +8,22 @@ export const homepageType = defineType({
   icon: RiHomeSmile2Line,
   fields: [
     defineField({
-      name: "title",
-      title: "Title",
-      type: "string",
-      validation: (rule) => rule.required().min(1)
-    }),
-    defineField({
-      name: "videos",
-      title: "Videos",
+      name: "content",
+      title: "Content Blocks",
       type: "array",
-      of: [defineArrayMember({ type: "mux.video" })],
-      validation: (rule) => rule.unique()
+      of: [
+        defineArrayMember({ type: "homepageVideoBanner" }),
+        defineArrayMember({ type: "homepageFeaturedInterview" }),
+        defineArrayMember({ type: "homepageTextBlock" }),
+        defineArrayMember({ type: "homepageFeaturedReleases" })
+      ],
+      validation: (rule) => rule.required().min(1)
     }),
     defineField({
       name: "seo",
       title: "SEO",
       type: "seo",
       validation: (rule) => rule.required()
-    }),
+    })
   ]
 });
