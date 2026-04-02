@@ -9,10 +9,14 @@ import { homepageType } from "./schemas/homepage";
 import { siteSettingsType } from "./schemas/siteSettings";
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID;
-const dataset = process.env.SANITY_STUDIO_DATASET || "production";
+const dataset = process.env.SANITY_STUDIO_DATASET;
 
 if (!projectId) {
   throw new Error("Missing SANITY_STUDIO_PROJECT_ID environment variable");
+}
+
+if (!dataset) {
+  throw new Error("Missing SANITY_STUDIO_DATASET environment variable");
 }
 
 const singletonTypes = ["about", "homepage", "siteSettings"] as const;
