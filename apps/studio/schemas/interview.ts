@@ -1,11 +1,11 @@
-import { defineField, defineType } from "sanity";
-import { RiAlbumLine } from "react-icons/ri";
+import { defineArrayMember, defineField, defineType } from "sanity";
+import { RiQuestionAnswerLine } from "react-icons/ri";
 
-export const releaseType = defineType({
-  name: "release",
-  title: "Release",
+export const interviewType = defineType({
+  name: "interview",
+  title: "Interview",
   type: "document",
-  icon: RiAlbumLine,
+  icon: RiQuestionAnswerLine,
   fields: [
     defineField({
       name: "title",
@@ -26,7 +26,6 @@ export const releaseType = defineType({
     defineField({
       name: "published",
       title: "Published?",
-      description: "If published, the release will be active on the website.",
       type: "boolean",
       initialValue: false,
       validation: (rule) => rule.required()
@@ -38,33 +37,51 @@ export const releaseType = defineType({
       validation: (rule) => rule.required()
     }),
     defineField({
+      name: "authors",
+      title: "Author(s)",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "reference",
+          to: [{ type: "contributor" }]
+        })
+      ],
+      validation: (rule) => rule.required().min(1)
+    }),
+    defineField({
+      name: "authorInitials",
+      title: "Author Initials",
+      description: "Initials used as shorthand in interview formatting.",
+      type: "string",
+      validation: (rule) => rule.required().max(20)
+    }),
+    defineField({
       name: "cover",
       title: "Cover",
       type: "richImage",
       validation: (rule) => rule.required()
     }),
     defineField({
-      name: "coverAlt",
-      title: "Cover (Alt)",
-      type: "richImage"
+      name: "backgroundColor",
+      title: "Background Color",
+      type: "color"
     }),
     defineField({
-      name: "intro",
-      title: "Intro",
-      type: "richText"
-    }),
-    defineField({
-      name: "embed",
-      title: "Embed",
-      description: "Paste iframe code to embed external media.",
+      name: "quote",
+      title: "Quote",
       type: "text",
-      rows: 4
+      rows: 3
+    }),
+    defineField({
+      name: "body",
+      title: "Body",
+      type: "interviewBody",
+      validation: (rule) => rule.required()
     }),
     defineField({
       name: "seo",
       title: "SEO",
-      type: "seo",
-      validation: (rule) => rule.required()
+      type: "seo"
     })
   ],
   preview: {
@@ -75,11 +92,10 @@ export const releaseType = defineType({
     },
     prepare({ title, date, media }) {
       return {
-        title,
-        subtitle: date ? new Date(date).toLocaleDateString() : undefined,
+        title: title || "Untitled interview",
+        subtitle: date ? new Date(date).toLocaleDateString() : "No release date",
         media
       };
     }
   }
 });
-
