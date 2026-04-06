@@ -136,6 +136,14 @@ export async function POST(request: NextRequest) {
       tagsToRevalidate.add("sanity:about");
       break;
     }
+    case "clubEden": {
+      tagsToRevalidate.add("sanity:clubEden");
+      break;
+    }
+    case "reclus": {
+      tagsToRevalidate.add("sanity:reclus");
+      break;
+    }
     case "collection": {
       tagsToRevalidate.add("sanity:collection:list");
       if (primarySlug) {
@@ -147,6 +155,13 @@ export async function POST(request: NextRequest) {
       tagsToRevalidate.add("sanity:project:list");
       if (primarySlug) {
         tagsToRevalidate.add(`sanity:project:${primarySlug}`);
+      }
+      break;
+    }
+    case "interview": {
+      tagsToRevalidate.add("sanity:interview:list");
+      if (primarySlug) {
+        tagsToRevalidate.add(`sanity:interview:${primarySlug}`);
       }
       break;
     }

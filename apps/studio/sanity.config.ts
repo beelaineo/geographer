@@ -13,14 +13,9 @@ import { homepageType } from "./schemas/homepage";
 import { siteSettingsType } from "./schemas/siteSettings";
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID;
-const dataset = process.env.SANITY_STUDIO_DATASET;
 
 if (!projectId) {
   throw new Error("Missing SANITY_STUDIO_PROJECT_ID environment variable");
-}
-
-if (!dataset) {
-  throw new Error("Missing SANITY_STUDIO_DATASET environment variable");
 }
 
 const singletonTypes = [
@@ -92,50 +87,85 @@ const singletonItems = (S: StructureBuilder) => [
     )
 ];
 
-export default defineConfig({
-  name: "default",
-  title: "Geographer Studio",
-  projectId,
-  dataset,
-  plugins: [
-    deskTool({
-      structure: (S) =>
-        S.list()
-          .title("Content")
-          .items([
-            ...singletonItems(S),
-            S.divider(),
-            ...S.documentTypeListItems().filter((listItem) => {
-              const id = listItem.getId();
-              if (!id) {
-                return true;
-              }
-              return !singletonSet.has(id as SingletonType);
-            })
-          ])
-    }),
-    visionTool(),
-    colorInput(),
-    muxInput()
-  ],
-  schema: {
-    types: schemaTypes as SchemaTypeDefinition[]
+const sharedPlugins = [
+  deskTool({
+    structure: (S) =>
+      S.list()
+        .title("Content")
+        .items([
+          ...singletonItems(S),
+          S.divider(),
+          ...S.documentTypeListItems().filter((listItem) => {
+            const id = listItem.getId();
+            if (!id) {
+              return true;
+            }
+            return !singletonSet.has(id as SingletonType);
+          })
+        ])
+  }),
+  visionTool(),
+  colorInput(),
+  muxInput()
+];
+
+const sharedSchema = {
+  types: schemaTypes as SchemaTypeDefinition[]
+};
+
+export default defineConfig([
+  {
+    name: "redesign",
+    title: "Geographer · Redesign",
+    subtitle: "Default workspace",
+    basePath: "/redesign",
+    projectId,
+    dataset: "redesign",
+    plugins: sharedPlugins,
+    schema: sharedSchema,
+    document: {
+      newDocumentOptions: (prev, { creationContext }) => {
+        if (creationContext.type === "global") {
+          return prev.filter(
+            (templateItem) =>
+              templateItem.templateId && !singletonSet.has(templateItem.templateId as SingletonType)
+          );
+        }
+        return prev;
+      },
+      actions: (prev, { schemaType }) => {
+        if (singletonSet.has(schemaType as SingletonType)) {
+          return prev.filter(({ action }) => action !== "duplicate");
+        }
+        return prev;
+      }
+    }
   },
-  document: {
-    newDocumentOptions: (prev, { creationContext }) => {
-      if (creationContext.type === "global") {
-        return prev.filter(
-          (templateItem) =>
-            templateItem.templateId && !singletonSet.has(templateItem.templateId as SingletonType)
-        );
+  {
+    name: "production",
+    title: "Geographer · Production",
+    subtitle: "Live site dataset",
+    basePath: "/production",
+    projectId,
+    dataset: "production",
+    plugins: sharedPlugins,
+    schema: sharedSchema,
+    document: {
+      newDocumentOptions: (prev, { creationContext }) => {
+        if (creationContext.type === "global") {
+          return prev.filter(
+            (templateItem) =>
+              templateItem.templateId && !singletonSet.has(templateItem.templateId as SingletonType)
+          );
+        }
+        return prev;
+      },
+      actions: (prev, { schemaType }) => {
+        if (singletonSet.has(schemaType as SingletonType)) {
+          return prev.filter(({ action }) => action !== "duplicate");
+        }
+        return prev;
       }
-      return prev;
-    },
-    actions: (prev, { schemaType }) => {
-      if (singletonSet.has(schemaType as SingletonType)) {
-        return prev.filter(({ action }) => action !== "duplicate");
-      }
-      return prev;
     }
   }
-});
+]);

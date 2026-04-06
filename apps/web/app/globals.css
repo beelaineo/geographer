@@ -14,5 +14,13 @@
   body {
     @apply min-h-screen bg-white font-serif antialiased;
   }
+
+  html.releases-route {
+    @apply bg-gray-300;
+  }
+
+  html.releases-route body {
+    @apply bg-gray-300;
+  }
 }
 

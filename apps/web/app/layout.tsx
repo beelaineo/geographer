@@ -8,6 +8,24 @@ import LayoutShell from "../components/LayoutShell";
 import { fetchSiteSettings } from "../lib/siteSettings";
 import { buildMetadata } from "../lib/seo";
 
+const univers = localFont({
+  src: [
+    {
+      path: "../assets/fonts/UniversLTStd.woff2",
+      weight: "400",
+      style: "normal"
+    },
+    {
+      path: "../assets/fonts/UniversLTStd-Bold.woff2",
+      weight: "700",
+      style: "normal"
+    }
+  ],
+  variable: "--font-univers",
+  display: "swap",
+  adjustFontFallback: "Arial"
+});
+
 const junicode = localFont({
   src: [
     {
@@ -45,8 +63,8 @@ export default async function RootLayout({
   const siteSettings = await fetchSiteSettings(isEnabled);
 
   return (
-    <html lang="en" className={junicode.variable}>
-      <body className="font-serif antialiased">
+    <html lang="en" className={`${junicode.variable} ${univers.variable}`}>
+      <body className="font-sans antialiased">
         <LayoutShell siteSettings={siteSettings}>{children}</LayoutShell>
       </body>
     </html>

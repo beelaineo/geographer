@@ -49,6 +49,12 @@ export const releaseType = defineType({
       type: "richImage"
     }),
     defineField({
+      name: "backgroundColor",
+      title: "List hover color",
+      description: "Row background on hover (e.g. Club Eden release list).",
+      type: "color"
+    }),
+    defineField({
       name: "intro",
       title: "Intro",
       type: "richText"

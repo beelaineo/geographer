@@ -72,13 +72,13 @@ const components: PortableTextComponents = {
   },
   block: {
     normal: ({ children }: { children?: ReactNode }) => (
-      <p className="text-base leading-relaxed md:text-lg">{children}</p>
+      <p className="text-base leading-relaxed md:text-2xl">{children}</p>
     ),
     h2: ({ children }: { children?: ReactNode }) => (
-      <h2 className="text-lg font-semibold leading-snug md:text-xl">{children}</h2>
+      <h2 className="text-lg font-semibold leading-snug md:text-2xl">{children}</h2>
     ),
     h3: ({ children }: { children?: ReactNode }) => (
-      <h3 className="text-base font-semibold leading-snug md:text-lg">{children}</h3>
+      <h3 className="text-base font-semibold leading-snug md:text-2xl">{children}</h3>
     ),
     blockquote: ({ children }: { children?: ReactNode }) => (
       <blockquote className="border-l-2 border-black pl-4 italic">{children}</blockquote>
@@ -105,7 +105,7 @@ const components: PortableTextComponents = {
   }
 };
 
-export default function RichText({ value, className }: RichTextProps) {
+export default function HomepageRichText({ value, className }: RichTextProps) {
   if (!value?.length) {
     return null;
   }

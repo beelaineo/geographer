@@ -21,6 +21,8 @@ declare global {
 type AutoplayVideoProps = {
   playbackId: string;
   className?: string;
+  /** Shown as aria-label for the video element (e.g. CMS media description). */
+  accessibilityLabel?: string;
 };
 
 const RESUME_ATTEMPT_DELAYS = [0, 150, 300, 600, 1000];
@@ -42,7 +44,11 @@ type HlsConstructor = {
   };
 };
 
-export default function AutoplayVideo({ playbackId, className }: AutoplayVideoProps) {
+export default function AutoplayVideo({
+  playbackId,
+  className,
+  accessibilityLabel
+}: AutoplayVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const lastPlaybackTimeRef = useRef(0);
   const wasFullscreenRef = useRef(false);
@@ -311,58 +317,60 @@ export default function AutoplayVideo({ playbackId, className }: AutoplayVideoPr
   }, []);
 
   const handleClick = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) {
-      return;
-    }
+    return;
 
-    const enterFullscreen = () => {
-      if (video.requestFullscreen) {
-        video
-          .requestFullscreen()
-          .catch(() => {
-            // ignore failures (user gesture requirement, etc.)
-          });
-        return true;
-      }
+    // const video = videoRef.current;
+    // if (!video) {
+    //   return;
+    // }
 
-      if (typeof video.webkitEnterFullscreen === "function") {
-        try {
-          video.webkitEnterFullscreen();
-          return true;
-        } catch {
-          return false;
-        }
-      }
+    // const enterFullscreen = () => {
+    //   if (video.requestFullscreen) {
+    //     video
+    //       .requestFullscreen()
+    //       .catch(() => {
+    //         // ignore failures (user gesture requirement, etc.)
+    //       });
+    //     return true;
+    //   }
 
-      if (typeof video.webkitRequestFullscreen === "function") {
-        video.webkitRequestFullscreen().catch(() => {});
-        return true;
-      }
+    //   if (typeof video.webkitEnterFullscreen === "function") {
+    //     try {
+    //       video.webkitEnterFullscreen();
+    //       return true;
+    //     } catch {
+    //       return false;
+    //     }
+    //   }
 
-      if (typeof video.mozRequestFullScreen === "function") {
-        video.mozRequestFullScreen().catch(() => {});
-        return true;
-      }
+    //   if (typeof video.webkitRequestFullscreen === "function") {
+    //     video.webkitRequestFullscreen().catch(() => {});
+    //     return true;
+    //   }
 
-      if (typeof video.msRequestFullscreen === "function") {
-        video.msRequestFullscreen().catch(() => {});
-        return true;
-      }
+    //   if (typeof video.mozRequestFullScreen === "function") {
+    //     video.mozRequestFullScreen().catch(() => {});
+    //     return true;
+    //   }
 
-      return false;
-    };
+    //   if (typeof video.msRequestFullscreen === "function") {
+    //     video.msRequestFullscreen().catch(() => {});
+    //     return true;
+    //   }
 
-    const currentFullscreen = document.fullscreenElement;
-    if (currentFullscreen === video) {
-      lastPlaybackTimeRef.current = video.currentTime;
-      document.exitFullscreen?.().catch(() => {});
-      return;
-    }
+    //   return false;
+    // };
 
-    if (enterFullscreen()) {
-      wasFullscreenRef.current = true;
-    }
+    // const currentFullscreen = document.fullscreenElement;
+    // if (currentFullscreen === video) {
+    //   lastPlaybackTimeRef.current = video.currentTime;
+    //   document.exitFullscreen?.().catch(() => {});
+    //   return;
+    // }
+
+    // if (enterFullscreen()) {
+    //   wasFullscreenRef.current = true;
+    // }
   }, []);
 
   return (
@@ -375,6 +383,7 @@ export default function AutoplayVideo({ playbackId, className }: AutoplayVideoPr
       controls={false}
       preload="auto"
       poster={posterUrl}
+      aria-label={accessibilityLabel ?? undefined}
       className={["cursor-pointer", className].filter(Boolean).join(" ")}
       onClick={handleClick}
     >

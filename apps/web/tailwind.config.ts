@@ -9,6 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
+        sans: [
+          "var(--font-univers)",
+          "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "\"Segoe UI\"",
+          "sans-serif"
+        ],
         serif: [
           "var(--font-junicode)",
           "system-ui",

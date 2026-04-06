@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 
+import HomepageBlocks from "../components/HomepageBlocks";
 import { HOMEPAGE_QUERY, type HOMEPAGE_QUERYResult } from "../lib/queries";
-import AutoplayVideo from "../components/AutoplayVideo";
 import { fetchSiteSettings } from "../lib/siteSettings";
 import { fetchSanityQuery } from "../lib/sanity.fetch";
 import { buildMetadata, type SanitySeoPayload } from "../lib/seo";
-
-// Force dynamic rendering to ensure random video selection on each request
-export const dynamic = 'force-dynamic';
 
 async function loadHomepage(previewEnabled: boolean) {
   return fetchSanityQuery<HOMEPAGE_QUERYResult>(HOMEPAGE_QUERY, {
@@ -30,30 +27,17 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({
     seo: pageSeo,
     siteSeo,
-    title: data?.title ?? "Geographer"
+    title: data?.seo?.title ?? siteSettings?.seo?.title ?? "Geographer"
   });
 }
 
 export default async function HomePage() {
   const { isEnabled } = await draftMode();
   const data = await loadHomepage(isEnabled);
-  
-  // Select a random video from the array
-  const videos = data?.videos ?? [];
-  const randomIndex = videos.length > 0 ? Math.floor(Math.random() * videos.length) : 0;
-  const randomVideo = videos[randomIndex];
-  const playbackId = randomVideo?.asset?.playbackId;
 
   return (
-    <main className="px-6 md:px-12 flex flex-col justify-center items-center min-h-[100dvh]">
-      {playbackId ? (
-        <section className="flex justify-center items-center w-full">
-          <AutoplayVideo
-            playbackId={playbackId}
-            className="block w-full md:w-1/2 h-auto bg-black"
-          />
-        </section>
-      ) : null}
-    </main>
+    <div className="flex w-full flex-col">
+      <HomepageBlocks blocks={data?.content} />
+    </div>
   );
 }

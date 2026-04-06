@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import type { PortableTextBlock } from "@portabletext/types";
 import { motion } from "framer-motion";
 
 import { urlForImageWithWidth } from "../lib/sanityImage";
 import type { COLLECTION_BY_SLUG_QUERYResult } from "../types/sanity.generated";
+import RichText from "./RichText";
 
 type ReleaseImage = {
   alt?: string | null;
@@ -16,11 +18,11 @@ type Release = NonNullable<
 >[number] & {
   cover?: ReleaseImage | null;
   coverAlt?: ReleaseImage | null;
-  intro?: string | null;
-  quote?: string | null;
-  embed?: string | null;
-  release_date?: string | null;
 };
+
+function portableTextHasContent(value: unknown): value is PortableTextBlock[] {
+  return Array.isArray(value) && value.length > 0;
+}
 
 type ReleaseCardProps = {
   release: Release | null | undefined;
@@ -62,7 +64,10 @@ export default function ReleaseCard({
   const isPublished = release.published ?? false;
 
   const hasAdditionalContent = Boolean(
-    release.intro || release.quote || release.embed || coverAltImageUrl
+    portableTextHasContent(release.intro) ||
+      release.quote ||
+      release.embed ||
+      coverAltImageUrl
   );
 
   const handleClick = () => {
@@ -244,16 +249,17 @@ export default function ReleaseCard({
       >
         <span className="text-lg md:text-xl leading-relaxed">
           {release.title ?? "Untitled release"}
-          {release.intro && isExpanded && !isClosing && (
-            <motion.span
-              variants={introVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              {" "}{release.intro}
-            </motion.span>
-          )}
         </span>
+        {portableTextHasContent(release.intro) && isExpanded && !isClosing ? (
+          <motion.div
+            variants={introVariants}
+            initial="hidden"
+            animate="visible"
+            className="mt-2 text-base leading-relaxed md:text-lg"
+          >
+            <RichText value={release.intro} />
+          </motion.div>
+        ) : null}
         {releaseDate && !isExpanded ? (
           <span className="text-sm md:text-base">
             {new Intl.DateTimeFormat("en-US", {
