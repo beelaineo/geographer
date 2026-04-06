@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import type { PortableTextBlock } from "@portabletext/types";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
+import { sanityTag } from "../../../lib/sanityCacheTags";
 import {
   PROJECT_BY_SLUG_QUERY,
   PROJECT_SLUGS_QUERY,
@@ -22,14 +23,14 @@ import { buildMetadata, type SanitySeoPayload } from "../../../lib/seo";
 async function loadProject(slug: string, previewEnabled: boolean) {
   return fetchSanityQuery<PROJECT_BY_SLUG_QUERYResult>(PROJECT_BY_SLUG_QUERY, {
     params: { slug },
-    tags: [`sanity:project:${slug}`, "sanity:project:list"],
+    tags: [sanityTag.project(slug), sanityTag.projectList],
     preview: previewEnabled
   });
 }
 
 export async function generateStaticParams() {
   const slugs = await fetchSanityQuery<PROJECT_SLUGS_QUERYResult>(PROJECT_SLUGS_QUERY, {
-    tags: ["sanity:project:list"]
+    tags: [sanityTag.projectList]
   });
 
   return (slugs ?? [])

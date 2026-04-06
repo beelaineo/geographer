@@ -5,6 +5,7 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import RichText from "../../../components/RichText";
+import { sanityTag } from "../../../lib/sanityCacheTags";
 import { formatPublishDateMmDdYyyy } from "../../../lib/formatPublishDate";
 import {
   RELEASE_BY_SLUG_QUERY,
@@ -20,14 +21,14 @@ import { getImageDimensions, urlForImageWithWidth } from "../../../lib/sanityIma
 async function loadRelease(slug: string, previewEnabled: boolean) {
   return fetchSanityQuery<RELEASE_BY_SLUG_QUERYResult>(RELEASE_BY_SLUG_QUERY, {
     params: { slug },
-    tags: [`sanity:release:${slug}`, "sanity:release:list"],
+    tags: [sanityTag.release(slug), sanityTag.releaseList],
     preview: previewEnabled
   });
 }
 
 export async function generateStaticParams() {
   const rows = await fetchSanityQuery<RELEASE_SLUGS_QUERYResult>(RELEASE_SLUGS_QUERY, {
-    tags: ["sanity:release:list"]
+    tags: [sanityTag.releaseList]
   });
 
   return (rows ?? [])

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 
 import PlayTitleMetaList from "../../../components/PlayTitleMetaList";
+import { sanityTag } from "../../../lib/sanityCacheTags";
 import { formatInterviewLeadInitials } from "../../../lib/formatInterviewInitials";
 import { formatReleaseDateMmYyyy } from "../../../lib/formatPublishDate";
 import {
@@ -14,7 +15,7 @@ import { buildMetadata, type SanitySeoPayload } from "../../../lib/seo";
 
 async function loadPublishedInterviews(previewEnabled: boolean) {
   return fetchSanityQuery<PUBLISHED_INTERVIEWS_QUERYResult>(PUBLISHED_INTERVIEWS_QUERY, {
-    tags: ["sanity:interview:list"],
+    tags: [sanityTag.interviewList],
     preview: previewEnabled
   });
 }

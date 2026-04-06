@@ -4,6 +4,7 @@ import type { PortableTextBlock } from "@portabletext/types";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { draftMode } from "next/headers";
 
+import { sanityTag } from "../../lib/sanityCacheTags";
 import { ABOUT_QUERY, type ABOUT_QUERYResult } from "../../lib/queries";
 import RichText from "../../components/RichText";
 import { getImageDimensions, urlForImageWithWidth } from "../../lib/sanityImage";
@@ -32,7 +33,7 @@ type AboutImage = {
 
 async function loadAbout(previewEnabled: boolean) {
   return fetchSanityQuery<ABOUT_QUERYResult>(ABOUT_QUERY, {
-    tags: ["sanity:about"],
+    tags: [sanityTag.about],
     preview: previewEnabled
   });
 }

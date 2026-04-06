@@ -5,6 +5,7 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import InterviewBody from "../../../components/InterviewBody";
+import { sanityTag } from "../../../lib/sanityCacheTags";
 import { formatPublishDateMmDdYyyy } from "../../../lib/formatPublishDate";
 import {
   INTERVIEW_BY_SLUG_QUERY,
@@ -21,14 +22,14 @@ import { colorToCss } from "../../../lib/sanityColor";
 async function loadInterview(slug: string, previewEnabled: boolean) {
   return fetchSanityQuery<INTERVIEW_BY_SLUG_QUERYResult>(INTERVIEW_BY_SLUG_QUERY, {
     params: { slug },
-    tags: [`sanity:interview:${slug}`, "sanity:interview:list"],
+    tags: [sanityTag.interview(slug), sanityTag.interviewList],
     preview: previewEnabled
   });
 }
 
 export async function generateStaticParams() {
   const rows = await fetchSanityQuery<INTERVIEW_SLUGS_QUERYResult>(INTERVIEW_SLUGS_QUERY, {
-    tags: ["sanity:interview:list"]
+    tags: [sanityTag.interviewList]
   });
 
   return (rows ?? [])

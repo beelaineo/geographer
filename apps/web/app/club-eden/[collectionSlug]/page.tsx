@@ -6,6 +6,7 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import RichText from "../../../components/RichText";
+import { sanityTag } from "../../../lib/sanityCacheTags";
 import { urlForImageWithWidth } from "../../../lib/sanityImage";
 import {
   CLUB_EDEN_COLLECTION_SLUGS_QUERY,
@@ -39,14 +40,14 @@ function isGridRelease(
 async function loadCollection(slug: string, previewEnabled: boolean) {
   return fetchSanityQuery<COLLECTION_BY_SLUG_QUERYResult>(COLLECTION_BY_SLUG_QUERY, {
     params: { slug },
-    tags: [`sanity:collection:${slug}`, "sanity:collection:list"],
+    tags: [sanityTag.collection(slug), sanityTag.collectionList],
     preview: previewEnabled
   });
 }
 
 export async function generateStaticParams() {
   const rows = await fetchSanityQuery<CLUB_EDEN_COLLECTION_SLUGS_QUERYResult>(CLUB_EDEN_COLLECTION_SLUGS_QUERY, {
-    tags: ["sanity:collection:list"]
+    tags: [sanityTag.collectionList]
   });
 
   return (rows ?? [])

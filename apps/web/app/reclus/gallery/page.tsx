@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { draftMode } from "next/headers";
 
+import { sanityTag } from "../../../lib/sanityCacheTags";
 import {
   PUBLISHED_INTERVIEWS_QUERY,
   type PUBLISHED_INTERVIEWS_QUERYResult
@@ -14,7 +15,7 @@ import { buildMetadata, type SanitySeoPayload } from "../../../lib/seo";
 
 async function loadPublishedInterviews(previewEnabled: boolean) {
   return fetchSanityQuery<PUBLISHED_INTERVIEWS_QUERYResult>(PUBLISHED_INTERVIEWS_QUERY, {
-    tags: ["sanity:interview:list"],
+    tags: [sanityTag.interviewList],
     preview: previewEnabled
   });
 }

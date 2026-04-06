@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 
 import { getClient } from "../../../lib/sanity.client";
+import { sanityTag } from "../../../lib/sanityCacheTags";
 
 const SANITY_REVALIDATE_SECRET = process.env.SANITY_REVALIDATE_SECRET;
 
@@ -129,46 +130,48 @@ export async function POST(request: NextRequest) {
 
   switch (docType) {
     case "homepage": {
-      tagsToRevalidate.add("sanity:homepage");
+      tagsToRevalidate.add(sanityTag.homepage);
       break;
     }
     case "about": {
-      tagsToRevalidate.add("sanity:about");
+      tagsToRevalidate.add(sanityTag.about);
       break;
     }
     case "clubEden": {
-      tagsToRevalidate.add("sanity:clubEden");
+      tagsToRevalidate.add(sanityTag.clubEden);
       break;
     }
     case "reclus": {
-      tagsToRevalidate.add("sanity:reclus");
+      tagsToRevalidate.add(sanityTag.reclus);
       break;
     }
     case "collection": {
-      tagsToRevalidate.add("sanity:collection:list");
+      tagsToRevalidate.add(sanityTag.collectionList);
       if (primarySlug) {
-        tagsToRevalidate.add(`sanity:collection:${primarySlug}`);
+        tagsToRevalidate.add(sanityTag.collection(primarySlug));
       }
       break;
     }
     case "project": {
-      tagsToRevalidate.add("sanity:project:list");
+      tagsToRevalidate.add(sanityTag.projectList);
       if (primarySlug) {
-        tagsToRevalidate.add(`sanity:project:${primarySlug}`);
+        tagsToRevalidate.add(sanityTag.project(primarySlug));
       }
       break;
     }
     case "interview": {
-      tagsToRevalidate.add("sanity:interview:list");
+      tagsToRevalidate.add(sanityTag.interviewList);
+      tagsToRevalidate.add(sanityTag.homepage);
       if (primarySlug) {
-        tagsToRevalidate.add(`sanity:interview:${primarySlug}`);
+        tagsToRevalidate.add(sanityTag.interview(primarySlug));
       }
       break;
     }
     case "release": {
-      tagsToRevalidate.add("sanity:release:list");
+      tagsToRevalidate.add(sanityTag.releaseList);
+      tagsToRevalidate.add(sanityTag.homepage);
       if (primarySlug) {
-        tagsToRevalidate.add(`sanity:release:${primarySlug}`);
+        tagsToRevalidate.add(sanityTag.release(primarySlug));
       }
 
       if (documentId) {
@@ -178,19 +181,23 @@ export async function POST(request: NextRequest) {
         ]);
 
         collectionSlugs.forEach((slug) => {
-          tagsToRevalidate.add("sanity:collection:list");
-          tagsToRevalidate.add(`sanity:collection:${slug}`);
+          tagsToRevalidate.add(sanityTag.collectionList);
+          tagsToRevalidate.add(sanityTag.collection(slug));
         });
 
         projectSlugs.forEach((slug) => {
-          tagsToRevalidate.add("sanity:project:list");
-          tagsToRevalidate.add(`sanity:project:${slug}`);
+          tagsToRevalidate.add(sanityTag.projectList);
+          tagsToRevalidate.add(sanityTag.project(slug));
         });
       }
       break;
     }
+    case "contributor": {
+      tagsToRevalidate.add(sanityTag.interviewList);
+      break;
+    }
     case "siteSettings": {
-      tagsToRevalidate.add("sanity:siteSettings");
+      tagsToRevalidate.add(sanityTag.siteSettings);
       break;
     }
     default: {

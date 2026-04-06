@@ -3,6 +3,7 @@ import type { PortableTextBlock } from "@portabletext/types";
 import { draftMode } from "next/headers";
 
 import ClubEdenReleaseList from "../../components/ClubEdenReleaseList";
+import { sanityTag } from "../../lib/sanityCacheTags";
 import RichText from "../../components/RichText";
 import {
   CLUB_EDEN_DOCUMENT_QUERY,
@@ -16,14 +17,14 @@ import { buildMetadata, type SanitySeoPayload } from "../../lib/seo";
 
 async function loadClubEdenDocument(previewEnabled: boolean) {
   return fetchSanityQuery<CLUB_EDEN_DOCUMENT_QUERYResult>(CLUB_EDEN_DOCUMENT_QUERY, {
-    tags: ["sanity:clubEden"],
+    tags: [sanityTag.clubEden],
     preview: previewEnabled
   });
 }
 
 async function loadReleases(previewEnabled: boolean) {
   return fetchSanityQuery<CLUB_EDEN_RELEASES_QUERYResult>(CLUB_EDEN_RELEASES_QUERY, {
-    tags: ["sanity:release:list", "sanity:collection:list"],
+    tags: [sanityTag.releaseList, sanityTag.collectionList],
     preview: previewEnabled
   });
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 
 import HomepageBlocks from "../components/HomepageBlocks";
+import { sanityTag } from "../lib/sanityCacheTags";
 import { HOMEPAGE_QUERY, type HOMEPAGE_QUERYResult } from "../lib/queries";
 import { fetchSiteSettings } from "../lib/siteSettings";
 import { fetchSanityQuery } from "../lib/sanity.fetch";
@@ -9,7 +10,7 @@ import { buildMetadata, type SanitySeoPayload } from "../lib/seo";
 
 async function loadHomepage(previewEnabled: boolean) {
   return fetchSanityQuery<HOMEPAGE_QUERYResult>(HOMEPAGE_QUERY, {
-    tags: ["sanity:homepage"],
+    tags: [sanityTag.homepage, sanityTag.releaseList, sanityTag.interviewList],
     preview: previewEnabled
   });
 }

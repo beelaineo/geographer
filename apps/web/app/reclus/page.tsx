@@ -4,6 +4,7 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import RichText from "../../components/RichText";
+import { sanityTag } from "../../lib/sanityCacheTags";
 import {
   RECLUS_DOCUMENT_QUERY,
   type RECLUS_DOCUMENT_QUERYResult
@@ -14,7 +15,7 @@ import { buildMetadata, type SanitySeoPayload } from "../../lib/seo";
 
 async function loadReclusDocument(previewEnabled: boolean) {
   return fetchSanityQuery<RECLUS_DOCUMENT_QUERYResult>(RECLUS_DOCUMENT_QUERY, {
-    tags: ["sanity:reclus"],
+    tags: [sanityTag.reclus],
     preview: previewEnabled
   });
 }
