@@ -11,6 +11,7 @@ import {
 import Footer from "./Footer";
 import Header from "./Header";
 import InterviewCloseBar from "./InterviewCloseBar";
+import NewsletterCloseBar from "./NewsletterCloseBar";
 import ReleaseCloseBar from "./ReleaseCloseBar";
 import { SiteSettingsProvider } from "./SiteSettingsProvider";
 import type { SITE_SETTINGS_QUERYResult } from "../types/sanity.generated";
@@ -55,19 +56,21 @@ export default function LayoutShell({
   const isAboutPage = pathname === "/about";
   const isReleasesRoute = !!pathname && pathname.includes("releases");
   const isInterviewDetailRoute = !!pathname && pathname.startsWith("/interviews/");
-  const hideSiteChrome = isReleasesRoute || isInterviewDetailRoute;
+  const isNewsletterRoute = pathname === "/newsletter";
+  const isOverlayRoute = isReleasesRoute || isNewsletterRoute;
+  const hideSiteChrome = isOverlayRoute || isInterviewDetailRoute;
 
   useEffect(() => {
-    document.documentElement.classList.toggle("releases-route", isReleasesRoute);
+    document.documentElement.classList.toggle("releases-route", isOverlayRoute);
     return () => {
       document.documentElement.classList.remove("releases-route");
     };
-  }, [isReleasesRoute]);
+  }, [isOverlayRoute]);
 
   return (
     <SiteSettingsProvider siteSettings={siteSettings}>
       <div
-        className={`flex min-h-screen flex-col text-black ${isReleasesRoute ? "bg-gray-300" : "bg-white"}`}
+        className={`flex min-h-screen flex-col text-black ${isOverlayRoute ? "bg-gray-300" : "bg-white"}`}
       >
         {!isCollectionsOrProjects && !hideSiteChrome && (
           <Header
@@ -77,6 +80,7 @@ export default function LayoutShell({
           />
         )}
         {isReleasesRoute ? <ReleaseCloseBar /> : null}
+        {isNewsletterRoute ? <NewsletterCloseBar /> : null}
         {isInterviewDetailRoute ? <InterviewCloseBar /> : null}
         <main className="flex-1">{children}</main>
         {!hideSiteChrome ? (

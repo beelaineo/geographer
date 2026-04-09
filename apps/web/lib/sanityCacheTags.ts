@@ -9,12 +9,15 @@ export const sanityTag = {
   siteSettings: "sanity:siteSettings",
   clubEden: "sanity:clubEden",
   reclus: "sanity:reclus",
+  lastTurnOurTurn: "sanity:lastTurnOurTurn",
   releaseList: "sanity:release:list",
   interviewList: "sanity:interview:list",
   collectionList: "sanity:collection:list",
   projectList: "sanity:project:list",
+  pageList: "sanity:page:list",
   release: (slug: string) => `sanity:release:${slug}`,
   interview: (slug: string) => `sanity:interview:${slug}`,
   collection: (slug: string) => `sanity:collection:${slug}`,
-  project: (slug: string) => `sanity:project:${slug}`
+  project: (slug: string) => `sanity:project:${slug}`,
+  page: (slug: string) => `sanity:page:${slug}`
 } as const;

@@ -274,6 +274,19 @@ export const RECLUS_DOCUMENT_QUERY = defineQuery(`
   }
 `);
 
+/** Last Turn / Our Turn singleton page copy. */
+export const LAST_TURN_OUR_TURN_DOCUMENT_QUERY = defineQuery(`
+  *[_type == "lastTurnOurTurn"][0]{
+    title,
+    body${RICH_TEXT_SELECTION},
+    seo{
+      title,
+      description,
+      image${RICH_IMAGE_SELECTION}
+    }
+  }
+`);
+
 export const INTERVIEW_SLUGS_QUERY = defineQuery(`
   *[_type == "interview" && published == true && defined(slug.current)]{
     "slug": slug.current
@@ -406,6 +419,26 @@ export const COLLECTION_BY_SLUG_QUERY = defineQuery(`
 export const PROJECT_SLUGS_QUERY = defineQuery(`
   *[_type == "project" && defined(slug.current)]{
     "slug": slug.current
+  }
+`);
+
+export const PAGE_SLUGS_QUERY = defineQuery(`
+  *[_type == "page" && defined(slug.current)]{
+    "slug": slug.current
+  }
+`);
+
+export const PAGE_BY_SLUG_QUERY = defineQuery(`
+  *[_type == "page" && slug.current == $slug][0]{
+    _id,
+    title,
+    slug,
+    body${RICH_TEXT_SELECTION},
+    seo{
+      title,
+      description,
+      image${RICH_IMAGE_SELECTION}
+    }
   }
 `);
 

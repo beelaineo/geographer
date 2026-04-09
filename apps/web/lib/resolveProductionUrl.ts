@@ -29,6 +29,9 @@ export function resolveProductionUrl(document?: SanityDocumentLike | null): stri
     case "lastTurnOurTurn":
       return "/last-turn-our-turn";
     case "page":
+      if (slug === "newsletter") {
+        return "/newsletter";
+      }
       return slug ? `/pages/${slug}` : "/pages";
     case "collection":
       return slug ? `/collections/${slug}` : "/collections";

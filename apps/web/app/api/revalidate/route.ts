@@ -145,6 +145,10 @@ export async function POST(request: NextRequest) {
       tagsToRevalidate.add(sanityTag.reclus);
       break;
     }
+    case "lastTurnOurTurn": {
+      tagsToRevalidate.add(sanityTag.lastTurnOurTurn);
+      break;
+    }
     case "collection": {
       tagsToRevalidate.add(sanityTag.collectionList);
       if (primarySlug) {
@@ -156,6 +160,13 @@ export async function POST(request: NextRequest) {
       tagsToRevalidate.add(sanityTag.projectList);
       if (primarySlug) {
         tagsToRevalidate.add(sanityTag.project(primarySlug));
+      }
+      break;
+    }
+    case "page": {
+      tagsToRevalidate.add(sanityTag.pageList);
+      if (primarySlug) {
+        tagsToRevalidate.add(sanityTag.page(primarySlug));
       }
       break;
     }

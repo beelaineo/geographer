@@ -18,5 +18,9 @@ export function resolveMenuHref(item: MenuLike | null | undefined): string {
     return resolveProductionUrl(item.internalLink ?? undefined);
   }
 
+  if (item.externalLink === "/form.html") {
+    return "/newsletter";
+  }
+
   return item.externalLink ?? "/";
 }
