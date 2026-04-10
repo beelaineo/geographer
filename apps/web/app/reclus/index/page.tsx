@@ -39,21 +39,21 @@ export default async function ReclusIndexPage() {
     _id: interview._id,
     title: interview.title,
     slug: interview.slug,
+    href: interview.slug?.current ? `/interviews/${interview.slug.current}` : null,
     leadContent: formatInterviewLeadInitials(interview.contributors, interview.authorInitials),
     meta: formatReleaseDateMmYyyy(interview.release_date),
     backgroundColor: interview.backgroundColor
   }));
 
   return (
-    <div className="mx-auto max-w-3xl px-6 pb-16 pt-24 md:px-12 md:pt-36">
+    <div className="mx-auto max-w-2xl px-5 pb-16 pt-32">
       <PlayTitleMetaList
         items={rows}
         showColumnHeadings
         metaColumnHeading="Date"
-        buildHref={(slug) => `/interviews/${slug}`}
       />
       {!interviews.length ? (
-        <p className="text-sm text-black/60">No interviews yet.</p>
+        <p className="type-small-text text-black/60">No interviews yet.</p>
       ) : null}
     </div>
   );

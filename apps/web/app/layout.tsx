@@ -8,20 +8,30 @@ import LayoutShell from "../components/LayoutShell";
 import { fetchSiteSettings } from "../lib/siteSettings";
 import { buildMetadata } from "../lib/seo";
 
-const univers = localFont({
+const u001 = localFont({
   src: [
     {
-      path: "../assets/fonts/UniversLTStd.woff2",
+      path: "../assets/fonts/u001-reg.woff2",
       weight: "400",
       style: "normal"
     },
     {
-      path: "../assets/fonts/UniversLTStd-Bold.woff2",
+      path: "../assets/fonts/u001-ita.woff2",
+      weight: "400",
+      style: "italic"
+    },
+    {
+      path: "../assets/fonts/u001-bol.woff2",
       weight: "700",
       style: "normal"
-    }
+    },
+    {
+      path: "../assets/fonts/u001-bolita.woff2",
+      weight: "700",
+      style: "italic"
+    },
   ],
-  variable: "--font-univers",
+  variable: "--font-u001",
   display: "swap",
   adjustFontFallback: "Arial"
 });
@@ -63,7 +73,7 @@ export default async function RootLayout({
   const siteSettings = await fetchSiteSettings(isEnabled);
 
   return (
-    <html lang="en" className={`${junicode.variable} ${univers.variable}`}>
+    <html lang="en" className={`${junicode.variable} ${u001.variable}`}>
       <body className="font-sans antialiased">
         <LayoutShell siteSettings={siteSettings}>{children}</LayoutShell>
       </body>

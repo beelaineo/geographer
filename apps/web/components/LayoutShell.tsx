@@ -8,6 +8,7 @@ import {
   INTERVIEW_FROM_INTERNAL_NAV_STORAGE_KEY,
   RELEASE_FROM_INTERNAL_NAV_STORAGE_KEY
 } from "../lib/releaseNavigation";
+import { colorToCss } from "../lib/sanityColor";
 import Footer from "./Footer";
 import Header from "./Header";
 import InterviewCloseBar from "./InterviewCloseBar";
@@ -59,6 +60,7 @@ export default function LayoutShell({
   const isNewsletterRoute = pathname === "/newsletter";
   const isOverlayRoute = isReleasesRoute || isNewsletterRoute;
   const hideSiteChrome = isOverlayRoute || isInterviewDetailRoute;
+  const overlayBackgroundColor = colorToCss(siteSettings?.overlayBGColor) ?? "#b0b3b2";
 
   useEffect(() => {
     document.documentElement.classList.toggle("releases-route", isOverlayRoute);
@@ -70,7 +72,8 @@ export default function LayoutShell({
   return (
     <SiteSettingsProvider siteSettings={siteSettings}>
       <div
-        className={`flex min-h-screen flex-col text-black ${isOverlayRoute ? "bg-gray-300" : "bg-white"}`}
+        className={`flex min-h-screen flex-col text-black ${isOverlayRoute ? "" : "bg-white"}`}
+        style={isOverlayRoute ? { backgroundColor: overlayBackgroundColor } : undefined}
       >
         {!isCollectionsOrProjects && !hideSiteChrome && (
           <Header

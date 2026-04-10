@@ -48,12 +48,12 @@ function isActiveMenuHref(pathname: string, href: string): boolean {
 function ChevronDown({ open }: { open: boolean }) {
   return (
     <svg
-      width={11}
+      width={8}
       height={9}
       viewBox="0 0 11 9"
       aria-hidden
       className={[
-        "origin-center shrink-0 mb-1",
+        "origin-center shrink-0 mb-0",
         open ? "rotate-180 transition-transform" : "transition-transform"
       ].join(" ")}
     >
@@ -101,7 +101,7 @@ export default function HeaderMenu({ items }: HeaderMenuProps) {
     <div ref={rootRef} className="relative isolate">
       <button
         type="button"
-        className="flex items-center gap-1 text-base font-bold transition hover:opacity-70 uppercase tracking-wider"
+        className="flex items-center gap-1 type-small-text transition uppercase"
         aria-expanded={open}
         aria-haspopup="true"
         aria-controls="site-main-menu"
@@ -116,7 +116,7 @@ export default function HeaderMenu({ items }: HeaderMenuProps) {
           id="site-main-menu"
           role="menu"
           aria-labelledby="site-main-menu-button"
-          className="absolute -left-4 top-full z-30 mt-3 min-w-[16rem] bg-black text-white py-4 shadow-sm"
+          className="absolute left-1/2 top-full z-30 mt-2 md:mt-5 min-w-[14rem] -translate-x-1/2 bg-[#382f1f] py-3 text-white bg-blend-multiply md:left-0 md:translate-x-0"
         >
           <ul className="flex flex-col gap-1">
             {items.map((item, index) => {
@@ -132,9 +132,9 @@ export default function HeaderMenu({ items }: HeaderMenuProps) {
                     href={href}
                     aria-current={active ? "page" : undefined}
                     className={[
-                      "block px-4 font-bold tracking-wide transition underline-offset-4",
-                      compactItem ? "py-0" : "py-4",
-                      firstItem ? "pt-1" : "pt-unset",
+                      "block px-3 type-small-text transition underline-offset-2",
+                      compactItem ? "py-0" : "py-2",
+                      firstItem ? "pt-0" : "pt-unset",
                       active ? "underline" : "hover:underline"
                     ].join(" ")}
                     onClick={() => setOpen(false)}

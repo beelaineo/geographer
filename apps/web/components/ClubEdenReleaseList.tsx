@@ -27,6 +27,7 @@ function toRows(releases: ClubEdenReleaseListItem[]): PlayTitleMetaRow[] {
     _id: release._id,
     title: release.title,
     slug: release.slug,
+    href: release.slug?.current ? `/releases/${release.slug.current}` : null,
     meta: formatSeriesNames(release.seriesTitles),
     backgroundColor: release.backgroundColor
   }));
@@ -41,7 +42,6 @@ export default function ClubEdenReleaseList({
       items={toRows(releases)}
       showColumnHeadings={showColumnHeadings}
       metaColumnHeading="Series"
-      buildHref={(slug) => `/releases/${slug}`}
     />
   );
 }

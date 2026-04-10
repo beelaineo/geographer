@@ -105,21 +105,21 @@ export default async function ClubEdenCollectionPage({ params }: ClubEdenCollect
   const is1992 = collectionSlug === "1992";
 
   const gridListClassName = is1992
-    ? "mt-2 grid list-none grid-cols-4 gap-0 p-0"
-    : "mt-2 grid list-none grid-cols-2 gap-8 p-0 sm:grid-cols-2 md:grid-cols-3 md:gap-16";
+    ? "max-w-[160px] mx-auto md:max-w-none mt-2 grid list-none md:grid-cols-5 gap-8 md:gap-0 p-0"
+    : "max-w-[160px] mx-auto md:max-w-none mt-2 grid list-none grid-cols-1 gap-8 p-0 md:grid-cols-3 md:gap-16";
 
   const imageSizes = is1992 ? "(max-width: 768px) 50vw, 25vw" : "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw";
 
   return (
     <div
       className={[
-        "mx-auto px-6 pb-16 pt-24 md:px-12 md:pt-36",
-        is1992 ? "max-w-3xl" : "max-w-3xl"
+        "mx-auto px-6 pb-16 pt-24 md:px-10 md:pt-36",
+        is1992 ? "md:max-w-3xl" : "md:max-w-3xl"
       ].join(" ")}
     >
-      <h1 className="mb-8 hidden text-xl font-semibold md:text-3xl">{data.title}</h1>
+      <h1 className="mb-8 hidden md:text-3xl">{data.title}</h1>
       {intro?.length ? (
-        <div className="mx-auto mb-12 max-w-3xl space-y-4 font-serif leading-relaxed">
+        <div className="mx-auto mb-12 max-w-3xl space-y-4">
           <RichText value={intro} />
         </div>
       ) : null}
@@ -135,7 +135,7 @@ export default async function ClubEdenCollectionPage({ params }: ClubEdenCollect
             const href = slug ? `/releases/${slug}` : null;
 
             const cell = (
-              <div className="relative aspect-[4/5] w-full overflow-hidden bg-neutral-100">
+              <div className="relative aspect-[4/5] w-full overflow-hidden">
                 {imageUrl ? (
                   <Image
                     src={imageUrl}
@@ -145,12 +145,12 @@ export default async function ClubEdenCollectionPage({ params }: ClubEdenCollect
                     className="object-cover transition-transform duration-300 ease-out"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-neutral-200 px-3 text-center text-xs font-bold uppercase tracking-wide text-black">
+                  <div className="flex h-full w-full items-center justify-center bg-neutral-200 px-3 text-center type-small-text uppercase text-black">
                     {title}
                   </div>
                 )}
                 {imageUrl ? (
-                  <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white p-4 text-center text-sm font-bold uppercase leading-snug tracking-wide text-black opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-focus-within:opacity-100">
+                  <span className="pointer-events-none hidden md:absolute md:inset-0 md:flex items-center justify-center bg-white p-4 text-center type-small-text uppercase text-black md:opacity-0 md:transition-opacity duration-200 ease-out md:group-hover:opacity-100 md:group-focus-within:opacity-100">
                     {title}
                   </span>
                 ) : null}
@@ -166,6 +166,9 @@ export default async function ClubEdenCollectionPage({ params }: ClubEdenCollect
                     aria-label={title}
                   >
                     {cell}
+                    <p className="md:hidden text-center type-small-text mt-2">
+                      {title}
+                    </p>
                   </Link>
                 ) : (
                   <div className="group block w-full">{cell}</div>

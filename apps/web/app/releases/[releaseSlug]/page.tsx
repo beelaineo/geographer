@@ -96,6 +96,10 @@ export default async function ReleasePage({ params }: ReleasePageProps) {
     1,
     Math.round((coverAltDims.height / coverAltDims.width) * coverDisplayW)
   );
+  const dualCoverClassName = "h-auto max-h-[33vh] w-auto max-w-[min(50%,160px)] object-contain";
+  const singleCoverClassName = "h-auto max-h-[33vh] w-auto max-w-[min(100%,180px)] object-contain";
+  const dualCoverSizes = "(max-width: 768px) 50vw, 360px";
+  const singleCoverSizes = "(max-width: 768px) 100vw, 360px";
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-col items-center px-6 pb-20 pt-24 text-center md:px-12 md:pt-36">
@@ -107,8 +111,8 @@ export default async function ReleasePage({ params }: ReleasePageProps) {
               alt={cover.alt ?? title}
               width={coverDisplayW}
               height={coverDisplayH}
-              className={coverAltUrl ? "h-auto max-h-[40vh] w-auto max-w-[min(50%,360px)] object-contain" : "h-auto max-h-[70vh] w-auto max-w-[min(100%,360px)] object-contain"}
-              sizes={coverAltUrl ? "(max-width: 768px) 50vw, 360px" : "(max-width: 768px) 100vw, 360px"}
+              className={coverAltUrl ? dualCoverClassName : singleCoverClassName}
+              sizes={coverAltUrl ? dualCoverSizes : singleCoverSizes}
               priority
             />
           ) : null}
@@ -118,8 +122,8 @@ export default async function ReleasePage({ params }: ReleasePageProps) {
               alt={coverAlt.alt ?? `${title} alternate cover`}
               width={coverDisplayW}
               height={coverAltDisplayH}
-              className="h-auto max-h-[40vh] w-auto max-w-[min(50%,360px)] object-contain"
-              sizes="(max-width: 768px) 50vw, 360px"
+              className={dualCoverClassName}
+              sizes={dualCoverSizes}
             />
           ) : null}
         </div>
@@ -137,7 +141,7 @@ export default async function ReleasePage({ params }: ReleasePageProps) {
       ) : null}
 
       {intro?.length ? (
-        <div className="mt-6 w-full text-center font-serif">
+        <div className="mt-6 w-full text-center type-body-text">
           <RichText
             value={intro}
             className="[&_blockquote]:mx-auto [&_blockquote]:max-w-prose [&_blockquote]:border-l-0 [&_blockquote]:pl-0 [&_blockquote]:text-center [&_h2]:text-center [&_h3]:text-center [&_li]:text-left [&_ol]:mx-auto [&_ol]:inline-block [&_ol]:text-left [&_p]:text-center [&_ul]:mx-auto [&_ul]:inline-block [&_ul]:text-left"

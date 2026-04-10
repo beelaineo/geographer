@@ -58,7 +58,7 @@ export default function PortableTextRichImage({
         />
       </div>
       {value?.caption?.trim() ? (
-        <figcaption className="mt-3 text-center text-sm leading-snug text-black">
+        <figcaption className="mt-3 text-center type-small-text text-black">
           {value.caption.trim()}
         </figcaption>
       ) : null}

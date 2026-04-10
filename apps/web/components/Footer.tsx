@@ -23,11 +23,11 @@ export default function Footer({
   const footerMenu = (siteSettings?.footerMenu ?? []).filter(
     (item): item is NonNullable<typeof item> => Boolean(item)
   );
-  const baseClasses = "p-6 md:p-12 w-full";
+  const baseClasses = "p-5 md:p-10 w-full";
   return (
     <footer className={`${baseClasses}`}>
-      <div className="flex items-center justify-center gap-4">
-        <nav className="flex gap-4">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-5">
+        <nav className="flex gap-5">
           {footerMenu.map((item, index) => (
             <Link
               key={item._key ?? `${item.label ?? "footer-item"}-${index}`}
@@ -38,14 +38,14 @@ export default function Footer({
                   ? resolveProductionUrl(item.internalLink)
                   : item.externalLink ?? "/"
               }
-              className="font-bold tracking-wide leading-none transition hover:opacity-70"
+              className="type-small-text transition hover:opacity-70"
             >
               {item.label}
             </Link>
           ))}
         </nav>
         <div className="text-center">
-          <span className="font-bold tracking-wide">© Geographer {new Date().getFullYear()}</span>
+          <span className="type-small-text">© Geographer {new Date().getFullYear()}</span>
         </div>
       </div>
     </footer>

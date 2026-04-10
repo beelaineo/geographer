@@ -6,9 +6,9 @@ export const metadata: Metadata = {
 
 export default function NewsletterPage() {
   return (
-    <section className="mx-auto flex w-full max-w-3xl flex-col items-center px-6 pb-20 pt-24 text-center md:px-4 md:pt-36">
+    <section className="mx-auto flex w-full max-w-3xl flex-col items-center justify-center min-h-screen px-6 pb-20 text-center">
       <h1 className="hidden text-base font-bold uppercase tracking-wide">Newsletter</h1>
-      <p className="mt-4 max-w-3xl font-bold text-base md:text-2xl leading-relaxed">
+      <p className="mt-4 max-w-3xl type-homepage-text-block">
       Sign up for the most significant Geographer updates in your mailbox, focusing on our text content. No spam, promise.
       </p>
 
@@ -32,8 +32,8 @@ export default function NewsletterPage() {
           name="firstName"
           type="text"
           required
-          placeholder="First Name"
-          className="w-full border border-black bg-white px-3 py-2 focus:outline-none"
+          placeholder="first name"
+          className="w-full  bg-white px-2 py-2 focus:outline-none"
           autoComplete="given-name"
         />
         <input
@@ -41,8 +41,8 @@ export default function NewsletterPage() {
           name="lastName"
           type="text"
           required
-          placeholder="Last Name"
-          className="w-full border border-black bg-white px-3 py-2 focus:outline-none"
+          placeholder="last name"
+          className="w-full bg-white p-2 focus:outline-none"
           autoComplete="family-name"
         />
         <input
@@ -50,14 +50,14 @@ export default function NewsletterPage() {
           name="email"
           type="email"
           required
-          placeholder="Email"
-          className="w-full border border-black bg-white px-3 py-2 focus:outline-none"
+          placeholder="email"
+          className="w-full bg-white p-2 focus:outline-none"
           autoComplete="email"
         />
 
         <button
           type="submit"
-          className="mt-2 w-fit appearance-none bg-transparent p-0 text-sm font-bold uppercase tracking-wide transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="mt-2 w-fit font-bold mx-auto appearance-none bg-transparent p-0 uppercase transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           Get Updates
         </button>

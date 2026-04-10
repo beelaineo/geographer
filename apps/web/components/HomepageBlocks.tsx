@@ -57,12 +57,12 @@ function HomepageVideoBannerSection({
 
   return (
     <section
-      className="flex min-h-[80vh] w-full items-center justify-center px-6 pt-40 py-20 md:px-12"
+      className="flex min-h-[50vh] md:min-h-[85vh] w-full items-center justify-center px-10 py-20"
       style={bg ? { backgroundColor: bg } : undefined}
     >
       {playbackId ? (
         <div
-          className="flex w-[50vw] max-w-full justify-center"
+          className="flex md:w-[50vw] max-w-full justify-center"
           style={{ willChange: "transform" }}
         >
           <AutoplayVideo
@@ -85,6 +85,7 @@ function HomepageFeaturedInterviewSection({
   const cover = interview?.cover;
   const href = interview ? resolveProductionUrl(interview) : "/";
   const coverUrl = cover?.asset ? urlForImageWithWidth(cover, 600).url() : null;
+  const quote = interview?.quote?.trim();
   const { width: dimW, height: dimH } = getImageDimensions(cover ?? undefined);
   const displayW = 300;
   const displayH = Math.max(1, Math.round((dimH / dimW) * displayW));
@@ -92,30 +93,37 @@ function HomepageFeaturedInterviewSection({
   const inner = (
     <>
       {coverUrl && cover ? (
-        <Image
-          src={coverUrl}
-          alt={cover.alt ?? interview?.title ?? ""}
-          width={displayW}
-          height={displayH}
-          className="w-[300px] max-w-full object-cover"
-          sizes="300px"
-        />
+        <div className="relative w-[320px] max-w-full">
+          <Image
+            src={coverUrl}
+            alt={cover.alt ?? interview?.title ?? ""}
+            width={displayW}
+            height={displayH}
+            className="w-[320px] max-w-full object-cover"
+            sizes="320px"
+          />
+          {quote ? (
+            <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white p-4 text-center type-body-text text-black opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-focus-within:opacity-100">
+              &ldquo;{quote}&rdquo;
+            </span>
+          ) : null}
+        </div>
       ) : null}
       {block.title ? (
-        <p className="mt-6 max-w-[300px] text-center uppercase font-bold tracking-wide">{block.title}</p>
+        <p className="mt-5 max-w-[320px] text-center uppercase type-small-text">{block.title}</p>
       ) : null}
     </>
   );
 
   return (
-    <section className="w-full bg-transparent px-6 py-16 md:px-12">
+    <section className="w-full bg-transparent px-5 py-16 md:px-5">
       <div className="mx-auto flex max-w-4xl flex-col items-center">
         {interview?.slug?.current ? (
-          <Link href={href} className="flex flex-col items-center transition hover:opacity-80">
+          <Link href={href} className="group flex flex-col items-center">
             {inner}
           </Link>
         ) : (
-          <div className="flex flex-col items-center">{inner}</div>
+          <div className="group flex flex-col items-center">{inner}</div>
         )}
       </div>
     </section>
@@ -133,12 +141,12 @@ function HomepageTextBlockSection({
   const showCta = Boolean(cta?.label?.trim());
   const ctaIsExternal = ctaHref.startsWith("http");
   const ctaClass =
-    "text-sm font-bold uppercase tracking-widest transition hover:underline underline-offset-4";
+    "type-small-text uppercase transition hover:underline underline-offset-4";
 
   return (
-    <section className="w-full px-6 py-8 md:px-12">
-      <div className="mx-auto max-w-3xl text-center">
-        <HomepageRichText value={body} className="space-y-4 text-center font-bold tracking-wide [&_blockquote]:mx-auto [&_blockquote]:max-w-prose [&_blockquote]:text-left" />
+    <section className="w-full px-5 py-8 md:px-5">
+      <div className="mx-auto max-w-2xl text-center">
+        <HomepageRichText value={body} className="space-y-5 text-center [&_blockquote]:mx-auto [&_blockquote]:max-w-prose [&_blockquote]:text-left" />
         {showCta ? (
           <p className="mt-10">
             {ctaIsExternal ? (
@@ -175,8 +183,8 @@ function HomepageFeaturedReleasesSection({
   const releases = (block.releases ?? []).filter(Boolean);
 
   return (
-    <section className="w-full px-6 py-12 md:px-12">
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-8">
+    <section className="w-full px-5 py-14">
+      <div className="mx-auto flex max-w-2xl flex-col items-center gap-10">
         {block.title ? <h2 className="hidden">{block.title}</h2> : null}
         {imageUrl && image ? (
           <Image
@@ -184,8 +192,8 @@ function HomepageFeaturedReleasesSection({
             alt={image.alt ?? ""}
             width={displayW}
             height={displayH}
-            className="w-[360px] max-w-full object-cover"
-            sizes="360px"
+            className="w-[380px] max-w-full object-cover"
+            sizes="380px"
           />
         ) : null}
         <ClubEdenReleaseList releases={releases} showColumnHeadings={false} />

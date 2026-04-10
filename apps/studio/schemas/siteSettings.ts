@@ -20,6 +20,12 @@ export const siteSettingsType = defineType({
       of: [defineArrayMember({ type: "menuItem" })]
     }),
     defineField({
+      name: "overlayBGColor",
+      title: "Overlay Background Color",
+      description: "Used for release/newsletter overlay routes.",
+      type: "color"
+    }),
+    defineField({
       name: "seo",
       title: "SEO",
       type: "seo"

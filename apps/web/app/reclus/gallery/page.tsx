@@ -36,9 +36,9 @@ export default async function ReclusGalleryPage() {
   const interviews = (await loadPublishedInterviews(isEnabled)) ?? [];
 
   return (
-    <div className="mx-auto max-w-5xl px-6 pb-16 pt-24 md:px-12 md:pt-36">
+    <div className="mx-auto max-w-[270px] sm:max-w-2xl md:px-5 pb-16 pt-32">
       {interviews.length ? (
-        <ul className="grid list-none grid-cols-1 gap-8 p-0 sm:grid-cols-2 md:grid-cols-3 md:gap-12">
+        <ul className="grid list-none grid-cols-1 gap-8 p-0 sm:grid-cols-2 md:grid-cols-3">
           {interviews.map((interview, index) => {
             const slug = interview.slug?.current;
             const title = interview.title?.trim() || "Untitled";
@@ -64,7 +64,7 @@ export default async function ReclusGalleryPage() {
                   </div>
                 )}
                 {quote ? (
-                  <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white p-4 text-center text-base font-serif leading-snug text-black opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-focus-within:opacity-100 md:text-base">
+                  <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white p-4 text-center type-body-text text-black opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-focus-within:opacity-100 md:text-base">
                     &ldquo;{quote}&rdquo;
                   </span>
                 ) : null}
@@ -89,7 +89,7 @@ export default async function ReclusGalleryPage() {
           })}
         </ul>
       ) : (
-        <p className="text-sm text-black/60">No interviews yet.</p>
+        <p className="type-small-text text-black/60">No interviews yet.</p>
       )}
     </div>
   );

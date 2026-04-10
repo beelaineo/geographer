@@ -36,13 +36,15 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({
     seo: pageSeo,
     siteSeo,
-    title: pageDoc?.seo?.title ?? pageDoc?.title ?? "Last Turn / Our Turn"
+    title: pageDoc?.seo?.title ?? pageDoc?.title ?? "Last Turn — Our Turn"
   });
 }
 
 export default async function LastTurnOurTurnPage() {
   const { isEnabled } = await draftMode();
   const pageDoc = await loadLastTurnOurTurn(isEnabled);
+
+  console.log(pageDoc);
 
   if (!pageDoc) {
     notFound();
@@ -52,11 +54,11 @@ export default async function LastTurnOurTurnPage() {
   const heading = pageDoc.title?.trim() || "Last Turn / Our Turn";
 
   return (
-    <main className="mx-auto max-w-3xl px-6 pb-16 pt-16 md:px-12 md:pt-32">
-      <h1 className="mb-8 text-base font-bold uppercase tracking-wide">{heading}</h1>
+    <main className="mx-auto max-w-3xl px-6 pb-16 pt-32 md:px-12 md:pt-32">
+      <h1 className="hidden">{heading}</h1>
       {body?.length ? (
-        <section className="max-w-3xl space-y-4 font-serif leading-relaxed">
-          <RichText value={body} />
+        <section className="max-w-3xl space-y-5">
+          <RichText value={body} className="space-y-10" />
         </section>
       ) : null}
     </main>

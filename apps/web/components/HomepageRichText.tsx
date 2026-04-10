@@ -72,16 +72,16 @@ const components: PortableTextComponents = {
   },
   block: {
     normal: ({ children }: { children?: ReactNode }) => (
-      <p className="text-base leading-relaxed md:text-2xl">{children}</p>
+      <p className="type-homepage-text-block">{children}</p>
     ),
     h2: ({ children }: { children?: ReactNode }) => (
-      <h2 className="text-lg font-semibold leading-snug md:text-2xl">{children}</h2>
+      <h2 className="type-homepage-text-block">{children}</h2>
     ),
     h3: ({ children }: { children?: ReactNode }) => (
-      <h3 className="text-base font-semibold leading-snug md:text-2xl">{children}</h3>
+      <h3 className="type-homepage-text-block">{children}</h3>
     ),
     blockquote: ({ children }: { children?: ReactNode }) => (
-      <blockquote className="border-l-2 border-black pl-4 italic">{children}</blockquote>
+      <blockquote className="border-l-2 border-black pl-4 italic type-homepage-text-block">{children}</blockquote>
     )
   },
   list: {

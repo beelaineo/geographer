@@ -283,7 +283,7 @@ export default function ReleaseCard({
              {release.embed && (
               <div className="space-y-2">
                 <div
-                  className="overflow-hidden bg-gray-100 shadow-md p-4"
+                  className="overflow-hidden bg-[#b0b3b2] shadow-md p-4"
                   dangerouslySetInnerHTML={{ __html: release.embed }}
                 />
               </div>

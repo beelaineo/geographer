@@ -60,14 +60,14 @@ export default async function ClubEdenPage() {
     <div className="px-6 pb-16 pt-24 md:px-12 md:pt-36 max-w-3xl mx-auto">
       <h1 className="mb-10 text-2xl font-semibold md:text-3xl hidden">{heading}</h1>
       {intro?.length ? (
-        <div className="mb-12 max-w-3xl space-y-4 leading-relaxed font-serif">
+        <div className="mb-12 max-w-3xl space-y-4 type-body-text">
           <RichText value={intro} />
         </div>
       ) : null}
       {list.length ? (
         <ClubEdenReleaseList releases={list} showColumnHeadings />
       ) : (
-        <p className="text-sm text-black">No releases yet.</p>
+        <p className="type-small-text text-black">No releases yet.</p>
       )}
     </div>
   );

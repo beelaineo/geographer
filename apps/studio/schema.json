@@ -3051,6 +3051,14 @@
         },
         "optional": true
       },
+      "overlayBGColor": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "color"
+        },
+        "optional": true
+      },
       "seo": {
         "type": "objectAttribute",
         "value": {

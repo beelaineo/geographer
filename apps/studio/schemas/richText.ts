@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { createElement, type ReactNode } from "react";
 import { internalLinkTargets } from "./internalLinkTargets";
 
 type PortableTextSpan = {
@@ -32,6 +33,16 @@ const richTextDefinition = {
         decorators: [
           { title: "Strong", value: "strong" },
           { title: "Emphasis", value: "em" },
+          {
+            title: "Center",
+            value: "center",
+            component: ({ children }: { children: ReactNode }) =>
+              createElement(
+                "span",
+                { style: { display: "inline-block", width: "100%", textAlign: "center" } },
+                children
+              )
+          },
           { title: "Code", value: "code" }
         ],
         annotations: [

@@ -49,10 +49,10 @@ export default async function ReclusPage() {
   const heading = pageDoc.title?.trim() || "Reclus";
 
   return (
-    <div className="mx-auto max-w-3xl px-6 pb-16 pt-16 md:px-12 md:pt-16">
-      <h1 className="mb-10 hidden text-2xl font-semibold md:text-3xl">{heading}</h1>
+    <div className="mx-auto max-w-2xl px-6 pb-16 pt-16 md:px-12 md:pt-16">
+      <h1 className="hidden">{heading}</h1>
       {body?.length ? (
-        <div className="max-w-3xl space-y-4 font-serif leading-relaxed">
+        <div className="max-w-2xl space-y-4 type-body-text">
           <RichText value={body} />
         </div>
       ) : null}

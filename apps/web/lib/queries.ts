@@ -141,6 +141,7 @@ const HOMEPAGE_CONTENT_SELECTION = /* groq */ `content[]{
       _type,
       title,
       slug,
+      quote,
       cover${RICH_IMAGE_SELECTION}
     }
   },
@@ -209,6 +210,7 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
     footerMenu[]{
       ${MENU_ITEM_PROJECTION}
     },
+    overlayBGColor,
     seo{
       title,
       description,
@@ -276,7 +278,7 @@ export const RECLUS_DOCUMENT_QUERY = defineQuery(`
 
 /** Last Turn / Our Turn singleton page copy. */
 export const LAST_TURN_OUR_TURN_DOCUMENT_QUERY = defineQuery(`
-  *[_type == "lastTurnOurTurn"][0]{
+  *[_id == "lastTurnOurTurn"][0]{
     title,
     body${RICH_TEXT_SELECTION},
     seo{

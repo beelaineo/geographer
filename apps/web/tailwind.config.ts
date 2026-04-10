@@ -10,7 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: [
-          "var(--font-univers)",
+          "var(--font-u001)",
           "system-ui",
           "-apple-system",
           "BlinkMacSystemFont",

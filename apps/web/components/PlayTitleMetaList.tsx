@@ -1,4 +1,7 @@
+"use client";
+
 import type { CSSProperties } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 
 import { colorToCss } from "../lib/sanityColor";
@@ -8,6 +11,7 @@ export type PlayTitleMetaRow = {
   _id?: string | null;
   title?: string | null;
   slug?: Slug | null;
+  href?: string | null;
   /**
    * First column: when `undefined`, the play triangle is shown (Club Eden).
    * When set (including empty after trim), text is shown or an em dash if blank.
@@ -22,8 +26,10 @@ type PlayTitleMetaListProps = {
   items: PlayTitleMetaRow[];
   showColumnHeadings?: boolean;
   metaColumnHeading: string;
-  buildHref: (slug: string) => string;
 };
+
+type SortColumn = "title" | "meta";
+type SortDirection = "asc" | "desc";
 
 function PlayTriangleIcon({ className }: { className?: string }) {
   return (
@@ -42,54 +48,166 @@ function PlayTriangleIcon({ className }: { className?: string }) {
 export default function PlayTitleMetaList({
   items,
   showColumnHeadings = true,
-  metaColumnHeading,
-  buildHref
+  metaColumnHeading
 }: PlayTitleMetaListProps) {
+  const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+
   if (!items.length) {
     return null;
   }
 
+  const sortedItems = useMemo(() => {
+    if (!sortColumn) {
+      return items;
+    }
+
+    const dir = sortDirection === "asc" ? 1 : -1;
+    const getValue = (row: PlayTitleMetaRow) => {
+      if (sortColumn === "title") {
+        return row.title?.trim() || "Untitled";
+      }
+      return row.meta?.trim() || "";
+    };
+
+    return items
+      .map((row, index) => ({ row, index }))
+      .sort((a, b) => {
+        const aValue = getValue(a.row);
+        const bValue = getValue(b.row);
+        const cmp = aValue.localeCompare(bValue, undefined, { sensitivity: "base" });
+
+        if (cmp !== 0) {
+          return cmp * dir;
+        }
+
+        return a.index - b.index;
+      })
+      .map(({ row }) => row);
+  }, [items, sortColumn, sortDirection]);
+
+  const onHeadingClick = (column: SortColumn) => {
+    if (sortColumn === column) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+      return;
+    }
+
+    setSortColumn(column);
+    setSortDirection("asc");
+  };
+
+  const clearSort = () => {
+    setSortColumn(null);
+    setSortDirection("asc");
+  };
+
+  const sortLabel = (column: SortColumn) => {
+    if (sortColumn !== column) {
+      return "";
+    }
+    return sortDirection === "asc" ? " ↑" : " ↓";
+  };
+
+  const sortDirectionLabel = (column: SortColumn) => {
+    if (sortColumn !== column) {
+      return "";
+    }
+    return sortDirection === "asc" ? " ascending" : " descending";
+  };
+
+  const normalizedMetaHeading = metaColumnHeading.trim().toLowerCase();
+  const thirdColumnWidth = normalizedMetaHeading === "date" ? "60px" : "64px";
+  const hasAnyLeadDisplay = sortedItems.some((row) => row.leadContent !== undefined);
+  const headerFirstColumnWidth = hasAnyLeadDisplay ? "24px" : "8px";
+  const headerGridTemplateColumns = `${headerFirstColumnWidth} minmax(0, 1fr) ${thirdColumnWidth}`;
+
   return (
-    <div className="w-full max-w-5xl">
+    <div className="w-full max-w-2xl">
       {showColumnHeadings ? (
-        <div className="grid w-full grid-cols-[64px_minmax(0,2fr)_minmax(0,1fr)] items-end gap-x-4 pb-4 text-[10px] font-bold uppercase tracking-wide md:gap-x-8">
-          <span className="px-4" aria-hidden />
-          <span className="text-center leading-none">Name</span>
-          <span className="text-center leading-none">{metaColumnHeading}</span>
+        <div
+          className="grid w-full items-end gap-x-5 pb-2 px-2 md:px-5 type-small-text uppercase"
+          style={{ gridTemplateColumns: headerGridTemplateColumns }}
+        >
+          <span style={{ width: headerFirstColumnWidth }} aria-hidden />
+          <span className="flex items-center justify-center gap-1">
+            <button
+              type="button"
+              className="uppercase text-center leading-none underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              onClick={() => onHeadingClick("title")}
+              aria-label={`Sort by name${sortDirectionLabel("title")}`}
+            >
+              Name{sortLabel("title")}
+            </button>
+            {sortColumn === "title" ? (
+              <button
+                type="button"
+                className="font-normal leading-none hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                onClick={clearSort}
+                aria-label="Clear name sort"
+              >
+                x
+              </button>
+            ) : null}
+          </span>
+          <span className="flex items-center justify-center gap-1">
+            <button
+              type="button"
+              className="uppercase text-center leading-none underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              onClick={() => onHeadingClick("meta")}
+              aria-label={`Sort by ${metaColumnHeading}${sortDirectionLabel("meta")}`}
+            >
+              {metaColumnHeading}
+              {sortLabel("meta")}
+            </button>
+            {sortColumn === "meta" ? (
+              <button
+                type="button"
+                className="leading-none hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                onClick={clearSort}
+                aria-label={`Clear ${metaColumnHeading} sort`}
+              >
+                x
+              </button>
+            ) : null}
+          </span>
         </div>
       ) : null}
       <ul className="w-full list-none border-t border-black p-0">
-        {items.map((row, index) => {
-          const slug = row.slug?.current;
+        {sortedItems.map((row, index) => {
           const title = row.title?.trim() || "Untitled";
           const key = row._id ?? `row-${index}`;
           const metaTrimmed = row.meta?.trim();
           const metaDisplay = metaTrimmed ? metaTrimmed : "—";
-          const href = slug ? buildHref(slug) : null;
+          const href = row.href ?? null;
           const hoverBg = colorToCss(row.backgroundColor ?? undefined);
           const leadDefined = row.leadContent !== undefined;
           const leadTrimmed = row.leadContent?.trim();
           const leadDisplay = leadDefined ? (leadTrimmed ? leadTrimmed : "—") : null;
+          const rowFirstColumnWidth = leadDisplay === null ? "8px" : "24px";
+          const rowGridTemplateColumns = `${rowFirstColumnWidth} minmax(0, 1fr) ${thirdColumnWidth}`;
 
           const rowClassName =
-            "grid w-full grid-cols-[64px_minmax(0,2fr)_minmax(0,1fr)] items-center gap-x-4 border-b border-black py-2 pt-3 text-inherit transition-colors duration-200 ease-out md:gap-x-8 md:py-2 md:pt-3";
+            "grid w-full items-center gap-x-5 border-b border-black px-2 md:px-5 py-2 text-inherit transition-colors duration-200 ease-out";
+
+          const rowTextClassName = "type-small-text text-center uppercase tabular-nums";
 
           const inner = (
             <>
               <span
-                className="flex min-w-[2.5rem] items-center justify-center px-2 text-center leading-none md:min-w-[3rem] md:px-4"
+                className="flex items-center justify-center text-center leading-none"
+                style={{ width: rowFirstColumnWidth }}
                 aria-hidden={!leadDefined}
               >
                 {leadDisplay !== null ? (
-                  <span className="text-xs font-bold uppercase tabular-nums tracking-wide leading-none">{leadDisplay}</span>
+                  <span className={rowTextClassName}>{leadDisplay}</span>
                 ) : (
                   <PlayTriangleIcon className="h-2 w-2" />
                 )}
               </span>
-              <span className="min-w-0 text-center text-xs font-bold uppercase tracking-wide leading-none">
+              <span className={rowTextClassName}>
                 {title}
               </span>
-              <span className="min-w-0 text-center text-xs font-bold uppercase tracking-wide leading-none">
+              <span className={rowTextClassName}>
                 {metaDisplay}
               </span>
             </>
@@ -108,15 +226,21 @@ export default function PlayTitleMetaList({
                     .filter(Boolean)
                     .join(" ")}
                   style={
-                    hoverBg
-                      ? ({ ["--ce-row-hover" as string]: hoverBg } as CSSProperties)
-                      : undefined
+                    ({
+                      gridTemplateColumns: rowGridTemplateColumns,
+                      ...(hoverBg ? { ["--ce-row-hover" as string]: hoverBg } : {})
+                    } as CSSProperties)
                   }
                 >
                   {inner}
                 </Link>
               ) : (
-                <div className={rowClassName}>{inner}</div>
+                <div
+                  className={rowClassName}
+                  style={{ gridTemplateColumns: rowGridTemplateColumns }}
+                >
+                  {inner}
+                </div>
               )}
             </li>
           );

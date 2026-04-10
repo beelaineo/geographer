@@ -39,6 +39,29 @@ type InterviewEntryValue = {
   text?: PortableTextBlock[] | null;
 };
 
+function hasVisibleContent(children: ReactNode): boolean {
+  const nodes = Array.isArray(children) ? children : [children];
+
+  for (const node of nodes) {
+    if (typeof node === "string" && node.trim().length > 0) {
+      return true;
+    }
+
+    if (typeof node === "number") {
+      return true;
+    }
+
+    if (node && typeof node === "object" && "props" in node) {
+      const childNode = (node as { props?: { children?: ReactNode } }).props?.children;
+      if (hasVisibleContent(childNode)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 function renderPortableLink({
   href,
   blank,
@@ -56,7 +79,7 @@ function renderPortableLink({
 
   if (isInternal) {
     return (
-      <Link href={resolvedHref} className="underline underline-offset-4 hover:opacity-70">
+      <Link href={resolvedHref} className="underline underline-offset-2 hover:opacity-70">
         {children}
       </Link>
     );
@@ -67,7 +90,7 @@ function renderPortableLink({
       href={resolvedHref}
       target={target}
       rel={rel}
-      className="underline underline-offset-4 hover:opacity-70"
+      className="underline underline-offset-2 hover:opacity-70"
     >
       {children}
     </a>
@@ -79,7 +102,7 @@ const interviewPortableTextMarks: NonNullable<PortableTextComponents["marks"]> =
     const href = resolveProductionUrl(value?.reference);
 
     return (
-      <Link href={href} className="underline underline-offset-4 hover:opacity-70">
+      <Link href={href} className="underline underline-offset-2 hover:opacity-70">
         {children}
       </Link>
     );
@@ -96,22 +119,26 @@ const interviewEntryTextComponents: PortableTextComponents = {
     richImage: PortableTextRichImage
   },
   block: {
-    normal: ({ children }: { children?: ReactNode }) => (
-      <p className="text-sm leading-relaxed font-sans">{children}</p>
-    ),
+    normal: ({ children }: { children?: ReactNode }) => {
+      if (!hasVisibleContent(children)) {
+        return <p className="whitespace-pre-line">&nbsp;</p>;
+      }
+
+      return <p className="whitespace-pre-line">{children}</p>;
+    },
     h2: ({ children }: { children?: ReactNode }) => (
-      <h2 className="text-base font-semibold leading-snug md:text-lg">{children}</h2>
+      <h2 className="">{children}</h2>
     ),
     h3: ({ children }: { children?: ReactNode }) => (
-      <h3 className="text-sm font-semibold leading-snug md:text-base">{children}</h3>
+      <h3 className="">{children}</h3>
     ),
     blockquote: ({ children }: { children?: ReactNode }) => (
       <blockquote className="border-l-2 border-black pl-4 text-sm italic md:text-base">{children}</blockquote>
     )
   },
   list: {
-    bullet: ({ children }) => <ul className="ml-5 list-disc space-y-2 text-sm md:text-base">{children}</ul>,
-    number: ({ children }) => <ol className="ml-5 list-decimal space-y-2 text-sm md:text-base">{children}</ol>
+    bullet: ({ children }) => <ul className="ml-5 list-disc space-y-2">{children}</ul>,
+    number: ({ children }) => <ol className="ml-5 list-decimal space-y-2">{children}</ol>
   },
   marks: interviewPortableTextMarks
 };
@@ -130,8 +157,8 @@ function InterviewEntryBlock({ value }: PortableTextTypeComponentProps<Interview
   const role = value?.speakerRole;
 
   return (
-    <div className={`my-6 grid grid-cols-[minmax(0,auto)_minmax(0,1fr)] gap-x-4 gap-y-1 text-left md:gap-x-6 ${role === "interviewer" ? "font-bold md:grid-cols-[minmax(0,40px)_minmax(0,1fr)]" : "md:grid-cols-[minmax(0,96px)_minmax(0,auto)]"}`}>
-      <span className="pt-0.5 text-sm uppercase tabular-nums tracking-wide">{initials}</span>
+    <div className={`my-6 grid grid-cols-[minmax(0,auto)_minmax(0,1fr)] gap-x-5 gap-y-1 text-left ${role === "interviewer" ? "type-interview-question md:grid-cols-[minmax(0,40px)_minmax(0,1fr)]" : "type-interview-answer md:grid-cols-[minmax(0,96px)_minmax(0,auto)]"}`}>
+      <span className="tabular-nums">{initials}</span>
       <div className="min-w-0">{renderInterviewEntryPortableText(text)}</div>
     </div>
   );
@@ -143,14 +170,18 @@ const components: PortableTextComponents = {
     richImage: PortableTextRichImage
   },
   block: {
-    normal: ({ children }: { children?: ReactNode }) => (
-      <p className="text-base leading-relaxed font-serif">{children}</p>
-    ),
+    normal: ({ children }: { children?: ReactNode }) => {
+      if (!hasVisibleContent(children)) {
+        return <p className="type-body-text whitespace-pre-line">&nbsp;</p>;
+      }
+
+      return <p className="type-body-text whitespace-pre-line">{children}</p>;
+    },
     h2: ({ children }: { children?: ReactNode }) => (
-      <h2 className="text-lg font-semibold leading-snug md:text-xl">{children}</h2>
+      <h2 className="type-body-text whitespace-pre-line">{children}</h2>
     ),
     h3: ({ children }: { children?: ReactNode }) => (
-      <h3 className="text-base font-semibold leading-snug md:text-lg">{children}</h3>
+      <h3 className="type-body-text whitespace-pre-line">{children}</h3>
     ),
     blockquote: ({ children }: { children?: ReactNode }) => (
       <blockquote className="border-l-2 border-black pl-4 italic">{children}</blockquote>

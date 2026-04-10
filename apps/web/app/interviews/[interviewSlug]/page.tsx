@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "@portabletext/types";
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
@@ -107,21 +108,28 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
   return (
     <main className="grid grid-cols-1 md:grid-cols-2 relative">
       {coverUrl && cover ? (
-        <div className="w-full justify-center items-center flex flex-col h-screen sticky top-0">
+        <div className="max-w-[270px] md:max-w-none mx-auto md:mx-0 py-28 md:py-0 w-full justify-center items-center flex flex-col md:h-screen md:sticky top-0">
           <Image
             src={coverUrl}
             alt={cover.alt ?? title}
             width={coverDisplayW}
             height={coverDisplayH}
-            className="h-auto max-h-[70vh] w-auto max-w-[min(100%,360px)] object-contain"
-            sizes="(max-width: 768px) 100vw, 360px"
+            className="h-auto max-h-[75vh] w-auto max-w-[min(100%,480px)] object-contain"
+            sizes="(max-width: 768px) 100vw, 480px"
             priority
           />
         </div>
       ) : null}
 
-      <div className={`mx-auto flex w-full flex-col items-center p-10 text-center md:p-12`} style={{ backgroundColor: backgroundColor ? backgroundColor : undefined }}>
-        <h1 className="hidden mt-10 text-base font-bold uppercase leading-tight tracking-wide md:mt-12">{title}</h1>
+      <div
+        className="mx-auto flex w-full flex-col items-center px-8 md:px-14 py-8 md:py-24 md:[background-color:var(--interview-bg)]"
+        style={
+          backgroundColor
+            ? ({ ["--interview-bg" as string]: backgroundColor } as CSSProperties)
+            : undefined
+        }
+      >
+        <h1 className="hidden">{title}</h1>
 
         {/* {authorLine ? (
           <p className="mt-3 max-w-prose text-center text-sm font-bold uppercase tracking-wide text-black/80">

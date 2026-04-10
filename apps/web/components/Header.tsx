@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import type { SITE_SETTINGS_QUERYResult } from "../types/sanity.generated";
 import HeaderMenu from "./HeaderMenu";
@@ -18,6 +19,7 @@ export default function Header({
   isFixedMobile = true,
   isFixedDesktop = true
 }: HeaderProps) {
+  const [isDesktopLogotypeHidden, setIsDesktopLogotypeHidden] = useState(false);
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const shouldFixMobile = isHomePage || isFixedMobile;
@@ -32,19 +34,42 @@ export default function Header({
 
   const logotypeText = siteSettings?.seo?.title?.trim() || "Geographer";
 
+  useEffect(() => {
+    const handleViewportChange = () => {
+      if (window.innerWidth < 768) {
+        setIsDesktopLogotypeHidden(false);
+        return;
+      }
+
+      setIsDesktopLogotypeHidden(window.scrollY > window.innerHeight * 0.5);
+    };
+
+    handleViewportChange();
+
+    window.addEventListener("scroll", handleViewportChange, { passive: true });
+    window.addEventListener("resize", handleViewportChange);
+
+    return () => {
+      window.removeEventListener("scroll", handleViewportChange);
+      window.removeEventListener("resize", handleViewportChange);
+    };
+  }, []);
+
   return (
     <header
-      className={`${mobilePositionClasses} ${desktopPositionClasses} px-6 py-10 md:px-12`}
+      className={`${mobilePositionClasses} ${desktopPositionClasses} px-5 py-5 md:px-5 md:py-5`}
     >
       <div className="relative mx-auto flex min-h-[2.5rem] w-full max-w-[100vw] items-center justify-center">
-        <div className="absolute left-0 top-1/2 z-30 -translate-y-1/2 md:left-0">
+        <div className="absolute left-1/2 top-16 z-30 mt-4 -translate-x-1/2 md:left-0 md:top-1/2 md:mt-0 md:-translate-x-0 md:-translate-y-1/2">
           <HeaderMenu items={mainMenu} />
         </div>
         <Link
           href="/"
-          className="relative z-0 block max-w-[640px] px-16 text-center transition"
+          className={`relative z-0 block max-w-[640px] px-16 text-center transition-opacity duration-300 md:hover:opacity-100 ${
+            isDesktopLogotypeHidden ? "md:opacity-0" : "md:opacity-100"
+          }`}
         >
-          <Logotype className="mx-auto h-10 w-auto" />
+          <Logotype className="mx-auto h-8 w-auto" />
         </Link>
       </div>
     </header>

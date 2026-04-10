@@ -72,13 +72,13 @@ const components: PortableTextComponents = {
   },
   block: {
     normal: ({ children }: { children?: ReactNode }) => (
-      <p className="text-base leading-relaxed md:text-lg">{children}</p>
+      <p className="type-body-text">{children}</p>
     ),
     h2: ({ children }: { children?: ReactNode }) => (
-      <h2 className="text-lg font-semibold leading-snug md:text-xl">{children}</h2>
+      <h2 className="type-body-text">{children}</h2>
     ),
     h3: ({ children }: { children?: ReactNode }) => (
-      <h3 className="text-base font-semibold leading-snug md:text-lg">{children}</h3>
+      <h3 className="type-body-text">{children}</h3>
     ),
     blockquote: ({ children }: { children?: ReactNode }) => (
       <blockquote className="border-l-2 border-black pl-4 italic">{children}</blockquote>
@@ -89,6 +89,12 @@ const components: PortableTextComponents = {
     number: ({ children }) => <ol className="ml-5 list-decimal space-y-2">{children}</ol>
   },
   marks: {
+    strong: ({ children }: { children?: ReactNode }) => (
+      <strong className="font-sans font-bold">{children}</strong>
+    ),
+    center: ({ children }: { children?: ReactNode }) => (
+      <span className="block text-center">{children}</span>
+    ),
     internalLink: ({ value, children }: PortableTextMarkComponentProps<InternalLinkValue>) => {
       const href = resolveProductionUrl(value?.reference);
 
