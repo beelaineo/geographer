@@ -145,6 +145,10 @@ export async function POST(request: NextRequest) {
       tagsToRevalidate.add(sanityTag.clubEden);
       break;
     }
+    case "newsletter": {
+      tagsToRevalidate.add(sanityTag.newsletter);
+      break;
+    }
     case "reclus": {
       tagsToRevalidate.add(sanityTag.reclus);
       break;

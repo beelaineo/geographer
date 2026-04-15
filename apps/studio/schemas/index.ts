@@ -15,6 +15,7 @@ import { interviewEntryType } from "./interviewEntry";
 import { interviewType } from "./interview";
 import { lastTurnOurTurnType } from "./lastTurnOurTurn";
 import { menuItemType } from "./menuItem";
+import { newsletterType } from "./newsletter";
 import { pageType } from "./page";
 import { pressItemType } from "./pressItem";
 import { projectType } from "./project";
@@ -38,6 +39,7 @@ export const schemaTypes = [
   reclusType,
   lastTurnOurTurnType,
   clubEdenType,
+  newsletterType,
   // Legacy types retained during redesign transition
   projectType,
   siteSettingsType,

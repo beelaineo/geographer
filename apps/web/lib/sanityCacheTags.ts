@@ -9,6 +9,7 @@ export const sanityTag = {
   contributors: "sanity:contributors",
   siteSettings: "sanity:siteSettings",
   clubEden: "sanity:clubEden",
+  newsletter: "sanity:newsletter",
   reclus: "sanity:reclus",
   lastTurnOurTurn: "sanity:lastTurnOurTurn",
   releaseList: "sanity:release:list",

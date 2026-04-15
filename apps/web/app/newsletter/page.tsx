@@ -1,15 +1,41 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
+
+import { sanityTag } from "../../lib/sanityCacheTags";
+import { NEWSLETTER_DOCUMENT_QUERY } from "../../lib/queries";
+import { fetchSanityQuery } from "../../lib/sanity.fetch";
 
 export const metadata: Metadata = {
   title: "Newsletter"
 };
 
-export default function NewsletterPage() {
+type NewsletterDocument = {
+  title: string | null;
+  text: string | null;
+  submitButtonLabel: string | null;
+} | null;
+
+async function loadNewsletterDocument(previewEnabled: boolean) {
+  return fetchSanityQuery<NewsletterDocument>(NEWSLETTER_DOCUMENT_QUERY, {
+    tags: [sanityTag.newsletter],
+    preview: previewEnabled
+  });
+}
+
+export default async function NewsletterPage() {
+  const { isEnabled } = await draftMode();
+  const newsletter = await loadNewsletterDocument(isEnabled);
+  const title = newsletter?.title?.trim() || "Newsletter";
+  const text =
+    newsletter?.text?.trim() ||
+    "Sign up for the most significant Geographer updates in your mailbox, focusing on our text content. No spam, promise.";
+  const submitButtonLabel = newsletter?.submitButtonLabel?.trim() || "Submit";
+
   return (
     <section className="mx-auto flex w-full max-w-3xl flex-col items-center justify-center min-h-screen px-6 pb-20 text-center">
-      <h1 className="hidden type-body-sans">Newsletter</h1>
+      <h1 className="hidden type-body-sans">{title}</h1>
       <p className="mt-4 max-w-3xl type-body-sans">
-      Sign up for the most significant Geographer updates in your mailbox, focusing on our text content. No spam, promise.
+        {text}
       </p>
 
       <form
@@ -59,7 +85,7 @@ export default function NewsletterPage() {
           type="submit"
           className="mt-2 w-fit type-body-sans mx-auto appearance-none bg-transparent p-0 uppercase transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         >
-          Get Updates
+          {submitButtonLabel}
         </button>
       </form>
     </section>

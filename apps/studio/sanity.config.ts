@@ -8,6 +8,7 @@ import { aboutType } from "./schemas/about";
 import { clubEdenType } from "./schemas/clubEden";
 import { contributorsType } from "./schemas/contributors";
 import { lastTurnOurTurnType } from "./schemas/lastTurnOurTurn";
+import { newsletterType } from "./schemas/newsletter";
 import { reclusType } from "./schemas/reclus";
 import { schemaTypes } from "./schemas";
 import { homepageType } from "./schemas/homepage";
@@ -26,7 +27,8 @@ const singletonTypes = [
   "siteSettings",
   "reclus",
   "lastTurnOurTurn",
-  "clubEden"
+  "clubEden",
+  "newsletter"
 ] as const;
 type SingletonType = (typeof singletonTypes)[number];
 const singletonSet = new Set<SingletonType>(singletonTypes);
@@ -95,6 +97,15 @@ const singletonItems = (S: StructureBuilder) => [
       S.document()
         .schemaType("clubEden")
         .documentId("clubEden")
+    ),
+  S.listItem()
+    .title(newsletterType.title || "Newsletter")
+    .id("newsletter")
+    .icon(newsletterType.icon)
+    .child(
+      S.document()
+        .schemaType("newsletter")
+        .documentId("newsletter")
     )
 ];
 

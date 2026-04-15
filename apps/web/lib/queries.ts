@@ -290,6 +290,15 @@ export const CLUB_EDEN_DOCUMENT_QUERY = defineQuery(`
   }
 `);
 
+/** Singleton Newsletter page copy (Studio document id \`newsletter\`). */
+export const NEWSLETTER_DOCUMENT_QUERY = defineQuery(`
+  *[_id == "newsletter"][0]{
+    title,
+    text,
+    submitButtonLabel
+  }
+`);
+
 /** Singleton Reclus page copy (Studio document id \`reclus\`). */
 export const RECLUS_DOCUMENT_QUERY = defineQuery(`
   *[_id == "reclus"][0]{
