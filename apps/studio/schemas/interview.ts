@@ -26,6 +26,7 @@ export const interviewType = defineType({
     defineField({
       name: "published",
       title: "Published?",
+      description: "When false, Reclus index line values are ciphered and the item is not linkable.",
       type: "boolean",
       initialValue: false,
       validation: (rule) => rule.required()

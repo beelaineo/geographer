@@ -13,8 +13,12 @@ import { fetchSiteSettings } from "../../../lib/siteSettings";
 import { urlForImageWithWidth } from "../../../lib/sanityImage";
 import { buildMetadata, type SanitySeoPayload } from "../../../lib/seo";
 
+type ReclusGalleryInterviewsQueryResult = Array<
+  PUBLISHED_INTERVIEWS_QUERYResult[number] & { published: boolean | null }
+>;
+
 async function loadPublishedInterviews(previewEnabled: boolean) {
-  return fetchSanityQuery<PUBLISHED_INTERVIEWS_QUERYResult>(PUBLISHED_INTERVIEWS_QUERY, {
+  return fetchSanityQuery<ReclusGalleryInterviewsQueryResult>(PUBLISHED_INTERVIEWS_QUERY, {
     tags: [sanityTag.interviewList],
     preview: previewEnabled
   });
@@ -40,12 +44,13 @@ export default async function ReclusGalleryPage() {
       {interviews.length ? (
         <ul className="grid list-none grid-cols-1 gap-8 sm:gap-10 p-0 sm:grid-cols-2 md:grid-cols-3">
           {interviews.map((interview, index) => {
+            const isPublished = interview.published === true;
             const slug = interview.slug?.current;
             const title = interview.title?.trim() || "Untitled";
             const key = interview._id ?? `interview-${index}`;
             const cover = interview.cover;
             const imageUrl = cover?.asset ? urlForImageWithWidth(cover, 720).url() : null;
-            const href = slug ? `/interviews/${slug}` : null;
+            const href = isPublished && slug ? `/interviews/${slug}` : null;
             const quote = interview.quote?.trim();
 
             const cell = (
@@ -63,7 +68,7 @@ export default async function ReclusGalleryPage() {
                     {title}
                   </div>
                 )}
-                {quote ? (
+                {isPublished && quote ? (
                   <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white p-4 text-center type-body-text text-black opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-focus-within:opacity-100 md:text-base">
                     &ldquo;{quote}&rdquo;
                   </span>
@@ -82,7 +87,7 @@ export default async function ReclusGalleryPage() {
                     {cell}
                   </Link>
                 ) : (
-                  <div className="group block w-full">{cell}</div>
+                  <div className="block w-full">{cell}</div>
                 )}
               </li>
             );

@@ -15,6 +15,10 @@ import { fetchSanityQuery } from "../../lib/sanity.fetch";
 import { fetchSiteSettings } from "../../lib/siteSettings";
 import { buildMetadata, type SanitySeoPayload } from "../../lib/seo";
 
+type ClubEdenReleasesQueryResult = Array<
+  CLUB_EDEN_RELEASES_QUERYResult[number] & { published: boolean | null }
+>;
+
 async function loadClubEdenDocument(previewEnabled: boolean) {
   return fetchSanityQuery<CLUB_EDEN_DOCUMENT_QUERYResult>(CLUB_EDEN_DOCUMENT_QUERY, {
     tags: [sanityTag.clubEden],
@@ -23,7 +27,7 @@ async function loadClubEdenDocument(previewEnabled: boolean) {
 }
 
 async function loadReleases(previewEnabled: boolean) {
-  return fetchSanityQuery<CLUB_EDEN_RELEASES_QUERYResult>(CLUB_EDEN_RELEASES_QUERY, {
+  return fetchSanityQuery<ClubEdenReleasesQueryResult>(CLUB_EDEN_RELEASES_QUERY, {
     tags: [sanityTag.releaseList, sanityTag.collectionList],
     preview: previewEnabled
   });

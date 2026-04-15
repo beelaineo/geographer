@@ -4,6 +4,7 @@ import { draftMode } from "next/headers";
 import PlayTitleMetaList from "../../../components/PlayTitleMetaList";
 import { sanityTag } from "../../../lib/sanityCacheTags";
 import { formatInterviewLeadInitials } from "../../../lib/formatInterviewInitials";
+import { cipherInterviewLineValue } from "../../../lib/interviewLineCipher";
 import { formatReleaseDateMmYyyy } from "../../../lib/formatPublishDate";
 import {
   PUBLISHED_INTERVIEWS_QUERY,
@@ -13,8 +14,12 @@ import { fetchSanityQuery } from "../../../lib/sanity.fetch";
 import { fetchSiteSettings } from "../../../lib/siteSettings";
 import { buildMetadata, type SanitySeoPayload } from "../../../lib/seo";
 
+type ReclusIndexInterviewsQueryResult = Array<
+  PUBLISHED_INTERVIEWS_QUERYResult[number] & { published: boolean | null }
+>;
+
 async function loadPublishedInterviews(previewEnabled: boolean) {
-  return fetchSanityQuery<PUBLISHED_INTERVIEWS_QUERYResult>(PUBLISHED_INTERVIEWS_QUERY, {
+  return fetchSanityQuery<ReclusIndexInterviewsQueryResult>(PUBLISHED_INTERVIEWS_QUERY, {
     tags: [sanityTag.interviewList],
     preview: previewEnabled
   });
@@ -35,15 +40,26 @@ export default async function ReclusIndexPage() {
   const { isEnabled } = await draftMode();
   const interviews = (await loadPublishedInterviews(isEnabled)) ?? [];
 
-  const rows = interviews.map((interview) => ({
-    _id: interview._id,
-    title: interview.title,
-    slug: interview.slug,
-    href: interview.slug?.current ? `/interviews/${interview.slug.current}` : null,
-    leadContent: formatInterviewLeadInitials(interview.contributors, interview.authorInitials),
-    meta: formatReleaseDateMmYyyy(interview.release_date),
-    backgroundColor: interview.backgroundColor
-  }));
+  const rows = interviews.map((interview) => {
+    const isPublished = interview.published === true;
+    const rowSeed = interview._id ?? interview.title ?? "interview-row";
+    const title = interview.title?.trim() || "Untitled";
+    const leadContent = formatInterviewLeadInitials(interview.contributors, interview.authorInitials);
+    const meta = formatReleaseDateMmYyyy(interview.release_date) ?? "";
+
+    return {
+      _id: interview._id,
+      isObfuscated: !isPublished,
+      title: isPublished ? title : cipherInterviewLineValue(title, `${rowSeed}:title`),
+      slug: interview.slug,
+      href: isPublished && interview.slug?.current ? `/interviews/${interview.slug.current}` : null,
+      leadContent: isPublished
+        ? leadContent
+        : cipherInterviewLineValue(leadContent, `${rowSeed}:leadContent`),
+      meta: isPublished ? meta : cipherInterviewLineValue(meta, `${rowSeed}:meta`),
+      backgroundColor: interview.backgroundColor
+    };
+  });
 
   return (
     <div className="mx-auto max-w-2xl px-5 pb-16 pt-24 md:px-12 md:pt-24">

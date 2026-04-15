@@ -169,7 +169,7 @@ const HOMEPAGE_CONTENT_SELECTION = /* groq */ `content[]{
     title,
     image${RICH_IMAGE_SELECTION},
     hoverImage${RICH_IMAGE_SELECTION},
-    releases[]->{
+    "releases": *[_type == "release" && published == true && defined(slug.current)] | order(release_date desc)[0...2]{
       _id,
       _type,
       title,
@@ -265,12 +265,13 @@ export const RELEASES_QUERY = defineQuery(`
   }
 `);
 
-/** Published releases only, newest first (e.g. Club Eden listing). */
+/** Releases for Club Eden listing, newest first. */
 export const CLUB_EDEN_RELEASES_QUERY = defineQuery(`
-  *[_type == "release" && published == true && defined(slug.current)] | order(release_date desc){
+  *[_type == "release" && defined(slug.current)] | order(release_date desc){
     _id,
     title,
     slug,
+    published,
     backgroundColor,
     "seriesTitles": *[_type == "collection" && references(^._id)].title
   }
@@ -498,12 +499,13 @@ export const PROJECTS_QUERY = defineQuery(`
   }
 `);
 
-/** Published interviews, newest first (e.g. Reclus gallery / index). */
+/** Interviews for Reclus listings, newest first. */
 export const PUBLISHED_INTERVIEWS_QUERY = defineQuery(`
-  *[_type == "interview" && published == true && defined(slug.current)] | order(release_date desc){
+  *[_type == "interview" && defined(slug.current)] | order(release_date desc){
     _id,
     title,
     slug,
+    published,
     release_date,
     authorInitials,
     quote,

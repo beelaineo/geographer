@@ -12,6 +12,8 @@ export type PlayTitleMetaRow = {
   title?: string | null;
   slug?: Slug | null;
   href?: string | null;
+  /** Applies visual obfuscation for unreleased rows. */
+  isObfuscated?: boolean;
   /**
    * First column: when `undefined`, the play triangle is shown (Club Eden).
    * When set (including empty after trim), text is shown or an em dash if blank.
@@ -190,6 +192,7 @@ export default function PlayTitleMetaList({
             "grid w-full items-center gap-x-5 border-b border-black px-2 md:px-5 py-2 text-inherit transition-colors duration-200 ease-out";
 
           const rowTextClassName = "type-small-text text-center uppercase tabular-nums";
+          const obfuscationClassName = row.isObfuscated ? "blur-[4px]" : "";
 
           const inner = (
             <>
@@ -199,15 +202,21 @@ export default function PlayTitleMetaList({
                 aria-hidden={!leadDefined}
               >
                 {leadDisplay !== null ? (
-                  <span className={rowTextClassName}>{leadDisplay}</span>
+                  <span className={[rowTextClassName, obfuscationClassName].filter(Boolean).join(" ")}>
+                    {leadDisplay}
+                  </span>
                 ) : (
                   <PlayTriangleIcon className="h-2 w-2" />
                 )}
               </span>
-              <span className={["pl-[calc(2.5rem+8px)]", rowTextClassName].filter(Boolean).join(" ")}>
+              <span
+                className={["pl-[calc(2.5rem+8px)]", rowTextClassName, obfuscationClassName]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
                 {title}
               </span>
-              <span className={rowTextClassName}>
+              <span className={[rowTextClassName, obfuscationClassName].filter(Boolean).join(" ")}>
                 {metaDisplay}
               </span>
             </>

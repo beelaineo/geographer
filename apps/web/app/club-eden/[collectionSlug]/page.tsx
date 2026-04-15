@@ -127,12 +127,13 @@ export default async function ClubEdenCollectionPage({ params }: ClubEdenCollect
       {gridReleases.length ? (
         <ul className={gridListClassName}>
           {gridReleases.map((release, index) => {
+            const isReleasePublished = release.published !== false;
             const cover = release.cover ?? release.coverAlt;
             const slug = release.slug?.current;
             const title = release.title?.trim() || "Untitled";
             const key = release._id ?? `release-${index}`;
             const imageUrl = cover?.asset ? urlForImageWithWidth(cover, 720).url() : null;
-            const href = slug ? `/releases/${slug}` : null;
+            const href = isReleasePublished && slug ? `/releases/${slug}` : null;
 
             const cell = (
               <div className="relative aspect-[4/5] w-full overflow-hidden">
@@ -149,7 +150,7 @@ export default async function ClubEdenCollectionPage({ params }: ClubEdenCollect
                     {title}
                   </div>
                 )}
-                {imageUrl ? (
+                {isReleasePublished && imageUrl ? (
                   <span className="pointer-events-none hidden md:absolute md:inset-0 md:flex items-center justify-center bg-white p-4 text-center type-small-text uppercase text-black md:opacity-0 md:transition-opacity duration-200 ease-out md:group-hover:opacity-100 md:group-focus-within:opacity-100">
                     {title}
                   </span>
