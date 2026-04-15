@@ -83,6 +83,36 @@
     }
   },
   {
+    "name": "homepageNewsletterSignup",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "homepageNewsletterSignup"
+          }
+        },
+        "ctaLabel": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "emailPlaceholder": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
     "name": "homepageFeaturedReleases",
     "type": "type",
     "value": {
@@ -1536,6 +1566,13 @@
                 "dereferencesTo": "clubEden"
               }
             ]
+          },
+          "optional": true
+        },
+        "subLink": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
           },
           "optional": true
         },
@@ -3386,6 +3423,21 @@
                 "rest": {
                   "type": "inline",
                   "name": "homepageFeaturedReleases"
+                }
+              },
+              {
+                "type": "object",
+                "attributes": {
+                  "_key": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "rest": {
+                  "type": "inline",
+                  "name": "homepageNewsletterSignup"
                 }
               }
             ]

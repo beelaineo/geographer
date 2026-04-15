@@ -384,7 +384,7 @@ export default function AutoplayVideo({
       preload="auto"
       poster={posterUrl}
       aria-label={accessibilityLabel ?? undefined}
-      className={["cursor-pointer", className].filter(Boolean).join(" ")}
+      className={[className].filter(Boolean).join(" ")}
       onClick={handleClick}
     >
       Your browser does not support the video tag.

@@ -105,7 +105,7 @@ export default async function ClubEdenCollectionPage({ params }: ClubEdenCollect
   const is1992 = collectionSlug === "1992";
 
   const gridListClassName = is1992
-    ? "max-w-[160px] mx-auto md:max-w-none mt-2 grid list-none md:grid-cols-5 gap-8 md:gap-0 p-0"
+    ? "max-w-[160px] mx-auto md:max-w-none md:w-full md:flex-1 mt-2 grid list-none md:grid-cols-5 gap-8 md:gap-0 p-0"
     : "max-w-[160px] mx-auto md:max-w-none mt-2 grid list-none grid-cols-1 gap-8 p-0 md:grid-cols-3 md:gap-16";
 
   const imageSizes = is1992 ? "(max-width: 768px) 50vw, 25vw" : "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw";
@@ -113,14 +113,14 @@ export default async function ClubEdenCollectionPage({ params }: ClubEdenCollect
   return (
     <div
       className={[
-        "mx-auto px-6 pb-16 pt-24 md:px-10 md:pt-36",
-        is1992 ? "md:max-w-3xl" : "md:max-w-3xl"
+        "mx-auto px-6 pb-16 pt-24 md:px-3 md:pt-24",
+        is1992 ? "md:max-w-3xl flex flex-col-reverse md:gap-10" : "md:max-w-3xl"
       ].join(" ")}
     >
       <h1 className="mb-8 hidden md:text-3xl">{data.title}</h1>
       {intro?.length ? (
-        <div className="mx-auto mb-12 max-w-3xl space-y-4">
-          <RichText value={intro} />
+        <div className="mx-auto flex-1 mb-12 max-w-2xl space-y-4 md:px-12">
+          <RichText value={intro} className="md:max-w-2xl"/>
         </div>
       ) : null}
 

@@ -97,6 +97,7 @@ const MENU_ITEM_PROJECTION = /* groq */ `_key,
     title,
     slug
   },
+  subLink,
   externalLink`;
 
 const PRESS_ITEM_SELECTION = /* groq */ `{
@@ -175,6 +176,12 @@ const HOMEPAGE_CONTENT_SELECTION = /* groq */ `content[]{
       backgroundColor,
       "seriesTitles": *[_type == "collection" && references(^._id)].title
     }
+  },
+  _type == "homepageNewsletterSignup" => {
+    _key,
+    _type,
+    ctaLabel,
+    emailPlaceholder
   }
 }`;
 
@@ -190,7 +197,7 @@ export const HOMEPAGE_QUERY = defineQuery(`
 `);
 
 export const ABOUT_QUERY = defineQuery(`
-  *[_type == "about"][0]{
+  *[_id == "about"][0]{
     richText${RICH_TEXT_SELECTION},
     image${RICH_IMAGE_SELECTION},
     imageText${RICH_TEXT_SELECTION},

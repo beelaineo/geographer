@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const linkClass =
-  "uppercase type-small-text transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
+  "uppercase type-body-sans transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
 
 export default function ReclusNav() {
   const pathname = usePathname() ?? "";

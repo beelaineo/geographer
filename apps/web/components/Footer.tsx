@@ -44,8 +44,8 @@ export default function Footer({
             </Link>
           ))}
         </nav>
-        <div className="text-center">
-          <span className="type-small-text">© Geographer {new Date().getFullYear()}</span>
+        <div className="flex flex-col items-center justify-center">
+          <span className="type-small-text"><span className="inline-block translate-y-[2px]">©</span> Geographer {new Date().getFullYear()}</span>
         </div>
       </div>
     </footer>

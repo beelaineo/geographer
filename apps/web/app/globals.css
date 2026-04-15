@@ -43,8 +43,12 @@
     -webkit-text-stroke: 0.2px;
   }
 
+  .type-body-sans {
+    @apply font-sans font-bold text-[16px] leading-[21.5px] tracking-[0.02em];
+  }
+
   .type-interview-answer {
-    @apply font-sans text-[14.5px] font-normal leading-[22px] tracking-[0.02em];
+    @apply font-sans text-[14.5px] font-normal leading-[21.5px] tracking-[0.02em];
     -webkit-text-stroke: 0.1px;
   }
 }

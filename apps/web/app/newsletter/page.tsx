@@ -7,8 +7,8 @@ export const metadata: Metadata = {
 export default function NewsletterPage() {
   return (
     <section className="mx-auto flex w-full max-w-3xl flex-col items-center justify-center min-h-screen px-6 pb-20 text-center">
-      <h1 className="hidden text-base font-bold uppercase tracking-wide">Newsletter</h1>
-      <p className="mt-4 max-w-3xl type-homepage-text-block">
+      <h1 className="hidden type-body-sans">Newsletter</h1>
+      <p className="mt-4 max-w-3xl type-body-sans">
       Sign up for the most significant Geographer updates in your mailbox, focusing on our text content. No spam, promise.
       </p>
 
@@ -57,7 +57,7 @@ export default function NewsletterPage() {
 
         <button
           type="submit"
-          className="mt-2 w-fit font-bold mx-auto appearance-none bg-transparent p-0 uppercase transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="mt-2 w-fit type-body-sans mx-auto appearance-none bg-transparent p-0 uppercase transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           Get Updates
         </button>

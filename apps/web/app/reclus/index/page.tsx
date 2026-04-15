@@ -46,7 +46,7 @@ export default async function ReclusIndexPage() {
   }));
 
   return (
-    <div className="mx-auto max-w-2xl px-5 pb-16 pt-32">
+    <div className="mx-auto max-w-2xl px-5 pb-16 pt-24 md:px-12 md:pt-24">
       <PlayTitleMetaList
         items={rows}
         showColumnHeadings

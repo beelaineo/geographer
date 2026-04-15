@@ -15,7 +15,8 @@ export const homepageType = defineType({
         defineArrayMember({ type: "homepageVideoBanner" }),
         defineArrayMember({ type: "homepageFeaturedInterview" }),
         defineArrayMember({ type: "homepageTextBlock" }),
-        defineArrayMember({ type: "homepageFeaturedReleases" })
+        defineArrayMember({ type: "homepageFeaturedReleases" }),
+        defineArrayMember({ type: "homepageNewsletterSignup" })
       ],
       validation: (rule) => rule.required().min(1)
     }),

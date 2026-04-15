@@ -93,7 +93,7 @@ const components: PortableTextComponents = {
       <strong className="font-sans font-bold">{children}</strong>
     ),
     center: ({ children }: { children?: ReactNode }) => (
-      <span className="block text-center">{children}</span>
+      <span className="block text-center type-body-sans">{children}</span>
     ),
     internalLink: ({ value, children }: PortableTextMarkComponentProps<InternalLinkValue>) => {
       const href = resolveProductionUrl(value?.reference);

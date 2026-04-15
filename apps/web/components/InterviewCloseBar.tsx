@@ -7,7 +7,7 @@ import { useLayoutEffect, useState } from "react";
 import { INTERVIEW_FROM_INTERNAL_NAV_STORAGE_KEY } from "../lib/releaseNavigation";
 
 const controlClass =
-  "flex items-center gap-1 type-small-text uppercase transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
+  "flex items-center gap-1 type-body-sans uppercase transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
 
 export default function InterviewCloseBar() {
   const router = useRouter();
@@ -18,9 +18,9 @@ export default function InterviewCloseBar() {
   }, []);
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-20 px-6 py-5 md:left-0 md:right-0 md:top-0 md:px-5">
+    <header className="fixed left-0 right-0 top-0 z-20 px-5 py-5 md:left-0 md:right-0 md:top-0 md:px-5">
       <div className="relative mx-auto flex min-h-[2.5rem] w-full max-w-[100vw] items-center justify-center">
-        <div className="absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-1/2 md:left-0 md:translate-x-0">
+        <div className="absolute left-0 top-0 z-30">
           {fromInternalNavigation ? (
             <button
               type="button"

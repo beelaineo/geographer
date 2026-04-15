@@ -64,9 +64,9 @@ export default async function AboutPage() {
     Boolean(richText?.length)
 
   return (
-    <main className="mx-auto max-w-3xl px-6 pb-16 pt-16 md:px-12 md:pt-32">
+    <main className="mx-auto max-w-2xl px-6 pb-16 pt-16 md:px-12 md:pt-24">
       {hasAboutContent ? (
-            <section className="max-w-3xl space-y-4 type-body-text">
+            <section className="space-y-4 type-body-text">
               <RichText value={richText} />
             </section>
       ) : null}

@@ -57,10 +57,10 @@ export default async function ClubEdenPage() {
   const heading = pageDoc?.title?.trim() || "Club Eden";
 
   return (
-    <div className="px-6 pb-16 pt-24 md:px-12 md:pt-36 max-w-3xl mx-auto">
+    <div className="px-6 pb-16 pt-24 md:px-12 md:pt-24 max-w-2xl mx-auto">
       <h1 className="mb-10 text-2xl font-semibold md:text-3xl hidden">{heading}</h1>
       {intro?.length ? (
-        <div className="mb-12 max-w-3xl space-y-4 type-body-text">
+        <div className="mb-12 max-w-2xl space-y-4 type-body-text">
           <RichText value={intro} />
         </div>
       ) : null}

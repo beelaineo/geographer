@@ -60,7 +60,7 @@ export default function Header({
       className={`${mobilePositionClasses} ${desktopPositionClasses} px-5 py-5 md:px-5 md:py-5`}
     >
       <div className="relative mx-auto flex min-h-[2.5rem] w-full max-w-[100vw] items-center justify-center">
-        <div className="absolute left-1/2 top-16 z-30 mt-4 -translate-x-1/2 md:left-0 md:top-1/2 md:mt-0 md:-translate-x-0 md:-translate-y-1/2">
+        <div className="absolute left-1/2 top-16 z-30 mt-4 -translate-x-1/2 md:left-0 md:top-0 md:mt-0 md:-translate-x-0">
           <HeaderMenu items={mainMenu} />
         </div>
         <Link

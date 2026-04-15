@@ -42,6 +42,8 @@ function HomepageBlock({ block }: { block: Block }) {
       return <HomepageTextBlockSection block={block} />;
     case "homepageFeaturedReleases":
       return <HomepageFeaturedReleasesSection block={block} />;
+    case "homepageNewsletterSignup":
+      return <HomepageNewsletterSignupSection block={block} />;
     default:
       return null;
   }
@@ -68,7 +70,7 @@ function HomepageVideoBannerSection({
           <AutoplayVideo
             playbackId={playbackId}
             accessibilityLabel={block.mediaDescription ?? undefined}
-            className="h-auto w-full max-h-[70vh] object-contain bg-transparent"
+            className="h-auto w-full max-w-2xl max-h-[70vh] object-contain bg-transparent"
           />
         </div>
       ) : null}
@@ -84,23 +86,23 @@ function HomepageFeaturedInterviewSection({
   const interview = block.interview;
   const cover = interview?.cover;
   const href = interview ? resolveProductionUrl(interview) : "/";
-  const coverUrl = cover?.asset ? urlForImageWithWidth(cover, 600).url() : null;
+  const coverUrl = cover?.asset ? urlForImageWithWidth(cover, 1200).url() : null;
   const quote = interview?.quote?.trim();
   const { width: dimW, height: dimH } = getImageDimensions(cover ?? undefined);
-  const displayW = 300;
+  const displayW = 420;
   const displayH = Math.max(1, Math.round((dimH / dimW) * displayW));
 
   const inner = (
     <>
       {coverUrl && cover ? (
-        <div className="relative w-[320px] max-w-full">
+        <div className="relative max-w-full">
           <Image
             src={coverUrl}
             alt={cover.alt ?? interview?.title ?? ""}
             width={displayW}
             height={displayH}
-            className="w-[320px] max-w-full object-cover"
-            sizes="320px"
+            className="h-auto max-h-[75vh] max-w-[min(100%,420px)] object-contain"
+            sizes="(max-width: 768px) 100vw, 420px"
           />
           {quote ? (
             <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white p-4 text-center type-body-text text-black opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-focus-within:opacity-100">
@@ -197,6 +199,56 @@ function HomepageFeaturedReleasesSection({
           />
         ) : null}
         <ClubEdenReleaseList releases={releases} showColumnHeadings={false} />
+      </div>
+    </section>
+  );
+}
+
+function HomepageNewsletterSignupSection({
+  block
+}: {
+  block: Extract<Block, { _type: "homepageNewsletterSignup" }>;
+}) {
+  const ctaLabel = block.ctaLabel?.trim() || "Submit";
+  const emailPlaceholder = block.emailPlaceholder?.trim() || "email address";
+
+  return (
+    <section className="w-full px-5 py-8 md:px-5">
+      <div className="mx-auto max-w-2xl">
+        <form
+          name="newsletter-signup"
+          method="POST"
+          action="/newsletter"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          className="mx-auto flex w-full max-w-[270px] flex-col items-center gap-4"
+        >
+          <input type="hidden" name="form-name" value="newsletter-signup" />
+          <p className="hidden">
+            <label htmlFor="homepage-newsletter-bot-field">
+              Do not fill this out if you are human:
+              <input id="homepage-newsletter-bot-field" name="bot-field" />
+            </label>
+          </p>
+          <label htmlFor="homepage-newsletter-email" className="sr-only">
+            Email address
+          </label>
+          <input
+            id="homepage-newsletter-email"
+            name="email"
+            type="email"
+            required
+            placeholder={emailPlaceholder}
+            autoComplete="email"
+            className="w-full border-0 border-b border-black bg-transparent px-0 py-1 text-center type-small-text placeholder:text-center placeholder:uppercase focus:border-black focus:outline-none"
+          />
+          <button
+            type="submit"
+            className="appearance-none bg-transparent p-0 text-center type-small-text uppercase transition hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            {ctaLabel}
+          </button>
+        </form>
       </div>
     </section>
   );

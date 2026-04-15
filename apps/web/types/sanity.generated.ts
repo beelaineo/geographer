@@ -29,6 +29,12 @@ export type PressItem = {
   };
 };
 
+export type HomepageNewsletterSignup = {
+  _type: "homepageNewsletterSignup";
+  ctaLabel?: string;
+  emailPlaceholder?: string;
+};
+
 export type HomepageFeaturedReleases = {
   _type: "homepageFeaturedReleases";
   title?: string;
@@ -279,6 +285,7 @@ export type MenuItem = {
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "clubEden";
   };
+  subLink?: string;
   externalLink?: string;
 };
 
@@ -564,7 +571,9 @@ export type Homepage = {
     _key: string;
   } & HomepageTextBlock | {
     _key: string;
-  } & HomepageFeaturedReleases>;
+  } & HomepageFeaturedReleases | {
+    _key: string;
+  } & HomepageNewsletterSignup>;
   seo?: Seo;
 };
 
@@ -1064,11 +1073,11 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = PressItem | HomepageFeaturedReleases | HomepageTextBlock | HomepageFeaturedInterview | HomepageVideoBanner | CtaLink | MenuItem | InterviewEntry | InterviewBody | RichText | SiteSettings | Contributor | About | Homepage | Release | Collection | Project | Page | Interview | Reclus | LastTurnOurTurn | ClubEden | Seo | RichImage | MuxVideo | MuxVideoAsset | MuxAssetData | MuxStaticRenditions | MuxStaticRenditionFile | MuxPlaybackId | MuxTrack | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = PressItem | HomepageNewsletterSignup | HomepageFeaturedReleases | HomepageTextBlock | HomepageFeaturedInterview | HomepageVideoBanner | CtaLink | MenuItem | InterviewEntry | InterviewBody | RichText | SiteSettings | Contributor | About | Homepage | Release | Collection | Project | Page | Interview | Reclus | LastTurnOurTurn | ClubEden | Seo | RichImage | MuxVideo | MuxVideoAsset | MuxAssetData | MuxStaticRenditions | MuxStaticRenditionFile | MuxPlaybackId | MuxTrack | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ../web/lib/queries.ts
 // Variable: HOMEPAGE_QUERY
-// Query: *[_type == "homepage"][0]{    content[]{  _key,  _type,  _type == "homepageVideoBanner" => {    _key,    _type,    title,    mediaDescription,    backgroundColor,    video{      ...,      asset->{        _id,        playbackId,        status,        data      }    }  },  _type == "homepageFeaturedInterview" => {    _key,    _type,    title,    interview->{      _id,      _type,      title,      slug,      quote,      cover{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  },  _type == "homepageTextBlock" => {    _key,    _type,    title,    body[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  },  _type == "richImage" => {    ...,    alt,    caption,    asset->{      ...,      metadata{        blurHash,        dimensions{          width,          height,          aspectRatio        }      }    }  }},    cta{      label,      linkType,      internalLink->{        _type,        _id,        title,        slug      },      externalLink    }  },  _type == "homepageFeaturedReleases" => {    _key,    _type,    title,    image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    releases[]->{      _id,      _type,      title,      slug,      backgroundColor,      "seriesTitles": *[_type == "collection" && references(^._id)].title    }  }},    seo{      title,      description,      image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  }
+// Query: *[_type == "homepage"][0]{    content[]{  _key,  _type,  _type == "homepageVideoBanner" => {    _key,    _type,    title,    mediaDescription,    backgroundColor,    video{      ...,      asset->{        _id,        playbackId,        status,        data      }    }  },  _type == "homepageFeaturedInterview" => {    _key,    _type,    title,    interview->{      _id,      _type,      title,      slug,      quote,      cover{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  },  _type == "homepageTextBlock" => {    _key,    _type,    title,    body[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  },  _type == "richImage" => {    ...,    alt,    caption,    asset->{      ...,      metadata{        blurHash,        dimensions{          width,          height,          aspectRatio        }      }    }  }},    cta{      label,      linkType,      internalLink->{        _type,        _id,        title,        slug      },      externalLink    }  },  _type == "homepageFeaturedReleases" => {    _key,    _type,    title,    image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    releases[]->{      _id,      _type,      title,      slug,      backgroundColor,      "seriesTitles": *[_type == "collection" && references(^._id)].title    }  },  _type == "homepageNewsletterSignup" => {    _key,    _type,    ctaLabel,    emailPlaceholder  }},    seo{      title,      description,      image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  }
 export type HOMEPAGE_QUERYResult = {
   content: Array<{
     _key: string;
@@ -1167,6 +1176,11 @@ export type HOMEPAGE_QUERYResult = {
       backgroundColor: Color | null;
       seriesTitles: Array<string | null>;
     }> | null;
+  } | {
+    _key: string;
+    _type: "homepageNewsletterSignup";
+    ctaLabel: string | null;
+    emailPlaceholder: string | null;
   } | {
     _key: string;
     _type: "homepageTextBlock";
@@ -1698,7 +1712,7 @@ export type ABOUT_QUERYResult = {
   } | null;
 } | null;
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_type == "siteSettings"][0]{    mainMenu[]{      _key,  label,  linkType,  internalLink->{    _type,    _id,    title,    slug  },  externalLink    },    footerMenu[]{      _key,  label,  linkType,  internalLink->{    _type,    _id,    title,    slug  },  externalLink    },    overlayBGColor,    seo{      title,      description,      image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  }
+// Query: *[_type == "siteSettings"][0]{    mainMenu[]{      _key,  label,  linkType,  internalLink->{    _type,    _id,    title,    slug  },  subLink,  externalLink    },    footerMenu[]{      _key,  label,  linkType,  internalLink->{    _type,    _id,    title,    slug  },  subLink,  externalLink    },    overlayBGColor,    seo{      title,      description,      image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  }
 export type SITE_SETTINGS_QUERYResult = {
   mainMenu: Array<{
     _key: string;
@@ -1755,6 +1769,7 @@ export type SITE_SETTINGS_QUERYResult = {
       title: string | null;
       slug: Slug | null;
     } | null;
+    subLink: string | null;
     externalLink: string | null;
   }> | null;
   footerMenu: Array<{
@@ -1812,6 +1827,7 @@ export type SITE_SETTINGS_QUERYResult = {
       title: string | null;
       slug: Slug | null;
     } | null;
+    subLink: string | null;
     externalLink: string | null;
   }> | null;
   overlayBGColor: Color | null;
@@ -2652,8 +2668,295 @@ export type RECLUS_DOCUMENT_QUERYResult = {
   } | null;
 } | null;
 // Variable: LAST_TURN_OUR_TURN_DOCUMENT_QUERY
-// Query: *[_type == "lastTurnOurTurn"][0]{    title,    body[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  },  _type == "richImage" => {    ...,    alt,    caption,    asset->{      ...,      metadata{        blurHash,        dimensions{          width,          height,          aspectRatio        }      }    }  }},    seo{      title,      description,      image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  }
+// Query: *[_id == "lastTurnOurTurn"][0]{    title,    body[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  },  _type == "richImage" => {    ...,    alt,    caption,    asset->{      ...,      metadata{        blurHash,        dimensions{          width,          height,          aspectRatio        }      }    }  }},    seo{      title,      description,      image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  }
 export type LAST_TURN_OUR_TURN_DOCUMENT_QUERYResult = {
+  title: null;
+  body: null;
+  seo: null;
+} | {
+  title: string | null;
+  body: null;
+  seo: null;
+} | {
+  title: null;
+  body: null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    image: {
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata: {
+          blurHash: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+            aspectRatio: number | null;
+          } | null;
+        } | null;
+        source?: SanityAssetSourceData;
+      } | null;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string | null;
+      caption: string | null;
+      _type: "richImage";
+    } | null;
+  } | null;
+} | {
+  title: string | null;
+  body: null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    image: {
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata: {
+          blurHash: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+            aspectRatio: number | null;
+          } | null;
+        } | null;
+        source?: SanityAssetSourceData;
+      } | null;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string | null;
+      caption: string | null;
+      _type: "richImage";
+    } | null;
+  } | null;
+} | {
+  title: string | null;
+  body: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h2" | "h3" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }> | null;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    _key: string;
+    _type: "interviewEntry";
+    speakerRole?: "interviewee" | "interviewer";
+    speakerInitials?: string;
+    text?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "blockquote" | "h2" | "h3" | "normal";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<{
+        href?: string;
+        _type: "externalLink";
+        _key: string;
+      } | {
+        reference?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "about";
+        } | {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "clubEden";
+        } | {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "collection";
+        } | {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "homepage";
+        } | {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "interview";
+        } | {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "lastTurnOurTurn";
+        } | {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "page";
+        } | {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "project";
+        } | {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "reclus";
+        } | {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "release";
+        };
+        _type: "internalLink";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    } | {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      caption?: string;
+      _type: "richImage";
+      _key: string;
+    }>;
+    markDefs: null;
+  } | {
+    asset: {
+      _id: string;
+      _type: "sanity.imageAsset";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      originalFilename?: string;
+      label?: string;
+      title?: string;
+      description?: string;
+      altText?: string;
+      sha1hash?: string;
+      extension?: string;
+      mimeType?: string;
+      size?: number;
+      assetId?: string;
+      uploadId?: string;
+      path?: string;
+      url?: string;
+      metadata: {
+        blurHash: string | null;
+        dimensions: {
+          width: number | null;
+          height: number | null;
+          aspectRatio: number | null;
+        } | null;
+      } | null;
+      source?: SanityAssetSourceData;
+    } | null;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string | null;
+    caption: string | null;
+    _type: "richImage";
+    _key: string;
+    markDefs: null;
+  }> | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    image: {
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata: {
+          blurHash: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+            aspectRatio: number | null;
+          } | null;
+        } | null;
+        source?: SanityAssetSourceData;
+      } | null;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string | null;
+      caption: string | null;
+      _type: "richImage";
+    } | null;
+  } | null;
+} | {
   title: string | null;
   body: Array<{
     children?: Array<{
@@ -4497,15 +4800,15 @@ export type PROJECT_BY_SLUG_QUERYResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "\n  *[_type == \"homepage\"][0]{\n    content[]{\n  _key,\n  _type,\n  _type == \"homepageVideoBanner\" => {\n    _key,\n    _type,\n    title,\n    mediaDescription,\n    backgroundColor,\n    video{\n      ...,\n      asset->{\n        _id,\n        playbackId,\n        status,\n        data\n      }\n    }\n  },\n  _type == \"homepageFeaturedInterview\" => {\n    _key,\n    _type,\n    title,\n    interview->{\n      _id,\n      _type,\n      title,\n      slug,\n      quote,\n      cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  },\n  _type == \"homepageTextBlock\" => {\n    _key,\n    _type,\n    title,\n    body[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    cta{\n      label,\n      linkType,\n      internalLink->{\n        _type,\n        _id,\n        title,\n        slug\n      },\n      externalLink\n    }\n  },\n  _type == \"homepageFeaturedReleases\" => {\n    _key,\n    _type,\n    title,\n    image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    releases[]->{\n      _id,\n      _type,\n      title,\n      slug,\n      backgroundColor,\n      \"seriesTitles\": *[_type == \"collection\" && references(^._id)].title\n    }\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": HOMEPAGE_QUERYResult;
+    "\n  *[_type == \"homepage\"][0]{\n    content[]{\n  _key,\n  _type,\n  _type == \"homepageVideoBanner\" => {\n    _key,\n    _type,\n    title,\n    mediaDescription,\n    backgroundColor,\n    video{\n      ...,\n      asset->{\n        _id,\n        playbackId,\n        status,\n        data\n      }\n    }\n  },\n  _type == \"homepageFeaturedInterview\" => {\n    _key,\n    _type,\n    title,\n    interview->{\n      _id,\n      _type,\n      title,\n      slug,\n      quote,\n      cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  },\n  _type == \"homepageTextBlock\" => {\n    _key,\n    _type,\n    title,\n    body[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    cta{\n      label,\n      linkType,\n      internalLink->{\n        _type,\n        _id,\n        title,\n        slug\n      },\n      externalLink\n    }\n  },\n  _type == \"homepageFeaturedReleases\" => {\n    _key,\n    _type,\n    title,\n    image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    releases[]->{\n      _id,\n      _type,\n      title,\n      slug,\n      backgroundColor,\n      \"seriesTitles\": *[_type == \"collection\" && references(^._id)].title\n    }\n  },\n  _type == \"homepageNewsletterSignup\" => {\n    _key,\n    _type,\n    ctaLabel,\n    emailPlaceholder\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": HOMEPAGE_QUERYResult;
     "\n  *[_type == \"about\"][0]{\n    richText[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    imageText[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": ABOUT_QUERYResult;
-    "\n  *[_type == \"siteSettings\"][0]{\n    mainMenu[]{\n      _key,\n  label,\n  linkType,\n  internalLink->{\n    _type,\n    _id,\n    title,\n    slug\n  },\n  externalLink\n    },\n    footerMenu[]{\n      _key,\n  label,\n  linkType,\n  internalLink->{\n    _type,\n    _id,\n    title,\n    slug\n  },\n  externalLink\n    },\n    overlayBGColor,\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": SITE_SETTINGS_QUERYResult;
+    "\n  *[_type == \"siteSettings\"][0]{\n    mainMenu[]{\n      _key,\n  label,\n  linkType,\n  internalLink->{\n    _type,\n    _id,\n    title,\n    slug\n  },\n  subLink,\n  externalLink\n    },\n    footerMenu[]{\n      _key,\n  label,\n  linkType,\n  internalLink->{\n    _type,\n    _id,\n    title,\n    slug\n  },\n  subLink,\n  externalLink\n    },\n    overlayBGColor,\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": SITE_SETTINGS_QUERYResult;
     "\n  *[_type == \"release\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": RELEASE_SLUGS_QUERYResult;
     "\n  *[_type == \"release\"] | order(release_date desc){\n    _id,\n    title,\n    slug,\n    release_date,\n    published,\n    cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    coverAlt{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    intro,\n    quote\n  }\n": RELEASES_QUERYResult;
     "\n  *[_type == \"release\" && published == true && defined(slug.current)] | order(release_date desc){\n    _id,\n    title,\n    slug,\n    backgroundColor,\n    \"seriesTitles\": *[_type == \"collection\" && references(^._id)].title\n  }\n": CLUB_EDEN_RELEASES_QUERYResult;
     "\n  *[_id == \"clubEden\"][0]{\n    title,\n    intro[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": CLUB_EDEN_DOCUMENT_QUERYResult;
     "\n  *[_id == \"reclus\"][0]{\n    title,\n    body[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": RECLUS_DOCUMENT_QUERYResult;
-    "\n  *[_type == \"lastTurnOurTurn\"][0]{\n    title,\n    body[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": LAST_TURN_OUR_TURN_DOCUMENT_QUERYResult;
+    "\n  *[_id == \"lastTurnOurTurn\"][0]{\n    title,\n    body[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": LAST_TURN_OUR_TURN_DOCUMENT_QUERYResult;
     "\n  *[_type == \"interview\" && published == true && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": INTERVIEW_SLUGS_QUERYResult;
     "\n  *[_type == \"interview\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    published,\n    release_date,\n    authorInitials,\n    backgroundColor,\n    quote,\n    authors[]->{\n      name\n    },\n    cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    body[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"interviewEntry\" => {\n    ...,\n    speakerRole,\n    speakerInitials,\n    text[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n}\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": INTERVIEW_BY_SLUG_QUERYResult;
     "\n  *[_type == \"release\" && slug.current == $slug][0]{\n    _id,\n    title,\n    slug,\n    release_date,\n    published,\n    cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    coverAlt{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    intro[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    embed,\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": RELEASE_BY_SLUG_QUERYResult;

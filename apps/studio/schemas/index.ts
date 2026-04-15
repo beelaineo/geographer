@@ -6,6 +6,7 @@ import { ctaLinkType } from "./ctaLink";
 import { homepageType } from "./homepage";
 import { homepageFeaturedInterviewType } from "./homepageFeaturedInterview";
 import { homepageFeaturedReleasesType } from "./homepageFeaturedReleases";
+import { homepageNewsletterSignupType } from "./homepageNewsletterSignup";
 import { homepageTextBlockType } from "./homepageTextBlock";
 import { homepageVideoBannerType } from "./homepageVideoBanner";
 import { interviewBodyType } from "./interviewBody";
@@ -50,5 +51,6 @@ export const schemaTypes = [
   homepageFeaturedInterviewType,
   homepageTextBlockType,
   homepageFeaturedReleasesType,
+  homepageNewsletterSignupType,
   pressItemType
 ];

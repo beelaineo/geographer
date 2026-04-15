@@ -69,8 +69,10 @@ export const interviewType = defineType({
     defineField({
       name: "quote",
       title: "Quote",
+      description: "Hover quote, max. 350 characters",
       type: "text",
-      rows: 3
+      rows: 3,
+      validation: (rule) => rule.max(350)
     }),
     defineField({
       name: "body",

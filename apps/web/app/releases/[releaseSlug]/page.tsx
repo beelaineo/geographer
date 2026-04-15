@@ -129,11 +129,11 @@ export default async function ReleasePage({ params }: ReleasePageProps) {
         </div>
       )}
 
-      <h1 className="mt-10 text-base leading-tight md:mt-12 uppercase font-bold tracking-wide">{title}</h1>
+      <h1 className="mt-10 md:mt-12 uppercase type-body-sans">{title}</h1>
 
       {publishedLabel ? (
         <time
-          className="mt-2 text-base tabular-nums tracking-wide font-bold"
+          className="mt-2 type-body-sans tabular-nums"
           dateTime={data.release_date ?? undefined}
         >
           {publishedLabel}
@@ -150,7 +150,7 @@ export default async function ReleasePage({ params }: ReleasePageProps) {
       ) : null}
 
       {data.embed ? (
-        <div className="mt-12 flex w-full justify-center bg-white p-4">
+        <div className="mt-12 flex max-w-[75%] w-full justify-center bg-white p-4">
           <div
             className="release-embed w-full max-w-full overflow-x-auto [&_iframe]:mx-auto [&_iframe]:max-w-full"
             dangerouslySetInnerHTML={{ __html: data.embed }}

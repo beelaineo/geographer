@@ -129,7 +129,7 @@ export default function PlayTitleMetaList({
           style={{ gridTemplateColumns: headerGridTemplateColumns }}
         >
           <span style={{ width: headerFirstColumnWidth }} aria-hidden />
-          <span className="flex items-center justify-center gap-1">
+          <span className="pl-[calc(2.5rem+8px)] flex items-center justify-center gap-1">
             <button
               type="button"
               className="uppercase text-center leading-none underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -204,7 +204,7 @@ export default function PlayTitleMetaList({
                   <PlayTriangleIcon className="h-2 w-2" />
                 )}
               </span>
-              <span className={rowTextClassName}>
+              <span className={["pl-[calc(2.5rem+8px)]", rowTextClassName].filter(Boolean).join(" ")}>
                 {title}
               </span>
               <span className={rowTextClassName}>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { resolveMenuHref } from "../lib/resolveMenuHref";
 import type { SITE_SETTINGS_QUERYResult } from "../types/sanity.generated";
@@ -66,6 +67,69 @@ export default function HeaderMenu({ items }: HeaderMenuProps) {
   const pathname = usePathname() ?? "";
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLElement>(null);
+  const [menuSize, setMenuSize] = useState<{ width: number; height: number } | null>(null);
+  const [menuPosition, setMenuPosition] = useState<{
+    top: number;
+    left: number;
+    align: "left" | "center";
+  } | null>(null);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const updateMenuPosition = () => {
+      const rect = buttonRef.current?.getBoundingClientRect();
+      if (!rect) {
+        return;
+      }
+
+      const isDesktop = window.innerWidth >= 768;
+      const topOffset = isDesktop ? 20 : 8;
+
+      setMenuPosition({
+        top: rect.bottom + topOffset,
+        left: isDesktop ? rect.left : rect.left + rect.width / 2,
+        align: isDesktop ? "left" : "center"
+      });
+    };
+
+    updateMenuPosition();
+    window.addEventListener("resize", updateMenuPosition);
+    window.addEventListener("scroll", updateMenuPosition, true);
+
+    return () => {
+      window.removeEventListener("resize", updateMenuPosition);
+      window.removeEventListener("scroll", updateMenuPosition, true);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || !menuPosition) {
+      return;
+    }
+
+    const updateMenuSize = () => {
+      const rect = menuRef.current?.getBoundingClientRect();
+      if (!rect) {
+        return;
+      }
+      setMenuSize({
+        width: rect.width,
+        height: rect.height
+      });
+    };
+
+    updateMenuSize();
+    window.addEventListener("resize", updateMenuSize);
+
+    return () => {
+      window.removeEventListener("resize", updateMenuSize);
+    };
+  }, [open, menuPosition, items]);
 
   useEffect(() => {
     if (!open) {
@@ -73,7 +137,10 @@ export default function HeaderMenu({ items }: HeaderMenuProps) {
     }
 
     const onPointerDown = (event: PointerEvent) => {
-      if (rootRef.current?.contains(event.target as Node)) {
+      if (
+        rootRef.current?.contains(event.target as Node) ||
+        menuRef.current?.contains(event.target as Node)
+      ) {
         return;
       }
       setOpen(false);
@@ -98,10 +165,11 @@ export default function HeaderMenu({ items }: HeaderMenuProps) {
   }
 
   return (
-    <div ref={rootRef} className="relative isolate">
+    <div ref={rootRef} className="relative">
       <button
+        ref={buttonRef}
         type="button"
-        className="flex items-center gap-1 type-small-text transition uppercase"
+        className="flex items-center gap-1 type-body-sans transition uppercase"
         aria-expanded={open}
         aria-haspopup="true"
         aria-controls="site-main-menu"
@@ -111,42 +179,68 @@ export default function HeaderMenu({ items }: HeaderMenuProps) {
         {open ? "Close" : "Menu"}
         <ChevronDown open={open} />
       </button>
-      {open ? (
-        <nav
-          id="site-main-menu"
-          role="menu"
-          aria-labelledby="site-main-menu-button"
-          className="absolute left-1/2 top-full z-30 mt-2 md:mt-5 min-w-[14rem] -translate-x-1/2 bg-[#382f1f] py-3 text-white bg-blend-multiply md:left-0 md:translate-x-0"
-        >
-          <ul className="flex flex-col gap-1">
-            {items.map((item, index) => {
-              const key = item._key ?? `${item.label ?? "item"}-${index}`;
-              const href = resolveMenuHref(item);
-              const active = isActiveMenuHref(pathname, href);
-              const compactItem = index >= 4;
-              const firstItem = index === 0;
-              return (
-                <li key={key} role="none">
-                  <Link
-                    role="menuitem"
-                    href={href}
-                    aria-current={active ? "page" : undefined}
-                    className={[
-                      "block px-3 type-small-text transition underline-offset-2",
-                      compactItem ? "py-0" : "py-2",
-                      firstItem ? "pt-0" : "pt-unset",
-                      active ? "underline" : "hover:underline"
-                    ].join(" ")}
-                    onClick={() => setOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      ) : null}
+      {open && menuPosition && typeof document !== "undefined"
+        ? createPortal(
+            <>
+              {menuSize ? (
+                <div
+                  aria-hidden
+                  className="pointer-events-none fixed z-30 bg-[#382f1f] mix-blend-multiply"
+                  style={{
+                    top: `${menuPosition.top}px`,
+                    left: `${menuPosition.left}px`,
+                    width: `${menuSize.width}px`,
+                    height: `${menuSize.height}px`,
+                    transform: menuPosition.align === "center" ? "translateX(-50%)" : undefined
+                  }}
+                />
+              ) : null}
+              <nav
+                ref={menuRef}
+                id="site-main-menu"
+                role="menu"
+                aria-labelledby="site-main-menu-button"
+                className="fixed z-40 min-w-[18rem] py-3 text-white"
+                style={{
+                  top: `${menuPosition.top}px`,
+                  left: `${menuPosition.left}px`,
+                  transform: menuPosition.align === "center" ? "translateX(-50%)" : undefined
+                }}
+              >
+                <ul className="relative z-10 flex flex-col gap-1">
+                  {items.map((item, index) => {
+                    const key = item._key ?? `${item.label ?? "item"}-${index}`;
+                    const href = resolveMenuHref(item);
+                    const active = isActiveMenuHref(pathname, href);
+                    const compactItem = index >= 4;
+                    const firstItem = index === 0;
+                    const firstCompactItem = index === 4;
+                    return (
+                      <li key={key} role="none">
+                        <Link
+                          role="menuitem"
+                          href={href}
+                          aria-current={active ? "page" : undefined}
+                          className={[
+                            "block px-3 type-body-sans transition underline-offset-2",
+                            compactItem ? "py-0" : "py-2",
+                            firstItem ? "pt-0" : "pt-unset",
+                            firstCompactItem ? "pt-2" : "",
+                            active ? "underline" : "hover:underline"
+                          ].join(" ")}
+                          onClick={() => setOpen(false)}
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
+            </>,
+            document.body
+          )
+        : null}
     </div>
   );
 }

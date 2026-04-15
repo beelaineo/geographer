@@ -114,8 +114,8 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
             alt={cover.alt ?? title}
             width={coverDisplayW}
             height={coverDisplayH}
-            className="h-auto max-h-[75vh] w-auto max-w-[min(100%,480px)] object-contain"
-            sizes="(max-width: 768px) 100vw, 480px"
+            className="h-auto max-h-[75vh] max-w-[min(100%,480px)] object-contain"
+            sizes="(max-width: 768px) 100vw, 1200px"
             priority
           />
         </div>
