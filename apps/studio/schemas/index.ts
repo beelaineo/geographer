@@ -2,6 +2,7 @@ import { aboutType } from "./about";
 import { clubEdenType } from "./clubEden";
 import { collectionType } from "./collection";
 import { contributorType } from "./contributor";
+import { contributorsType } from "./contributors";
 import { ctaLinkType } from "./ctaLink";
 import { homepageType } from "./homepage";
 import { homepageFeaturedInterviewType } from "./homepageFeaturedInterview";
@@ -32,6 +33,7 @@ export const schemaTypes = [
   collectionType,
   interviewType,
   contributorType,
+  contributorsType,
   pageType,
   reclusType,
   lastTurnOurTurnType,

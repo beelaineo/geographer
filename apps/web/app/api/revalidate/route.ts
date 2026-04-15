@@ -137,6 +137,10 @@ export async function POST(request: NextRequest) {
       tagsToRevalidate.add(sanityTag.about);
       break;
     }
+    case "contributors": {
+      tagsToRevalidate.add(sanityTag.contributors);
+      break;
+    }
     case "clubEden": {
       tagsToRevalidate.add(sanityTag.clubEden);
       break;
@@ -205,6 +209,7 @@ export async function POST(request: NextRequest) {
     }
     case "contributor": {
       tagsToRevalidate.add(sanityTag.interviewList);
+      tagsToRevalidate.add(sanityTag.contributors);
       break;
     }
     case "siteSettings": {

@@ -105,7 +105,7 @@ function HomepageFeaturedInterviewSection({
             sizes="(max-width: 768px) 100vw, 420px"
           />
           {quote ? (
-            <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white p-4 text-center type-body-text text-black opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-focus-within:opacity-100">
+            <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white p-4 text-center type-body-text text-black opacity-0 transition-opacity duration-200 ease-out md:group-hover:opacity-100 md:group-focus-within:opacity-100">
               &ldquo;{quote}&rdquo;
             </span>
           ) : null}
@@ -179,6 +179,10 @@ function HomepageFeaturedReleasesSection({
 }) {
   const image = block.image;
   const imageUrl = image?.asset ? urlForImageWithWidth(image, 720).url() : null;
+  const hoverImage = block.hoverImage;
+  const hoverImageUrl = hoverImage?.asset
+    ? urlForImageWithWidth(hoverImage, 720).url()
+    : null;
   const { width: dimW, height: dimH } = getImageDimensions(image ?? undefined);
   const displayW = 360;
   const displayH = Math.max(1, Math.round((dimH / dimW) * displayW));
@@ -186,17 +190,31 @@ function HomepageFeaturedReleasesSection({
 
   return (
     <section className="w-full px-5 py-14">
-      <div className="mx-auto flex max-w-2xl flex-col items-center gap-10">
+      <div className="mx-auto flex max-w-2xl flex-col items-center gap-10 md:px-12">
         {block.title ? <h2 className="hidden">{block.title}</h2> : null}
         {imageUrl && image ? (
-          <Image
-            src={imageUrl}
-            alt={image.alt ?? ""}
-            width={displayW}
-            height={displayH}
-            className="w-[380px] max-w-full object-cover"
-            sizes="380px"
-          />
+          <Link href="/club-eden" className="group">
+            <span className="relative block w-[380px] max-w-full">
+              <Image
+                src={imageUrl}
+                alt={image.alt ?? ""}
+                width={displayW}
+                height={displayH}
+                className="h-auto w-full object-cover transition-opacity duration-200 ease-out md:group-hover:opacity-0 md:group-focus-visible:opacity-0"
+                sizes="380px"
+              />
+              {hoverImageUrl ? (
+                <Image
+                  src={hoverImageUrl}
+                  alt=""
+                  aria-hidden
+                  fill
+                  className="pointer-events-none absolute inset-0 hidden object-cover opacity-0 transition-opacity duration-200 ease-out md:block md:group-hover:opacity-100 md:group-focus-visible:opacity-100"
+                  sizes="380px"
+                />
+              ) : null}
+            </span>
+          </Link>
         ) : null}
         <ClubEdenReleaseList releases={releases} showColumnHeadings={false} />
       </div>

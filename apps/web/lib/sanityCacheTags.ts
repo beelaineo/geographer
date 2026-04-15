@@ -6,6 +6,7 @@
 export const sanityTag = {
   homepage: "sanity:homepage",
   about: "sanity:about",
+  contributors: "sanity:contributors",
   siteSettings: "sanity:siteSettings",
   clubEden: "sanity:clubEden",
   reclus: "sanity:reclus",

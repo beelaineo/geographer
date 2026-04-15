@@ -168,6 +168,7 @@ const HOMEPAGE_CONTENT_SELECTION = /* groq */ `content[]{
     _type,
     title,
     image${RICH_IMAGE_SELECTION},
+    hoverImage${RICH_IMAGE_SELECTION},
     releases[]->{
       _id,
       _type,
@@ -201,6 +202,24 @@ export const ABOUT_QUERY = defineQuery(`
     richText${RICH_TEXT_SELECTION},
     image${RICH_IMAGE_SELECTION},
     imageText${RICH_TEXT_SELECTION},
+    seo{
+      title,
+      description,
+      image${RICH_IMAGE_SELECTION}
+    }
+  }
+`);
+
+export const CONTRIBUTORS_DOCUMENT_QUERY = defineQuery(`
+  *[_id == "contributors"][0]{
+    title,
+    list[]->{
+      _id,
+      name,
+      slug,
+      sortName,
+      link
+    },
     seo{
       title,
       description,

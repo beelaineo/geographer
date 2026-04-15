@@ -52,6 +52,20 @@ export type HomepageFeaturedReleases = {
     caption?: string;
     _type: "richImage";
   };
+  hoverImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    caption?: string;
+    _type: "richImage";
+  };
   releases?: Array<{
     _ref: string;
     _type: "reference";
@@ -83,6 +97,11 @@ export type HomepageTextBlock = {
         _type: "reference";
         _weak?: boolean;
         [internalGroqTypeReferenceTo]?: "about";
+      } | {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "contributors";
       } | {
         _ref: string;
         _type: "reference";
@@ -185,6 +204,11 @@ export type CtaLink = {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "contributors";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "homepage";
   } | {
     _ref: string;
@@ -239,6 +263,11 @@ export type MenuItem = {
     _type: "reference";
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "about";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "contributors";
   } | {
     _ref: string;
     _type: "reference";
@@ -312,6 +341,11 @@ export type InterviewEntry = {
         _type: "reference";
         _weak?: boolean;
         [internalGroqTypeReferenceTo]?: "about";
+      } | {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "contributors";
       } | {
         _ref: string;
         _type: "reference";
@@ -435,6 +469,11 @@ export type RichText = Array<{
       _type: "reference";
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "about";
+    } | {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "contributors";
     } | {
       _ref: string;
       _type: "reference";
@@ -803,26 +842,6 @@ export type ClubEden = {
   seo?: Seo;
 };
 
-export type Seo = {
-  _type: "seo";
-  title?: string;
-  description?: string;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    caption?: string;
-    _type: "richImage";
-  };
-};
-
 export type RichImage = {
   _type: "richImage";
   asset?: {
@@ -836,6 +855,30 @@ export type RichImage = {
   crop?: SanityImageCrop;
   alt?: string;
   caption?: string;
+};
+
+export type Contributors = {
+  _id: string;
+  _type: "contributors";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  list?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "contributor";
+  }>;
+  seo?: Seo;
+};
+
+export type Seo = {
+  _type: "seo";
+  title?: string;
+  description?: string;
+  image?: RichImage;
 };
 
 export type MuxVideo = {
@@ -1073,11 +1116,11 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = PressItem | HomepageNewsletterSignup | HomepageFeaturedReleases | HomepageTextBlock | HomepageFeaturedInterview | HomepageVideoBanner | CtaLink | MenuItem | InterviewEntry | InterviewBody | RichText | SiteSettings | Contributor | About | Homepage | Release | Collection | Project | Page | Interview | Reclus | LastTurnOurTurn | ClubEden | Seo | RichImage | MuxVideo | MuxVideoAsset | MuxAssetData | MuxStaticRenditions | MuxStaticRenditionFile | MuxPlaybackId | MuxTrack | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = PressItem | HomepageNewsletterSignup | HomepageFeaturedReleases | HomepageTextBlock | HomepageFeaturedInterview | HomepageVideoBanner | CtaLink | MenuItem | InterviewEntry | InterviewBody | RichText | SiteSettings | Contributor | About | Homepage | Release | Collection | Project | Page | Interview | Reclus | LastTurnOurTurn | ClubEden | RichImage | Contributors | Seo | MuxVideo | MuxVideoAsset | MuxAssetData | MuxStaticRenditions | MuxStaticRenditionFile | MuxPlaybackId | MuxTrack | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ../web/lib/queries.ts
 // Variable: HOMEPAGE_QUERY
-// Query: *[_type == "homepage"][0]{    content[]{  _key,  _type,  _type == "homepageVideoBanner" => {    _key,    _type,    title,    mediaDescription,    backgroundColor,    video{      ...,      asset->{        _id,        playbackId,        status,        data      }    }  },  _type == "homepageFeaturedInterview" => {    _key,    _type,    title,    interview->{      _id,      _type,      title,      slug,      quote,      cover{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  },  _type == "homepageTextBlock" => {    _key,    _type,    title,    body[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  },  _type == "richImage" => {    ...,    alt,    caption,    asset->{      ...,      metadata{        blurHash,        dimensions{          width,          height,          aspectRatio        }      }    }  }},    cta{      label,      linkType,      internalLink->{        _type,        _id,        title,        slug      },      externalLink    }  },  _type == "homepageFeaturedReleases" => {    _key,    _type,    title,    image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    releases[]->{      _id,      _type,      title,      slug,      backgroundColor,      "seriesTitles": *[_type == "collection" && references(^._id)].title    }  },  _type == "homepageNewsletterSignup" => {    _key,    _type,    ctaLabel,    emailPlaceholder  }},    seo{      title,      description,      image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  }
+// Query: *[_type == "homepage"][0]{    content[]{  _key,  _type,  _type == "homepageVideoBanner" => {    _key,    _type,    title,    mediaDescription,    backgroundColor,    video{      ...,      asset->{        _id,        playbackId,        status,        data      }    }  },  _type == "homepageFeaturedInterview" => {    _key,    _type,    title,    interview->{      _id,      _type,      title,      slug,      quote,      cover{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  },  _type == "homepageTextBlock" => {    _key,    _type,    title,    body[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  },  _type == "richImage" => {    ...,    alt,    caption,    asset->{      ...,      metadata{        blurHash,        dimensions{          width,          height,          aspectRatio        }      }    }  }},    cta{      label,      linkType,      internalLink->{        _type,        _id,        title,        slug      },      externalLink    }  },  _type == "homepageFeaturedReleases" => {    _key,    _type,    title,    image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    hoverImage{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    releases[]->{      _id,      _type,      title,      slug,      backgroundColor,      "seriesTitles": *[_type == "collection" && references(^._id)].title    }  },  _type == "homepageNewsletterSignup" => {    _key,    _type,    ctaLabel,    emailPlaceholder  }},    seo{      title,      description,      image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  }
 export type HOMEPAGE_QUERYResult = {
   content: Array<{
     _key: string;
@@ -1168,6 +1211,43 @@ export type HOMEPAGE_QUERYResult = {
       caption: string | null;
       _type: "richImage";
     } | null;
+    hoverImage: {
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata: {
+          blurHash: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+            aspectRatio: number | null;
+          } | null;
+        } | null;
+        source?: SanityAssetSourceData;
+      } | null;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string | null;
+      caption: string | null;
+      _type: "richImage";
+    } | null;
     releases: Array<{
       _id: string;
       _type: "release";
@@ -1214,6 +1294,11 @@ export type HOMEPAGE_QUERYResult = {
           _id: string;
           title: string | null;
           slug: Slug | null;
+        } | {
+          _type: "contributors";
+          _id: string;
+          title: string | null;
+          slug: null;
         } | {
           _type: "homepage";
           _id: string;
@@ -1314,6 +1399,11 @@ export type HOMEPAGE_QUERYResult = {
         title: string | null;
         slug: Slug | null;
       } | {
+        _type: "contributors";
+        _id: string;
+        title: string | null;
+        slug: null;
+      } | {
         _type: "homepage";
         _id: string;
         title: null;
@@ -1371,6 +1461,7 @@ export type HOMEPAGE_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -1405,13 +1496,62 @@ export type HOMEPAGE_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | null;
 // Variable: ABOUT_QUERY
-// Query: *[_type == "about"][0]{    richText[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  },  _type == "richImage" => {    ...,    alt,    caption,    asset->{      ...,      metadata{        blurHash,        dimensions{          width,          height,          aspectRatio        }      }    }  }},    image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    imageText[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  },  _type == "richImage" => {    ...,    alt,    caption,    asset->{      ...,      metadata{        blurHash,        dimensions{          width,          height,          aspectRatio        }      }    }  }},    seo{      title,      description,      image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  }
+// Query: *[_id == "about"][0]{    richText[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  },  _type == "richImage" => {    ...,    alt,    caption,    asset->{      ...,      metadata{        blurHash,        dimensions{          width,          height,          aspectRatio        }      }    }  }},    image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }},    imageText[]{  ...,  markDefs[]{    ...,    _type == "internalLink" => {      ...,      reference->{        _type,        _id,        title,        slug      }    }  },  _type == "richImage" => {    ...,    alt,    caption,    asset->{      ...,      metadata{        blurHash,        dimensions{          width,          height,          aspectRatio        }      }    }  }},    seo{      title,      description,      image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  }
 export type ABOUT_QUERYResult = {
+  richText: null;
+  image: null;
+  imageText: null;
+  seo: null;
+} | {
+  richText: null;
+  image: null;
+  imageText: null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    image: {
+      _type: "richImage";
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata: {
+          blurHash: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+            aspectRatio: number | null;
+          } | null;
+        } | null;
+        source?: SanityAssetSourceData;
+      } | null;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string | null;
+      caption: string | null;
+    } | null;
+  } | null;
+} | {
   richText: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -1441,6 +1581,11 @@ export type ABOUT_QUERYResult = {
         _id: string;
         title: string | null;
         slug: Slug | null;
+      } | {
+        _type: "contributors";
+        _id: string;
+        title: string | null;
+        slug: null;
       } | {
         _type: "homepage";
         _id: string;
@@ -1589,6 +1734,11 @@ export type ABOUT_QUERYResult = {
         title: string | null;
         slug: Slug | null;
       } | {
+        _type: "contributors";
+        _id: string;
+        title: string | null;
+        slug: null;
+      } | {
         _type: "homepage";
         _id: string;
         title: null;
@@ -1673,6 +1823,7 @@ export type ABOUT_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -1707,7 +1858,155 @@ export type ABOUT_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
+    } | null;
+  } | null;
+} | null;
+// Variable: CONTRIBUTORS_DOCUMENT_QUERY
+// Query: *[_id == "contributors"][0]{    title,    list[]->{      _id,      name,      slug,      sortName,      link    },    seo{      title,      description,      image{  ...,  alt,  caption,  asset->{    ...,    metadata{      blurHash,      dimensions{        width,        height,        aspectRatio      }    }  }}    }  }
+export type CONTRIBUTORS_DOCUMENT_QUERYResult = {
+  title: null;
+  list: null;
+  seo: null;
+} | {
+  title: string | null;
+  list: null;
+  seo: null;
+} | {
+  title: null;
+  list: null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    image: {
       _type: "richImage";
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata: {
+          blurHash: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+            aspectRatio: number | null;
+          } | null;
+        } | null;
+        source?: SanityAssetSourceData;
+      } | null;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string | null;
+      caption: string | null;
+    } | null;
+  } | null;
+} | {
+  title: string | null;
+  list: null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    image: {
+      _type: "richImage";
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata: {
+          blurHash: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+            aspectRatio: number | null;
+          } | null;
+        } | null;
+        source?: SanityAssetSourceData;
+      } | null;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string | null;
+      caption: string | null;
+    } | null;
+  } | null;
+} | {
+  title: string | null;
+  list: Array<{
+    _id: string;
+    name: string | null;
+    slug: Slug | null;
+    sortName: string | null;
+    link: string | null;
+  }> | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    image: {
+      _type: "richImage";
+      asset: {
+        _id: string;
+        _type: "sanity.imageAsset";
+        _createdAt: string;
+        _updatedAt: string;
+        _rev: string;
+        originalFilename?: string;
+        label?: string;
+        title?: string;
+        description?: string;
+        altText?: string;
+        sha1hash?: string;
+        extension?: string;
+        mimeType?: string;
+        size?: number;
+        assetId?: string;
+        uploadId?: string;
+        path?: string;
+        url?: string;
+        metadata: {
+          blurHash: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+            aspectRatio: number | null;
+          } | null;
+        } | null;
+        source?: SanityAssetSourceData;
+      } | null;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string | null;
+      caption: string | null;
     } | null;
   } | null;
 } | null;
@@ -1733,6 +2032,11 @@ export type SITE_SETTINGS_QUERYResult = {
       _id: string;
       title: string | null;
       slug: Slug | null;
+    } | {
+      _type: "contributors";
+      _id: string;
+      title: string | null;
+      slug: null;
     } | {
       _type: "homepage";
       _id: string;
@@ -1792,6 +2096,11 @@ export type SITE_SETTINGS_QUERYResult = {
       title: string | null;
       slug: Slug | null;
     } | {
+      _type: "contributors";
+      _id: string;
+      title: string | null;
+      slug: null;
+    } | {
       _type: "homepage";
       _id: string;
       title: null;
@@ -1835,6 +2144,7 @@ export type SITE_SETTINGS_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -1869,7 +2179,6 @@ export type SITE_SETTINGS_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | null;
@@ -1989,6 +2298,7 @@ export type CLUB_EDEN_DOCUMENT_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -2023,7 +2333,6 @@ export type CLUB_EDEN_DOCUMENT_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | {
@@ -2033,6 +2342,7 @@ export type CLUB_EDEN_DOCUMENT_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -2067,7 +2377,6 @@ export type CLUB_EDEN_DOCUMENT_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | {
@@ -2102,6 +2411,11 @@ export type CLUB_EDEN_DOCUMENT_QUERYResult = {
         title: string | null;
         slug: Slug | null;
       } | {
+        _type: "contributors";
+        _id: string;
+        title: string | null;
+        slug: null;
+      } | {
         _type: "homepage";
         _id: string;
         title: null;
@@ -2186,6 +2500,7 @@ export type CLUB_EDEN_DOCUMENT_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -2220,7 +2535,6 @@ export type CLUB_EDEN_DOCUMENT_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | null;
@@ -2241,6 +2555,7 @@ export type RECLUS_DOCUMENT_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -2275,7 +2590,6 @@ export type RECLUS_DOCUMENT_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | {
@@ -2285,6 +2599,7 @@ export type RECLUS_DOCUMENT_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -2319,7 +2634,6 @@ export type RECLUS_DOCUMENT_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | {
@@ -2375,6 +2689,11 @@ export type RECLUS_DOCUMENT_QUERYResult = {
           _type: "reference";
           _weak?: boolean;
           [internalGroqTypeReferenceTo]?: "collection";
+        } | {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "contributors";
         } | {
           _ref: string;
           _type: "reference";
@@ -2476,6 +2795,7 @@ export type RECLUS_DOCUMENT_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -2510,7 +2830,6 @@ export type RECLUS_DOCUMENT_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | {
@@ -2544,6 +2863,11 @@ export type RECLUS_DOCUMENT_QUERYResult = {
         _id: string;
         title: string | null;
         slug: Slug | null;
+      } | {
+        _type: "contributors";
+        _id: string;
+        title: string | null;
+        slug: null;
       } | {
         _type: "homepage";
         _id: string;
@@ -2629,6 +2953,7 @@ export type RECLUS_DOCUMENT_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -2663,7 +2988,6 @@ export type RECLUS_DOCUMENT_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | null;
@@ -2684,6 +3008,7 @@ export type LAST_TURN_OUR_TURN_DOCUMENT_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -2718,7 +3043,6 @@ export type LAST_TURN_OUR_TURN_DOCUMENT_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | {
@@ -2728,6 +3052,7 @@ export type LAST_TURN_OUR_TURN_DOCUMENT_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -2762,7 +3087,6 @@ export type LAST_TURN_OUR_TURN_DOCUMENT_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | {
@@ -2818,6 +3142,11 @@ export type LAST_TURN_OUR_TURN_DOCUMENT_QUERYResult = {
           _type: "reference";
           _weak?: boolean;
           [internalGroqTypeReferenceTo]?: "collection";
+        } | {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "contributors";
         } | {
           _ref: string;
           _type: "reference";
@@ -2919,6 +3248,7 @@ export type LAST_TURN_OUR_TURN_DOCUMENT_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -2953,7 +3283,6 @@ export type LAST_TURN_OUR_TURN_DOCUMENT_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | {
@@ -2987,6 +3316,11 @@ export type LAST_TURN_OUR_TURN_DOCUMENT_QUERYResult = {
         _id: string;
         title: string | null;
         slug: Slug | null;
+      } | {
+        _type: "contributors";
+        _id: string;
+        title: string | null;
+        slug: null;
       } | {
         _type: "homepage";
         _id: string;
@@ -3072,6 +3406,7 @@ export type LAST_TURN_OUR_TURN_DOCUMENT_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -3106,7 +3441,6 @@ export type LAST_TURN_OUR_TURN_DOCUMENT_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | null;
@@ -3217,6 +3551,11 @@ export type INTERVIEW_BY_SLUG_QUERYResult = {
           _id: string;
           title: string | null;
           slug: Slug | null;
+        } | {
+          _type: "contributors";
+          _id: string;
+          title: string | null;
+          slug: null;
         } | {
           _type: "homepage";
           _id: string;
@@ -3342,6 +3681,7 @@ export type INTERVIEW_BY_SLUG_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -3376,7 +3716,6 @@ export type INTERVIEW_BY_SLUG_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | null;
@@ -3492,6 +3831,11 @@ export type RELEASE_BY_SLUG_QUERYResult = {
         title: string | null;
         slug: Slug | null;
       } | {
+        _type: "contributors";
+        _id: string;
+        title: string | null;
+        slug: null;
+      } | {
         _type: "homepage";
         _id: string;
         title: null;
@@ -3577,6 +3921,7 @@ export type RELEASE_BY_SLUG_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -3611,7 +3956,6 @@ export type RELEASE_BY_SLUG_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | null;
@@ -3702,6 +4046,11 @@ export type COLLECTIONS_QUERYResult = Array<{
         _id: string;
         title: string | null;
         slug: Slug | null;
+      } | {
+        _type: "contributors";
+        _id: string;
+        title: string | null;
+        slug: null;
       } | {
         _type: "homepage";
         _id: string;
@@ -3924,6 +4273,11 @@ export type COLLECTION_BY_SLUG_QUERYResult = {
         title: string | null;
         slug: Slug | null;
       } | {
+        _type: "contributors";
+        _id: string;
+        title: string | null;
+        slug: null;
+      } | {
         _type: "homepage";
         _id: string;
         title: null;
@@ -4008,6 +4362,7 @@ export type COLLECTION_BY_SLUG_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -4042,7 +4397,6 @@ export type COLLECTION_BY_SLUG_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
   releases: Array<{
@@ -4193,6 +4547,11 @@ export type PAGE_BY_SLUG_QUERYResult = {
         title: string | null;
         slug: Slug | null;
       } | {
+        _type: "contributors";
+        _id: string;
+        title: string | null;
+        slug: null;
+      } | {
         _type: "homepage";
         _id: string;
         title: null;
@@ -4277,6 +4636,7 @@ export type PAGE_BY_SLUG_QUERYResult = {
     title: string | null;
     description: string | null;
     image: {
+      _type: "richImage";
       asset: {
         _id: string;
         _type: "sanity.imageAsset";
@@ -4311,7 +4671,6 @@ export type PAGE_BY_SLUG_QUERYResult = {
       crop?: SanityImageCrop;
       alt: string | null;
       caption: string | null;
-      _type: "richImage";
     } | null;
   } | null;
 } | null;
@@ -4357,6 +4716,11 @@ export type PROJECTS_QUERYResult = Array<{
           _id: string;
           title: string | null;
           slug: Slug | null;
+        } | {
+          _type: "contributors";
+          _id: string;
+          title: string | null;
+          slug: null;
         } | {
           _type: "homepage";
           _id: string;
@@ -4624,6 +4988,11 @@ export type PROJECT_BY_SLUG_QUERYResult = {
           title: string | null;
           slug: Slug | null;
         } | {
+          _type: "contributors";
+          _id: string;
+          title: string | null;
+          slug: null;
+        } | {
           _type: "homepage";
           _id: string;
           title: null;
@@ -4800,8 +5169,9 @@ export type PROJECT_BY_SLUG_QUERYResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "\n  *[_type == \"homepage\"][0]{\n    content[]{\n  _key,\n  _type,\n  _type == \"homepageVideoBanner\" => {\n    _key,\n    _type,\n    title,\n    mediaDescription,\n    backgroundColor,\n    video{\n      ...,\n      asset->{\n        _id,\n        playbackId,\n        status,\n        data\n      }\n    }\n  },\n  _type == \"homepageFeaturedInterview\" => {\n    _key,\n    _type,\n    title,\n    interview->{\n      _id,\n      _type,\n      title,\n      slug,\n      quote,\n      cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  },\n  _type == \"homepageTextBlock\" => {\n    _key,\n    _type,\n    title,\n    body[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    cta{\n      label,\n      linkType,\n      internalLink->{\n        _type,\n        _id,\n        title,\n        slug\n      },\n      externalLink\n    }\n  },\n  _type == \"homepageFeaturedReleases\" => {\n    _key,\n    _type,\n    title,\n    image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    releases[]->{\n      _id,\n      _type,\n      title,\n      slug,\n      backgroundColor,\n      \"seriesTitles\": *[_type == \"collection\" && references(^._id)].title\n    }\n  },\n  _type == \"homepageNewsletterSignup\" => {\n    _key,\n    _type,\n    ctaLabel,\n    emailPlaceholder\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": HOMEPAGE_QUERYResult;
-    "\n  *[_type == \"about\"][0]{\n    richText[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    imageText[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": ABOUT_QUERYResult;
+    "\n  *[_type == \"homepage\"][0]{\n    content[]{\n  _key,\n  _type,\n  _type == \"homepageVideoBanner\" => {\n    _key,\n    _type,\n    title,\n    mediaDescription,\n    backgroundColor,\n    video{\n      ...,\n      asset->{\n        _id,\n        playbackId,\n        status,\n        data\n      }\n    }\n  },\n  _type == \"homepageFeaturedInterview\" => {\n    _key,\n    _type,\n    title,\n    interview->{\n      _id,\n      _type,\n      title,\n      slug,\n      quote,\n      cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  },\n  _type == \"homepageTextBlock\" => {\n    _key,\n    _type,\n    title,\n    body[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    cta{\n      label,\n      linkType,\n      internalLink->{\n        _type,\n        _id,\n        title,\n        slug\n      },\n      externalLink\n    }\n  },\n  _type == \"homepageFeaturedReleases\" => {\n    _key,\n    _type,\n    title,\n    image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    hoverImage{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    releases[]->{\n      _id,\n      _type,\n      title,\n      slug,\n      backgroundColor,\n      \"seriesTitles\": *[_type == \"collection\" && references(^._id)].title\n    }\n  },\n  _type == \"homepageNewsletterSignup\" => {\n    _key,\n    _type,\n    ctaLabel,\n    emailPlaceholder\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": HOMEPAGE_QUERYResult;
+    "\n  *[_id == \"about\"][0]{\n    richText[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    imageText[]{\n  ...,\n  markDefs[]{\n    ...,\n    _type == \"internalLink\" => {\n      ...,\n      reference->{\n        _type,\n        _id,\n        title,\n        slug\n      }\n    }\n  },\n  _type == \"richImage\" => {\n    ...,\n    alt,\n    caption,\n    asset->{\n      ...,\n      metadata{\n        blurHash,\n        dimensions{\n          width,\n          height,\n          aspectRatio\n        }\n      }\n    }\n  }\n},\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": ABOUT_QUERYResult;
+    "\n  *[_id == \"contributors\"][0]{\n    title,\n    list[]->{\n      _id,\n      name,\n      slug,\n      sortName,\n      link\n    },\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": CONTRIBUTORS_DOCUMENT_QUERYResult;
     "\n  *[_type == \"siteSettings\"][0]{\n    mainMenu[]{\n      _key,\n  label,\n  linkType,\n  internalLink->{\n    _type,\n    _id,\n    title,\n    slug\n  },\n  subLink,\n  externalLink\n    },\n    footerMenu[]{\n      _key,\n  label,\n  linkType,\n  internalLink->{\n    _type,\n    _id,\n    title,\n    slug\n  },\n  subLink,\n  externalLink\n    },\n    overlayBGColor,\n    seo{\n      title,\n      description,\n      image{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n}\n    }\n  }\n": SITE_SETTINGS_QUERYResult;
     "\n  *[_type == \"release\" && defined(slug.current)]{\n    \"slug\": slug.current\n  }\n": RELEASE_SLUGS_QUERYResult;
     "\n  *[_type == \"release\"] | order(release_date desc){\n    _id,\n    title,\n    slug,\n    release_date,\n    published,\n    cover{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    coverAlt{\n  ...,\n  alt,\n  caption,\n  asset->{\n    ...,\n    metadata{\n      blurHash,\n      dimensions{\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n},\n    intro,\n    quote\n  }\n": RELEASES_QUERYResult;

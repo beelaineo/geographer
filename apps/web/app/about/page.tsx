@@ -64,12 +64,14 @@ export default async function AboutPage() {
     Boolean(richText?.length)
 
   return (
-    <main className="mx-auto max-w-2xl px-6 pb-16 pt-16 md:px-12 md:pt-24">
+    <main id="about" className="mx-auto max-w-2xl px-6 pb-16 pt-16 md:px-12 md:pt-24">
+      <div id="contributors" className="scroll-mt-32 md:scroll-mt-24" />
       {hasAboutContent ? (
             <section className="space-y-4 type-body-text">
               <RichText value={richText} />
             </section>
       ) : null}
+      <div id="contact" className="scroll-mt-32 md:scroll-mt-24" />
     </main>
     
   );

@@ -6,6 +6,7 @@ import { muxInput } from "sanity-plugin-mux-input";
 
 import { aboutType } from "./schemas/about";
 import { clubEdenType } from "./schemas/clubEden";
+import { contributorsType } from "./schemas/contributors";
 import { lastTurnOurTurnType } from "./schemas/lastTurnOurTurn";
 import { reclusType } from "./schemas/reclus";
 import { schemaTypes } from "./schemas";
@@ -20,6 +21,7 @@ if (!projectId) {
 
 const singletonTypes = [
   "about",
+  "contributors",
   "homepage",
   "siteSettings",
   "reclus",
@@ -38,6 +40,15 @@ const singletonItems = (S: StructureBuilder) => [
       S.document()
         .schemaType("about")
         .documentId("about")
+    ),
+  S.listItem()
+    .title(contributorsType.title || "Contributors")
+    .id("contributors")
+    .icon(contributorsType.icon)
+    .child(
+      S.document()
+        .schemaType("contributors")
+        .documentId("contributors")
     ),
   S.listItem()
     .title(homepageType.title || "Homepage")

@@ -22,6 +22,8 @@ export function resolveProductionUrl(document?: SanityDocumentLike | null): stri
       return DEFAULT_ROUTE;
     case "about":
       return "/about";
+    case "contributors":
+      return "/contributors";
     case "clubEden":
       return "/club-eden";
     case "reclus":

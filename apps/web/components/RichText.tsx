@@ -31,6 +31,29 @@ type ExternalLinkValue = {
   blank?: boolean | null;
 };
 
+function hasVisibleContent(children: ReactNode): boolean {
+  const nodes = Array.isArray(children) ? children : [children];
+
+  for (const node of nodes) {
+    if (typeof node === "string" && node.trim().length > 0) {
+      return true;
+    }
+
+    if (typeof node === "number") {
+      return true;
+    }
+
+    if (node && typeof node === "object" && "props" in node) {
+      const childNode = (node as { props?: { children?: ReactNode } }).props?.children;
+      if (hasVisibleContent(childNode)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 function renderPortableLink({
   href,
   blank,
@@ -71,14 +94,18 @@ const components: PortableTextComponents = {
     richImage: PortableTextRichImage
   },
   block: {
-    normal: ({ children }: { children?: ReactNode }) => (
-      <p className="type-body-text">{children}</p>
-    ),
+    normal: ({ children }: { children?: ReactNode }) => {
+      if (!hasVisibleContent(children)) {
+        return <p className="type-body-text whitespace-pre-line">&nbsp;</p>;
+      }
+
+      return <p className="type-body-text whitespace-pre-line">{children}</p>;
+    },
     h2: ({ children }: { children?: ReactNode }) => (
-      <h2 className="type-body-text">{children}</h2>
+      <h2 className="type-body-text whitespace-pre-line">{children}</h2>
     ),
     h3: ({ children }: { children?: ReactNode }) => (
-      <h3 className="type-body-text">{children}</h3>
+      <h3 className="type-body-text whitespace-pre-line">{children}</h3>
     ),
     blockquote: ({ children }: { children?: ReactNode }) => (
       <blockquote className="border-l-2 border-black pl-4 italic">{children}</blockquote>
