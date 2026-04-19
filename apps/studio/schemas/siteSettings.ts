@@ -26,6 +26,12 @@ export const siteSettingsType = defineType({
       type: "color"
     }),
     defineField({
+      name: "favicon",
+      title: "Favicon",
+      description: "Browser tab icon for the site metadata.",
+      type: "richImage"
+    }),
+    defineField({
       name: "seo",
       title: "SEO",
       type: "seo"

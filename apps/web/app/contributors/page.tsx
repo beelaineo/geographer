@@ -83,7 +83,7 @@ export default async function ContributorsPage() {
       <h1 className="hidden">{heading}</h1>
       {contributors.length ? (
         <section className="">
-          <ul className="columns-1 md:columns-3 md:gap-8 type-body-text">
+          <ul className="columns-1 md:columns-3 md:gap-8 type-body-text text-center">
             {contributors.map((contributor) => {
               const label = contributor.name?.trim() || "Untitled contributor";
 

@@ -102,7 +102,7 @@ export default async function ReleasePage({ params }: ReleasePageProps) {
   const singleCoverSizes = "(max-width: 768px) 100vw, 360px";
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-col items-center px-6 pb-20 pt-24 text-center md:px-12 md:pt-36">
+    <main className="mx-auto flex min-h-[100svh] w-full max-w-2xl flex-col items-center justify-center px-6 pb-20 pt-24 text-center md:px-12 md:py-24">
       {(coverUrl || coverAltUrl) && (
         <div className="flex w-full flex-row items-center justify-center">
           {coverUrl && cover ? (
@@ -144,7 +144,7 @@ export default async function ReleasePage({ params }: ReleasePageProps) {
         <div className="mt-6 w-full text-center type-body-text">
           <RichText
             value={intro}
-            className="[&_blockquote]:mx-auto [&_blockquote]:max-w-prose [&_blockquote]:border-l-0 [&_blockquote]:pl-0 [&_blockquote]:text-center [&_h2]:text-center [&_h3]:text-center [&_li]:text-left [&_ol]:mx-auto [&_ol]:inline-block [&_ol]:text-left [&_p]:text-center [&_ul]:mx-auto [&_ul]:inline-block [&_ul]:text-left"
+            className="[&_blockquote]:mx-auto [&_blockquote]:max-w-prose [&_blockquote]:border-l-0 [&_blockquote]:pl-0 [&_blockquote]:text-center [&_h2]:text-center [&_h3]:text-center [&_li]:text-center [&_ol]:mx-auto [&_ol]:text-center [&_p]:text-center [&_ul]:mx-auto [&_ul]:text-center"
           />
         </div>
       ) : null}

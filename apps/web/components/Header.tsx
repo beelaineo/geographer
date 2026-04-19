@@ -65,11 +65,11 @@ export default function Header({
         </div>
         <Link
           href="/"
-          className={`relative z-0 block max-w-[640px] px-16 text-center transition-opacity duration-300 md:hover:opacity-100 ${
+          className={`relative z-0 block max-w-[270px] md:max-w-[640px] px-0 md:px-16 text-center transition-opacity duration-300 md:hover:opacity-100 ${
             isDesktopLogotypeHidden ? "md:opacity-0" : "md:opacity-100"
           }`}
         >
-          <Logotype className="mx-auto h-8 w-auto" />
+          <Logotype className="mx-auto w-full h-auto md:h-8 md:w-auto" />
         </Link>
       </div>
     </header>

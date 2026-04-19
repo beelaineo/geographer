@@ -169,11 +169,19 @@ const HOMEPAGE_CONTENT_SELECTION = /* groq */ `content[]{
     title,
     image${RICH_IMAGE_SELECTION},
     hoverImage${RICH_IMAGE_SELECTION},
-    "releases": *[_type == "release" && published == true && defined(slug.current)] | order(release_date desc)[0...2]{
+    "releases": *[
+      _type == "release" &&
+      published == true &&
+      defined(slug.current) &&
+      defined(release_date) &&
+      release_date <= now()
+    ] | order(release_date desc)[0...2]{
       _id,
       _type,
       title,
       slug,
+      published,
+      release_date,
       backgroundColor,
       "seriesTitles": *[_type == "collection" && references(^._id)].title
     }
@@ -237,6 +245,7 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
       ${MENU_ITEM_PROJECTION}
     },
     overlayBGColor,
+    favicon${RICH_IMAGE_SELECTION},
     seo{
       title,
       description,
@@ -295,6 +304,7 @@ export const NEWSLETTER_DOCUMENT_QUERY = defineQuery(`
   *[_id == "newsletter"][0]{
     title,
     text,
+    popupText,
     submitButtonLabel
   }
 `);

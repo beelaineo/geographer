@@ -6,11 +6,13 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import InterviewBody from "../../../components/InterviewBody";
+import InterviewNewsletterModal from "../../../components/InterviewNewsletterModal";
 import { sanityTag } from "../../../lib/sanityCacheTags";
 import { formatPublishDateMmDdYyyy } from "../../../lib/formatPublishDate";
 import {
   INTERVIEW_BY_SLUG_QUERY,
   INTERVIEW_SLUGS_QUERY,
+  NEWSLETTER_DOCUMENT_QUERY,
   type INTERVIEW_BY_SLUG_QUERYResult,
   type INTERVIEW_SLUGS_QUERYResult
 } from "../../../lib/queries";
@@ -24,6 +26,20 @@ async function loadInterview(slug: string, previewEnabled: boolean) {
   return fetchSanityQuery<INTERVIEW_BY_SLUG_QUERYResult>(INTERVIEW_BY_SLUG_QUERY, {
     params: { slug },
     tags: [sanityTag.interview(slug), sanityTag.interviewList],
+    preview: previewEnabled
+  });
+}
+
+type NewsletterDocument = {
+  title: string | null;
+  text: string | null;
+  popupText: string | null;
+  submitButtonLabel: string | null;
+} | null;
+
+async function loadNewsletterDocument(previewEnabled: boolean) {
+  return fetchSanityQuery<NewsletterDocument>(NEWSLETTER_DOCUMENT_QUERY, {
+    tags: [sanityTag.newsletter],
     preview: previewEnabled
   });
 }
@@ -82,7 +98,10 @@ function formatAuthorLine(
 export default async function InterviewPage({ params }: InterviewPageProps) {
   const { isEnabled } = await draftMode();
   const { interviewSlug } = await params;
-  const data = await loadInterview(interviewSlug, isEnabled);
+  const [data, newsletter] = await Promise.all([
+    loadInterview(interviewSlug, isEnabled),
+    loadNewsletterDocument(isEnabled)
+  ]);
 
   if (!data) {
     notFound();
@@ -97,6 +116,12 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
   const body = data.body as PortableTextBlock[] | null | undefined;
   const quote = data.quote?.trim();
   const authorLine = formatAuthorLine(data.authors);
+  const newsletterTitle = newsletter?.title?.trim() || "Newsletter";
+  const newsletterText =
+    newsletter?.popupText?.trim() ||
+    newsletter?.text?.trim() ||
+    "Sign up for the most significant Geographer updates in your mailbox.";
+  const newsletterSubmitLabel = newsletter?.submitButtonLabel?.trim() || "Submit";
 
   const cover = data.cover;
   const coverUrl = cover?.asset ? urlForImageWithWidth(cover, 900).url() : null;
@@ -153,6 +178,11 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
         ) : null}
 
       </div>
+      <InterviewNewsletterModal
+        title={newsletterTitle}
+        text={newsletterText}
+        ctaLabel={newsletterSubmitLabel}
+      />
     </main>
   );
 }

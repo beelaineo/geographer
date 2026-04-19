@@ -40,9 +40,9 @@ export default async function ReclusGalleryPage() {
   const interviews = (await loadPublishedInterviews(isEnabled)) ?? [];
 
   return (
-    <div className="mx-auto max-w-[270px] sm:max-w-4xl md:px-5 pb-16 pt-24">
+    <div className="mx-auto max-w-[270px] md:max-w-6xl px-2 md:px-24 pb-16 pt-36">
       {interviews.length ? (
-        <ul className="grid list-none grid-cols-1 gap-8 sm:gap-10 p-0 sm:grid-cols-2 md:grid-cols-3">
+        <ul className="grid list-none grid-cols-1 gap-8 md:gap-10 p-0 md:grid-cols-3">
           {interviews.map((interview, index) => {
             const isPublished = interview.published === true;
             const slug = interview.slug?.current;

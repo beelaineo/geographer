@@ -42,7 +42,7 @@ function PlayTriangleIcon({ className }: { className?: string }) {
       className={["shrink-0", className].filter(Boolean).join(" ")}
       aria-hidden
     >
-      <polygon points="0,0 10,6 0,12" fill="black" />
+      <polygon points="0,0 10,6 0,12" fill="currentColor" />
     </svg>
   );
 }
@@ -131,7 +131,7 @@ export default function PlayTitleMetaList({
           style={{ gridTemplateColumns: headerGridTemplateColumns }}
         >
           <span style={{ width: headerFirstColumnWidth }} aria-hidden />
-          <span className="pl-[calc(2.5rem+8px)] flex items-center justify-center gap-1">
+          <span className={`${hasAnyLeadDisplay ? "pl-[36px]" : "pl-[56px]"} flex items-center justify-center gap-1`}>
             <button
               type="button"
               className="uppercase text-center leading-none underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -189,10 +189,12 @@ export default function PlayTitleMetaList({
           const rowGridTemplateColumns = `${rowFirstColumnWidth} minmax(0, 1fr) ${thirdColumnWidth}`;
 
           const rowClassName =
-            "grid w-full items-center gap-x-5 border-b border-black px-2 md:px-5 py-2 text-inherit transition-colors duration-200 ease-out";
+            "grid w-full items-center gap-x-5 border-b border-black px-2 md:px-5 py-2 text-inherit transition-colors duration-200 ease-out selection:bg-transparent";
 
           const rowTextClassName = "type-small-text text-center uppercase tabular-nums";
           const obfuscationClassName = row.isObfuscated ? "blur-[4px]" : "";
+          const hoverTextClassName = hoverBg ? "group-hover:text-[var(--ce-row-hover)]" : "";
+          const rowTextPlClassName = leadDefined ? "pl-[36px]" : "pl-[56px]";
 
           const inner = (
             <>
@@ -202,33 +204,34 @@ export default function PlayTitleMetaList({
                 aria-hidden={!leadDefined}
               >
                 {leadDisplay !== null ? (
-                  <span className={[rowTextClassName, obfuscationClassName].filter(Boolean).join(" ")}>
+                  <span className={[rowTextClassName, obfuscationClassName, hoverTextClassName].filter(Boolean).join(" ")}>
                     {leadDisplay}
                   </span>
                 ) : (
-                  <PlayTriangleIcon className="h-2 w-2" />
+                  <PlayTriangleIcon className={[obfuscationClassName, "h-2 w-2"].filter(Boolean).join(" ")} />
                 )}
               </span>
               <span
-                className={["pl-[calc(2.5rem+8px)]", rowTextClassName, obfuscationClassName]
+                className={[rowTextPlClassName, rowTextClassName, obfuscationClassName, hoverTextClassName]
                   .filter(Boolean)
                   .join(" ")}
               >
                 {title}
               </span>
-              <span className={[rowTextClassName, obfuscationClassName].filter(Boolean).join(" ")}>
+              <span className={[rowTextClassName, obfuscationClassName, hoverTextClassName].filter(Boolean).join(" ")}>
                 {metaDisplay}
               </span>
             </>
           );
 
           return (
-            <li key={key} className="m-0 p-0">
+            <li key={key} className="m-0 p-0 cursor-pointer">
               {href ? (
                 <Link
                   href={href}
                   className={[
                     rowClassName,
+                    "group",
                     "no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
                     hoverBg ? "hover:text-[var(--ce-row-hover)]" : ""
                   ]
@@ -245,8 +248,16 @@ export default function PlayTitleMetaList({
                 </Link>
               ) : (
                 <div
-                  className={rowClassName}
-                  style={{ gridTemplateColumns: rowGridTemplateColumns }}
+                  className={[rowClassName, hoverBg ? "hover:text-[var(--ce-row-hover)]" : ""]
+                    .concat("group")
+                    .filter(Boolean)
+                    .join(" ")}
+                  style={
+                    ({
+                      gridTemplateColumns: rowGridTemplateColumns,
+                      ...(hoverBg ? { ["--ce-row-hover" as string]: hoverBg } : {})
+                    } as CSSProperties)
+                  }
                 >
                   {inner}
                 </div>

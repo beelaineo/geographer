@@ -7,6 +7,7 @@ import "./globals.css";
 import LayoutShell from "../components/LayoutShell";
 import { fetchSiteSettings } from "../lib/siteSettings";
 import { buildMetadata } from "../lib/seo";
+import { urlForImageWithWidth } from "../lib/sanityImage";
 
 const u001 = localFont({
   src: [
@@ -57,11 +58,27 @@ const junicode = localFont({
 export async function generateMetadata(): Promise<Metadata> {
   const { isEnabled } = await draftMode();
   const siteSettings = await fetchSiteSettings(isEnabled);
+  const favicon = (siteSettings as typeof siteSettings & {
+    favicon?: { asset?: unknown } | null;
+  })?.favicon;
+  const faviconUrl =
+    favicon?.asset ? urlForImageWithWidth(favicon, 64).fit("crop").url() : undefined;
 
-  return buildMetadata({
+  const metadata = buildMetadata({
     siteSeo: siteSettings?.seo,
     title: "Geographer"
   });
+
+  return {
+    ...metadata,
+    icons: faviconUrl
+      ? {
+          icon: [{ url: faviconUrl }],
+          shortcut: [faviconUrl],
+          apple: [{ url: faviconUrl }]
+        }
+      : metadata.icons
+  };
 }
 
 export default async function RootLayout({

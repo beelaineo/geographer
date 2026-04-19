@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 import { getClient } from "../../../lib/sanity.client";
 import { sanityTag } from "../../../lib/sanityCacheTags";
@@ -122,6 +122,7 @@ export async function POST(request: NextRequest) {
   console.log('[Revalidate] Processing document type:', docType);
 
   const tagsToRevalidate = new Set<string>();
+  let revalidateEntireSite = false;
   const primarySlug =
     extractSlug(document?.slug) ??
     extractSlug(payload.slug) ??
@@ -218,6 +219,7 @@ export async function POST(request: NextRequest) {
     }
     case "siteSettings": {
       tagsToRevalidate.add(sanityTag.siteSettings);
+      revalidateEntireSite = true;
       break;
     }
     default: {
@@ -238,6 +240,10 @@ export async function POST(request: NextRequest) {
   // In Next.js 16+, revalidateTag requires a second argument (options)
   for (const tag of tagsToRevalidate) {
     await revalidateTag(tag, {});
+  }
+
+  if (revalidateEntireSite) {
+    await revalidatePath("/", "layout");
   }
   
   console.log('[Revalidate] SUCCESS: Revalidation complete');

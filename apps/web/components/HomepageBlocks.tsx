@@ -11,6 +11,7 @@ import AutoplayVideo from "./AutoplayVideo";
 import ClubEdenReleaseList from "./ClubEdenReleaseList";
 import RichText from "./RichText";
 import HomepageRichText from "./HomepageRichText";
+import HomepageNewsletterSignupForm from "./HomepageNewsletterSignupForm";
 
 type Block = NonNullable<NonNullable<HOMEPAGE_QUERYResult>["content"]>[number];
 
@@ -216,7 +217,9 @@ function HomepageFeaturedReleasesSection({
             </span>
           </Link>
         ) : null}
-        <ClubEdenReleaseList releases={releases} showColumnHeadings={false} />
+        {releases.length ? (
+          <ClubEdenReleaseList releases={releases} showColumnHeadings={false} />
+        ) : null}
       </div>
     </section>
   );
@@ -232,41 +235,8 @@ function HomepageNewsletterSignupSection({
 
   return (
     <section className="w-full px-5 py-8 md:px-5">
-      <div className="mx-auto max-w-2xl">
-        <form
-          name="newsletter-signup"
-          method="POST"
-          action="/newsletter"
-          data-netlify="true"
-          netlify-honeypot="bot-field"
-          className="mx-auto flex w-full max-w-[270px] flex-col items-center gap-4"
-        >
-          <input type="hidden" name="form-name" value="newsletter-signup" />
-          <p className="hidden">
-            <label htmlFor="homepage-newsletter-bot-field">
-              Do not fill this out if you are human:
-              <input id="homepage-newsletter-bot-field" name="bot-field" />
-            </label>
-          </p>
-          <label htmlFor="homepage-newsletter-email" className="sr-only">
-            Email address
-          </label>
-          <input
-            id="homepage-newsletter-email"
-            name="email"
-            type="email"
-            required
-            placeholder={emailPlaceholder}
-            autoComplete="email"
-            className="w-full border-0 border-b border-black bg-transparent px-0 py-1 text-center type-small-text placeholder:text-center placeholder:uppercase focus:border-black focus:outline-none"
-          />
-          <button
-            type="submit"
-            className="appearance-none bg-transparent p-0 text-center type-small-text uppercase transition hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            {ctaLabel}
-          </button>
-        </form>
+      <div className="mx-auto max-w-3xl">
+        <HomepageNewsletterSignupForm ctaLabel={ctaLabel} emailPlaceholder={emailPlaceholder} />
       </div>
     </section>
   );

@@ -21,6 +21,12 @@ export const newsletterType = defineType({
       validation: (rule) => rule.required()
     }),
     defineField({
+      name: "popupText",
+      title: "Popup Text",
+      type: "text",
+      rows: 3
+    }),
+    defineField({
       name: "submitButtonLabel",
       title: "Submit Button Label",
       type: "string",

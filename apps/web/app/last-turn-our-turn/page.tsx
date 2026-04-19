@@ -54,7 +54,7 @@ export default async function LastTurnOurTurnPage() {
   const heading = pageDoc.title?.trim() || "Last Turn / Our Turn";
 
   return (
-    <main className="mx-auto max-w-2xl px-6 pb-16 pt-32 md:px-12 md:pt-32">
+    <main className="mx-auto max-w-2xl px-6 pb-16 pt-40 md:px-12 md:pt-32">
       <h1 className="hidden">{heading}</h1>
       {body?.length ? (
         <section className="max-w-2xl space-y-5">

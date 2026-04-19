@@ -15,7 +15,7 @@ export default function AboutNav() {
   return (
     <nav
       aria-label="About sections"
-      className="absolute left-1/2 top-32 z-10 flex w-max -translate-x-1/2 flex-col gap-1 text-center md:left-5 md:top-24 md:translate-x-0 md:text-left"
+      className="absolute left-1/2 top-16 z-10 flex w-max -translate-x-1/2 flex-col gap-1 text-center md:left-5 md:top-24 md:translate-x-0 md:text-left"
     >
       <Link
         href="/about"
