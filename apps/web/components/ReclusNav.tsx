@@ -21,7 +21,7 @@ export default function ReclusNav() {
         href="/reclus"
         className={[linkClass, onReclusIndex ? "underline underline-offset-2" : ""].filter(Boolean).join(" ")}
       >
-        Reclus
+        Interviews
       </Link>
       <div className="min-h-3 shrink-0 md:min-h-4" aria-hidden />
       <Link

@@ -31,7 +31,7 @@ export default function InterviewCloseBar() {
               Close
             </button>
           ) : (
-            <Link href="/reclus" className={controlClass}>
+            <Link href="/interviews/gallery" className={controlClass}>
               Interviews
             </Link>
           )}

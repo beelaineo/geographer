@@ -121,10 +121,10 @@ const interviewEntryTextComponents: PortableTextComponents = {
   block: {
     normal: ({ children }: { children?: ReactNode }) => {
       if (!hasVisibleContent(children)) {
-        return <p className="whitespace-pre-line">&nbsp;</p>;
+        return <p className="whitespace-pre-line text-pretty">&nbsp;</p>;
       }
 
-      return <p className="whitespace-pre-line">{children}</p>;
+      return <p className="whitespace-pre-line text-pretty">{children}</p>;
     },
     h2: ({ children }: { children?: ReactNode }) => (
       <h2 className="">{children}</h2>
@@ -133,7 +133,7 @@ const interviewEntryTextComponents: PortableTextComponents = {
       <h3 className="">{children}</h3>
     ),
     blockquote: ({ children }: { children?: ReactNode }) => (
-      <blockquote className="border-l-2 border-black pl-4 text-sm italic md:text-base">{children}</blockquote>
+      <blockquote className="border-l-2 border-black pl-4 text-sm italic md:text-base text-pretty">{children}</blockquote>
     )
   },
   list: {
@@ -172,10 +172,10 @@ const components: PortableTextComponents = {
   block: {
     normal: ({ children }: { children?: ReactNode }) => {
       if (!hasVisibleContent(children)) {
-        return <p className="type-body-text whitespace-pre-line">&nbsp;</p>;
+        return <p className="type-body-text whitespace-pre-line text-pretty">&nbsp;</p>;
       }
 
-      return <p className="type-body-text whitespace-pre-line">{children}</p>;
+      return <p className="type-body-text whitespace-pre-line text-pretty">{children}</p>;
     },
     h2: ({ children }: { children?: ReactNode }) => (
       <h2 className="type-body-text whitespace-pre-line">{children}</h2>
@@ -184,7 +184,7 @@ const components: PortableTextComponents = {
       <h3 className="type-body-text whitespace-pre-line">{children}</h3>
     ),
     blockquote: ({ children }: { children?: ReactNode }) => (
-      <blockquote className="border-l-2 border-black pl-4 italic">{children}</blockquote>
+      <blockquote className="border-l-2 border-black pl-4 italic text-pretty">{children}</blockquote>
     )
   },
   list: {

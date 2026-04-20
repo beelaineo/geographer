@@ -124,7 +124,7 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
   const newsletterSubmitLabel = newsletter?.submitButtonLabel?.trim() || "Submit";
 
   const cover = data.cover;
-  const coverUrl = cover?.asset ? urlForImageWithWidth(cover, 900).url() : null;
+  const coverUrl = cover?.asset ? urlForImageWithWidth(cover, 1024).url() : null;
   const coverDims = getImageDimensions(cover ?? undefined);
   const coverDisplayW = 420;
   const coverDisplayH = Math.max(1, Math.round((coverDims.height / coverDims.width) * coverDisplayW));
