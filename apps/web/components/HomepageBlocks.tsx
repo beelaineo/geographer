@@ -60,7 +60,7 @@ function HomepageVideoBannerSection({
 
   return (
     <section
-      className="flex min-h-[50vh] md:min-h-[85vh] w-full items-center justify-center px-10 py-20"
+      className="flex min-h-[50vh] md:min-h-[85vh] w-full items-center justify-center px-5 pt-40 pb-10 md:px-10 md:py-20"
       style={bg ? { backgroundColor: bg } : undefined}
     >
       {playbackId ? (
@@ -195,7 +195,7 @@ function HomepageFeaturedReleasesSection({
         {block.title ? <h2 className="hidden">{block.title}</h2> : null}
         {imageUrl && image ? (
           <Link href="/club-eden" className="group">
-            <span className="relative block w-[380px] max-w-full">
+            <span className="relative block w-[380px] px-5 md:px-0 max-w-full">
               <Image
                 src={imageUrl}
                 alt={image.alt ?? ""}

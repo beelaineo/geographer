@@ -15,7 +15,7 @@ export default function ClubEdenNav() {
   return (
     <nav
       aria-label="Club Eden sections"
-      className="absolute left-1/2 top-36 z-10 flex w-max -translate-x-1/2 flex-col gap-1 uppercase md:left-5 md:top-24 md:translate-x-0 text-center md:text-left"
+      className="absolute left-1/2 top-36 z-10 flex w-max -translate-x-1/2 flex-col gap-1 uppercase md:left-5 md:top-[115px] md:translate-x-0 text-center md:text-left"
     >
       <Link
         href="/club-eden"

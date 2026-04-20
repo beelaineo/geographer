@@ -73,7 +73,7 @@ export default async function StaticPage({ params }: StaticPageProps) {
   const body = page.body;
 
   return (
-    <main className="mx-auto max-w-2xl px-6 pb-16 pt-32 md:px-12 md:pt-24">
+    <main className="mx-auto max-w-2xl px-6 pb-16 pt-32 md:px-12 md:pt-[115px]">
       <h1 className="hidden">{heading}</h1>
       {body?.length ? (
         <section className="max-w-3xl space-y-4 type-body-text">

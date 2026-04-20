@@ -113,7 +113,7 @@ export default async function ClubEdenCollectionPage({ params }: ClubEdenCollect
   return (
     <div
       className={[
-        "mx-auto w-full px-6 pb-16 pt-36 md:px-3 md:pt-24",
+        "mx-auto w-full px-6 pb-16 pt-36 md:px-3 md:pt-[115px]",
         is1992 ? "md:max-w-3xl flex flex-col md:gap-2" : "md:max-w-3xl"
       ].join(" ")}
     >

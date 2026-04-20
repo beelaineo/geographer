@@ -61,7 +61,7 @@ export default async function ClubEdenPage() {
   const heading = pageDoc?.title?.trim() || "Club Eden";
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-6 pb-16 pt-36 md:px-12 md:pt-24">
+    <div className="mx-auto w-full max-w-2xl px-6 pb-16 pt-36 md:px-12 md:pt-[115px]">
       <h1 className="mb-10 text-2xl font-semibold md:text-3xl hidden">{heading}</h1>
       {intro?.length ? (
         <div className="mb-12 max-w-2xl space-y-4 type-body-text">

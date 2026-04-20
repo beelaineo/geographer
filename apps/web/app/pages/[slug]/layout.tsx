@@ -16,7 +16,7 @@ export default async function StaticPageLayout({ children, params }: StaticPageL
   }
 
   return (
-    <div className="relative min-h-0">
+    <div className="relative min-h-screen">
       <AboutNav />
       {children}
     </div>
