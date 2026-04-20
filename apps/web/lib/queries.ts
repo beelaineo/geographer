@@ -137,7 +137,12 @@ const HOMEPAGE_CONTENT_SELECTION = /* groq */ `content[]{
     _key,
     _type,
     title,
-    interview->{
+    "interview": *[
+      _type == "interview" &&
+      published == true &&
+      defined(slug.current) &&
+      defined(release_date)
+    ] | order(release_date desc)[0]{
       _id,
       _type,
       title,

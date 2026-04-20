@@ -32,6 +32,43 @@ type PlayTitleMetaListProps = {
 
 type SortColumn = "title" | "meta";
 type SortDirection = "asc" | "desc";
+const MONTH_ABBREVIATIONS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec"
+] as const;
+
+function formatDateMetaValue(meta: string | null | undefined): string | null {
+  const trimmed = meta?.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  const monthYearMatch = trimmed.match(/^(\d{1,2})\.(\d{4})$/);
+  if (monthYearMatch) {
+    const monthNumber = Number.parseInt(monthYearMatch[1], 10);
+    const year = monthYearMatch[2];
+    if (monthNumber >= 1 && monthNumber <= 12) {
+      return `${MONTH_ABBREVIATIONS[monthNumber - 1]} ${year}`;
+    }
+  }
+
+  const parsedDate = new Date(trimmed);
+  if (Number.isNaN(parsedDate.getTime())) {
+    return trimmed;
+  }
+
+  return `${MONTH_ABBREVIATIONS[parsedDate.getUTCMonth()]} ${parsedDate.getUTCFullYear()}`;
+}
 
 function PlayTriangleIcon({ className }: { className?: string }) {
   return (
@@ -118,7 +155,7 @@ export default function PlayTitleMetaList({
   };
 
   const normalizedMetaHeading = metaColumnHeading.trim().toLowerCase();
-  const thirdColumnWidth = normalizedMetaHeading === "date" ? "60px" : "64px";
+  const thirdColumnWidth = normalizedMetaHeading === "date" ? "62px" : "64px";
   const hasAnyLeadDisplay = sortedItems.some((row) => row.leadContent !== undefined);
   const headerFirstColumnWidth = hasAnyLeadDisplay ? "24px" : "8px";
   const headerGridTemplateColumns = `${headerFirstColumnWidth} minmax(0, 1fr) ${thirdColumnWidth}`;
@@ -179,7 +216,9 @@ export default function PlayTitleMetaList({
           const title = row.title?.trim() || "Untitled";
           const key = row._id ?? `row-${index}`;
           const metaTrimmed = row.meta?.trim();
-          const metaDisplay = metaTrimmed ? metaTrimmed : "—";
+          const metaDisplay = normalizedMetaHeading === "date"
+            ? (formatDateMetaValue(metaTrimmed) ?? "—")
+            : (metaTrimmed || "—");
           const href = row.href ?? null;
           const hoverBg = colorToCss(row.backgroundColor ?? undefined);
           const leadDefined = row.leadContent !== undefined;

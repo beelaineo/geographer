@@ -185,7 +185,7 @@ export default function HeaderMenu({ items }: HeaderMenuProps) {
               {menuSize ? (
                 <div
                   aria-hidden
-                  className="pointer-events-none fixed z-30 bg-[#382f1f] mix-blend-multiply"
+                  className="pointer-events-none fixed z-30 bg-[#382f1f] mix-blend-multiply backdrop-blur-md"
                   style={{
                     top: `${menuPosition.top}px`,
                     left: `${menuPosition.left}px`,

@@ -61,6 +61,10 @@ export default function NewsletterPageSignupForm({ submitButtonLabel }: Newslett
     }
   };
 
+  const inputClassName = "w-full bg-white p-2 text-center type-small-text placeholder:text-center placeholder:uppercase focus:border-black focus:outline-none";
+  const buttonClassName = "mt-0 w-fit p-2 mx-auto text-center type-small-text appearance-none bg-transparent uppercase transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-70";
+
+
   return (
     <form
       name="newsletter-signup"
@@ -84,7 +88,7 @@ export default function NewsletterPageSignupForm({ submitButtonLabel }: Newslett
         type="text"
         required
         placeholder="first name"
-        className="w-full bg-white px-2 py-2 focus:outline-none"
+        className={inputClassName}
         autoComplete="given-name"
       />
       <input
@@ -93,7 +97,7 @@ export default function NewsletterPageSignupForm({ submitButtonLabel }: Newslett
         type="text"
         required
         placeholder="last name"
-        className="w-full bg-white p-2 focus:outline-none"
+        className={inputClassName}
         autoComplete="family-name"
       />
       <input
@@ -102,13 +106,13 @@ export default function NewsletterPageSignupForm({ submitButtonLabel }: Newslett
         type="email"
         required
         placeholder="email"
-        className="w-full bg-white p-2 focus:outline-none"
+        className={inputClassName}
         autoComplete="email"
       />
 
       <button
         type="submit"
-        className="mt-2 w-fit type-body-sans mx-auto appearance-none bg-transparent p-0 uppercase transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-70"
+        className={buttonClassName}
         disabled={submissionState === "submitting"}
       >
         {buttonLabel}

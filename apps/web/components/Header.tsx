@@ -27,7 +27,7 @@ export default function Header({
   const mainMenu = (siteSettings?.mainMenu ?? []).filter(
     (item): item is NonNullable<typeof item> => Boolean(item)
   );
-  const mobilePositionClasses = shouldFixMobile ? "fixed top-0 left-0 right-0 z-20" : "relative";
+  const mobilePositionClasses = "fixed top-0 left-0 right-0 z-20";
   const desktopPositionClasses = shouldFixDesktop
     ? "md:fixed md:top-0 md:left-0 md:right-0 md:z-20"
     : "md:relative";

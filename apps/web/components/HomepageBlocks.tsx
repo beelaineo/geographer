@@ -112,9 +112,7 @@ function HomepageFeaturedInterviewSection({
           ) : null}
         </div>
       ) : null}
-      {block.title ? (
-        <p className="mt-5 max-w-[320px] text-center uppercase type-small-text">{block.title}</p>
-      ) : null}
+        <p className="mt-5 max-w-[320px] text-center uppercase type-small-text">In Conversation: {interview?.title}</p>
     </>
   );
 

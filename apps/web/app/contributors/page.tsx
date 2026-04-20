@@ -79,7 +79,7 @@ export default async function ContributorsPage() {
   });
 
   return (
-    <main className="mx-auto max-w-3xl px-6 pb-16 pt-32 md:px-5 md:pt-[115px]">
+    <main className="mx-auto max-w-3xl px-6 pb-16 pt-64 md:px-5 md:pt-[115px]">
       <h1 className="hidden">{heading}</h1>
       {contributors.length ? (
         <section className="">

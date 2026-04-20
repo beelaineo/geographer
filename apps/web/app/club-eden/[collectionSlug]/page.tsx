@@ -105,10 +105,10 @@ export default async function ClubEdenCollectionPage({ params }: ClubEdenCollect
   const is1992 = collectionSlug === "1992";
 
   const gridListClassName = is1992
-    ? "max-w-[160px] mx-auto md:max-w-none md:w-full md:flex-1 mt-2 grid list-none md:grid-cols-5 gap-8 md:gap-0 p-0"
+    ? "max-w-[160px] mx-auto md:max-w-none w-full md:flex-1 mt-2 grid list-none md:grid-cols-5 gap-8 md:gap-0 p-0"
     : "max-w-[160px] mx-auto md:max-w-none mt-2 grid list-none grid-cols-1 gap-8 p-0 md:grid-cols-3 md:gap-16";
 
-  const imageSizes = is1992 ? "(max-width: 768px) 50vw, 25vw" : "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw";
+  const imageSizes = is1992 ? "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw" : "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw";
 
   return (
     <div
