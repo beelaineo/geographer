@@ -24,6 +24,14 @@ export const collectionType = defineType({
       validation: (rule) => rule.required()
     }),
     defineField({
+      name: "published",
+      title: "Published?",
+      description: "When off, this collection is omitted from Club Eden paths and its Club Eden page returns 404.",
+      type: "boolean",
+      initialValue: true,
+      validation: (rule) => rule.required()
+    }),
+    defineField({
       name: "hero",
       title: "Hero",
       description: "Legacy field retained temporarily during redesign transition.",

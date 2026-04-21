@@ -12,24 +12,16 @@ export const homepageFeaturedInterviewType = defineType({
       title: "Title",
       type: "string",
       validation: (rule) => rule.required()
-    }),
-    defineField({
-      name: "interview",
-      title: "Interview",
-      type: "reference",
-      to: [{ type: "interview" }],
-      validation: (rule) => rule.required()
     })
   ],
   preview: {
     select: {
-      title: "title",
-      interviewTitle: "interview.title"
+      title: "title"
     },
-    prepare({ title, interviewTitle }) {
+    prepare({ title }) {
       return {
         title: title || "Featured interview",
-        subtitle: interviewTitle || "No interview selected"
+        subtitle: "Auto-selects latest published interview"
       };
     }
   }

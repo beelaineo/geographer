@@ -42,6 +42,27 @@ export const menuItemType = defineType({
         })
     }),
     defineField({
+      name: "subLink",
+      title: "Sub Link",
+      description: 'Optional path suffix to append (e.g. "/gallery").',
+      type: "string",
+      hidden: ({ parent }: { parent?: { linkType?: string } }) => parent?.linkType !== "internal",
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const parent = context.parent as { linkType?: string } | undefined;
+          if (parent?.linkType !== "internal" || !value?.trim()) {
+            return true;
+          }
+
+          const normalized = value.trim();
+          if (!normalized.startsWith("/")) {
+            return 'Sub Link must start with "/"';
+          }
+
+          return true;
+        })
+    }),
+    defineField({
       name: "externalLink",
       title: "External Link",
       type: "url",
@@ -66,13 +87,14 @@ export const menuItemType = defineType({
       title: "label",
       linkType: "linkType",
       internalTitle: "internalLink.title",
+      subLink: "subLink",
       externalLink: "externalLink"
     },
-    prepare({ title, linkType, internalTitle, externalLink }) {
+    prepare({ title, linkType, internalTitle, subLink, externalLink }) {
       const subtitle =
         linkType === "external"
           ? externalLink
-          : internalTitle || "Internal link";
+          : [internalTitle || "Internal link", subLink].filter(Boolean).join(" ");
 
       return {
         title,

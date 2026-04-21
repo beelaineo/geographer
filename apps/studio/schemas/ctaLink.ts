@@ -11,7 +11,6 @@ export const ctaLinkType = defineType({
       name: "label",
       title: "Label",
       type: "string",
-      validation: (rule) => rule.required()
     }),
     defineField({
       name: "linkType",
@@ -24,8 +23,6 @@ export const ctaLinkType = defineType({
         ],
         layout: "radio"
       },
-      initialValue: "internal",
-      validation: (rule) => rule.required()
     }),
     defineField({
       name: "internalLink",

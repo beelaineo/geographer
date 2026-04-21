@@ -1,0 +1,101 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { draftMode } from "next/headers";
+
+import { sanityTag } from "../../../lib/sanityCacheTags";
+import {
+  PUBLISHED_INTERVIEWS_QUERY,
+  type PUBLISHED_INTERVIEWS_QUERYResult
+} from "../../../lib/queries";
+import { fetchSanityQuery } from "../../../lib/sanity.fetch";
+import { fetchSiteSettings } from "../../../lib/siteSettings";
+import { urlForImageWithWidth } from "../../../lib/sanityImage";
+import { buildMetadata, type SanitySeoPayload } from "../../../lib/seo";
+
+type ReclusGalleryInterviewsQueryResult = Array<
+  PUBLISHED_INTERVIEWS_QUERYResult[number] & { published: boolean | null }
+>;
+
+async function loadPublishedInterviews(previewEnabled: boolean) {
+  return fetchSanityQuery<ReclusGalleryInterviewsQueryResult>(PUBLISHED_INTERVIEWS_QUERY, {
+    tags: [sanityTag.interviewList],
+    preview: previewEnabled
+  });
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { isEnabled } = await draftMode();
+  const siteSettings = await fetchSiteSettings(isEnabled);
+  const siteSeo = siteSettings?.seo as SanitySeoPayload;
+
+  return buildMetadata({
+    siteSeo,
+    title: "Gallery · Reclus"
+  });
+}
+
+export default async function ReclusGalleryPage() {
+  const { isEnabled } = await draftMode();
+  const interviews = (await loadPublishedInterviews(isEnabled)) ?? [];
+
+  return (
+    <div className="mx-auto max-w-[270px] md:max-w-6xl px-2 md:px-24 pb-16 pt-36 md:pt-[115px]">
+      {interviews.length ? (
+        <ul className="grid list-none grid-cols-1 gap-8 md:gap-10 p-0 md:grid-cols-3">
+          {interviews.map((interview, index) => {
+            const isPublished = interview.published === true;
+            const slug = interview.slug?.current;
+            const title = interview.title?.trim() || "Untitled";
+            const key = interview._id ?? `interview-${index}`;
+            const cover = interview.cover;
+            const imageUrl = cover?.asset ? urlForImageWithWidth(cover, 720).url() : null;
+            const href = isPublished && slug ? `/interviews/${slug}` : null;
+            const quote = interview.quote?.trim();
+
+            const cell = (
+              <div className="relative aspect-[5/4] w-full overflow-hidden bg-white">
+                {imageUrl ? (
+                  <Image
+                    src={imageUrl}
+                    alt={cover?.alt ?? title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                    className="object-contain transition-transform duration-300 ease-out"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-white px-3 text-center text-xs font-bold uppercase tracking-wide text-black">
+                    {title}
+                  </div>
+                )}
+                {isPublished && quote ? (
+                  <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white p-4 text-center type-body-text text-black opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-focus-within:opacity-100 md:text-base">
+                    &ldquo;{quote}&rdquo;
+                  </span>
+                ) : null}
+              </div>
+            );
+
+            return (
+              <li key={key} className="min-w-0">
+                {href ? (
+                  <Link
+                    href={href}
+                    className="group block w-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    aria-label={title}
+                  >
+                    {cell}
+                  </Link>
+                ) : (
+                  <div className="block w-full">{cell}</div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p className="type-small-text text-black/60">No interviews yet.</p>
+      )}
+    </div>
+  );
+}

@@ -5,6 +5,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
+import { sanityTag } from "../../../lib/sanityCacheTags";
 import {
   COLLECTION_BY_SLUG_QUERY,
   COLLECTION_SLUGS_QUERY,
@@ -22,14 +23,14 @@ import Link from "next/link";
 async function loadCollection(slug: string, previewEnabled: boolean) {
   return fetchSanityQuery<COLLECTION_BY_SLUG_QUERYResult>(COLLECTION_BY_SLUG_QUERY, {
     params: { slug },
-    tags: [`sanity:collection:${slug}`, "sanity:collection:list"],
+    tags: [sanityTag.collection(slug), sanityTag.collectionList],
     preview: previewEnabled
   });
 }
 
 export async function generateStaticParams() {
   const slugs = await fetchSanityQuery<COLLECTION_SLUGS_QUERYResult>(COLLECTION_SLUGS_QUERY, {
-    tags: ["sanity:collection:list"]
+    tags: [sanityTag.collectionList]
   });
 
   return (slugs ?? [])

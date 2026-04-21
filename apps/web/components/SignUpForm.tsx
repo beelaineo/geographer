@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { markNewsletterSubscribed } from "../lib/newsletterPopupCookies";
 
 export function SignUpForm() {
   const [email, setEmail] = useState("");
@@ -44,6 +45,7 @@ export function SignUpForm() {
         throw new Error("Request failed");
       }
 
+      markNewsletterSubscribed();
       setStatus("success");
       setEmail("");
     } catch (error) {

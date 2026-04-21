@@ -1,4 +1,4 @@
-import { defineArrayMember, defineField, defineType } from "sanity";
+import { defineField, defineType } from "sanity";
 import { RiAlbumLine } from "react-icons/ri";
 
 export const homepageFeaturedReleasesType = defineType({
@@ -20,28 +20,20 @@ export const homepageFeaturedReleasesType = defineType({
       validation: (rule) => rule.required()
     }),
     defineField({
-      name: "releases",
-      title: "Releases",
-      type: "array",
-      of: [
-        defineArrayMember({
-          type: "reference",
-          to: [{ type: "release" }]
-        })
-      ],
-      validation: (rule) => rule.required().min(1)
-    })
+      name: "hoverImage",
+      title: "Hover image",
+      type: "richImage",
+      description: "Shown on hover for non-mobile devices."
+    }),
   ],
   preview: {
     select: {
-      title: "title",
-      count: "releases.length"
+      title: "title"
     },
-    prepare({ title, count }) {
-      const releaseCount = typeof count === "number" ? count : 0;
+    prepare({ title }) {
       return {
         title: title || "Featured releases",
-        subtitle: `${releaseCount} release${releaseCount === 1 ? "" : "s"}`
+        subtitle: "Shows the 2 newest published releases"
       };
     }
   }

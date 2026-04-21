@@ -21,7 +21,7 @@ export const homepageTextBlockType = defineType({
     }),
     defineField({
       name: "cta",
-      title: "Call to Action",
+      title: "Call to Action (optional)",
       type: "ctaLink"
     })
   ],

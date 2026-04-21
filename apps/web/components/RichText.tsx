@@ -7,6 +7,7 @@ import {
 } from "@portabletext/react";
 import Link from "next/link";
 
+import PortableTextRichImage from "./PortableTextRichImage";
 import { resolveProductionUrl } from "../lib/resolveProductionUrl";
 
 type RichTextProps = {
@@ -29,6 +30,29 @@ type ExternalLinkValue = {
   href?: string | null;
   blank?: boolean | null;
 };
+
+function hasVisibleContent(children: ReactNode): boolean {
+  const nodes = Array.isArray(children) ? children : [children];
+
+  for (const node of nodes) {
+    if (typeof node === "string" && node.trim().length > 0) {
+      return true;
+    }
+
+    if (typeof node === "number") {
+      return true;
+    }
+
+    if (node && typeof node === "object" && "props" in node) {
+      const childNode = (node as { props?: { children?: ReactNode } }).props?.children;
+      if (hasVisibleContent(childNode)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
 
 function renderPortableLink({
   href,
@@ -66,18 +90,25 @@ function renderPortableLink({
 }
 
 const components: PortableTextComponents = {
+  types: {
+    richImage: PortableTextRichImage
+  },
   block: {
-    normal: ({ children }: { children?: ReactNode }) => (
-      <p className="text-base leading-relaxed md:text-lg">{children}</p>
-    ),
+    normal: ({ children }: { children?: ReactNode }) => {
+      if (!hasVisibleContent(children)) {
+        return <p className="type-body-text whitespace-pre-line text-pretty">&nbsp;</p>;
+      }
+
+      return <p className="type-body-text whitespace-pre-line text-pretty">{children}</p>;
+    },
     h2: ({ children }: { children?: ReactNode }) => (
-      <h2 className="text-lg font-semibold leading-snug md:text-xl">{children}</h2>
+      <h2 className="type-body-text whitespace-pre-line">{children}</h2>
     ),
     h3: ({ children }: { children?: ReactNode }) => (
-      <h3 className="text-base font-semibold leading-snug md:text-lg">{children}</h3>
+      <h3 className="type-body-text whitespace-pre-line">{children}</h3>
     ),
     blockquote: ({ children }: { children?: ReactNode }) => (
-      <blockquote className="border-l-2 border-black pl-4 italic">{children}</blockquote>
+      <blockquote className="border-l-2 border-black pl-4 italic text-pretty">{children}</blockquote>
     )
   },
   list: {
@@ -85,6 +116,12 @@ const components: PortableTextComponents = {
     number: ({ children }) => <ol className="ml-5 list-decimal space-y-2">{children}</ol>
   },
   marks: {
+    strong: ({ children }: { children?: ReactNode }) => (
+      <strong className="font-sans font-bold">{children}</strong>
+    ),
+    center: ({ children }: { children?: ReactNode }) => (
+      <span className="block text-center type-body-sans">{children}</span>
+    ),
     internalLink: ({ value, children }: PortableTextMarkComponentProps<InternalLinkValue>) => {
       const href = resolveProductionUrl(value?.reference);
 

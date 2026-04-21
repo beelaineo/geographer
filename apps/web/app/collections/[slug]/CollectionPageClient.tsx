@@ -16,11 +16,6 @@ type Release = NonNullable<
 >[number] & {
   cover?: ReleaseImage | null;
   coverAlt?: ReleaseImage | null;
-  intro?: string | null;
-  quote?: string | null;
-  embed?: string | null;
-  release_date?: string | null;
-  published?: boolean | null;
 };
 
 type CollectionPageClientProps = {

@@ -1,5 +1,6 @@
 export const internalLinkTargets = [
   { type: "about" },
+  { type: "contributors" },
   { type: "homepage" },
   { type: "release" },
   { type: "collection" },

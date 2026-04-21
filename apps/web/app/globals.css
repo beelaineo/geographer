@@ -14,5 +14,42 @@
   body {
     @apply min-h-screen bg-white font-serif antialiased;
   }
+
+  html.releases-route {
+    @apply bg-gray-300;
+  }
+
+  html.releases-route body {
+    @apply bg-gray-300;
+  }
+}
+
+@layer components {
+  .type-homepage-text-block {
+    @apply font-sans text-[19px] font-bold leading-[24px] tracking-[0.025em];
+    -webkit-text-stroke: 0.2px;
+  }
+
+  .type-small-text {
+    @apply font-sans text-[11.5px] font-bold leading-[14px] tracking-[0.06em];
+  }
+
+  .type-interview-question {
+    @apply font-sans text-[13.6px] font-bold leading-[19px] tracking-[0.035em];
+  }
+
+  .type-body-text {
+    @apply font-serif text-[16.2px] font-normal leading-[24px] tracking-[0.02em];
+    -webkit-text-stroke: 0.2px;
+  }
+
+  .type-body-sans {
+    @apply font-sans font-bold text-[16px] leading-[21.5px] tracking-[0.02em];
+  }
+
+  .type-interview-answer {
+    @apply font-sans text-[14.5px] font-normal leading-[21.5px] tracking-[0.02em];
+    -webkit-text-stroke: 0.1px;
+  }
 }
 

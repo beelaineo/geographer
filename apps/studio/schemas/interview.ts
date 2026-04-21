@@ -26,6 +26,7 @@ export const interviewType = defineType({
     defineField({
       name: "published",
       title: "Published?",
+      description: "When false, Reclus index line values are ciphered and the item is not linkable.",
       type: "boolean",
       initialValue: false,
       validation: (rule) => rule.required()
@@ -69,8 +70,10 @@ export const interviewType = defineType({
     defineField({
       name: "quote",
       title: "Quote",
+      description: "Hover quote, max. 350 characters",
       type: "text",
-      rows: 3
+      rows: 3,
+      validation: (rule) => rule.max(350)
     }),
     defineField({
       name: "body",

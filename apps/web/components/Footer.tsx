@@ -20,23 +20,14 @@ export default function Footer({
 }: FooterProps) {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
-  const shouldFixMobile = isHomePage || isFixedMobile;
-  const shouldFixDesktop = isHomePage || isFixedDesktop;
   const footerMenu = (siteSettings?.footerMenu ?? []).filter(
     (item): item is NonNullable<typeof item> => Boolean(item)
   );
-  const baseClasses = "p-6 md:p-12 grid md:grid-cols-2 w-full";
-  const mobilePositionClasses = shouldFixMobile ? "fixed bottom-0 left-0 z-10" : "relative";
-  const desktopPositionClasses = shouldFixDesktop
-    ? "md:fixed md:bottom-0 md:left-0 md:z-10"
-    : "md:relative";
+  const baseClasses = "p-5 md:p-10 w-full";
   return (
-    <footer className={`${baseClasses} ${mobilePositionClasses} ${desktopPositionClasses}`}>
-      <div className="flex items-center justify-between">
-        <Link href="/">
-          <Logotype className="h-6 md:h-8 w-auto" />
-        </Link>
-        <nav className="flex flex-col gap-1">
+    <footer className={`${baseClasses}`}>
+      <div className="flex flex-col md:flex-row items-center justify-center gap-5">
+        <nav className="flex gap-5">
           {footerMenu.map((item, index) => (
             <Link
               key={item._key ?? `${item.label ?? "footer-item"}-${index}`}
@@ -47,15 +38,15 @@ export default function Footer({
                   ? resolveProductionUrl(item.internalLink)
                   : item.externalLink ?? "/"
               }
-              className="text-xs sm:text-sm leading-none transition hover:opacity-70 uppercase"
+              className="type-small-text transition hover:opacity-70"
             >
               {item.label}
             </Link>
           ))}
         </nav>
-      </div>
-      <div className="hidden md:flex justify-end">
-        <SignUpForm />
+        <div className="flex flex-col items-center justify-center">
+          <span className="type-small-text"><span className="inline-block translate-y-[2px]">©</span> Geographer {new Date().getFullYear()}</span>
+        </div>
       </div>
     </footer>
   );
