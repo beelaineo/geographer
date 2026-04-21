@@ -10,6 +10,10 @@ type NewsletterPageSignupFormProps = {
   submitButtonLabel: string;
 };
 
+const NEWSLETTER_FORM_NAME = "newsletter-signup";
+const NEWSLETTER_FORM_ACTION = "/form.html";
+const NEWSLETTER_HONEYPOT_FIELD = "bot-field";
+
 function encodeFormData(formData: FormData): string {
   const pairs: string[] = [];
 
@@ -37,10 +41,11 @@ export default function NewsletterPageSignupForm({ submitButtonLabel }: Newslett
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+    formData.set("form-name", NEWSLETTER_FORM_NAME);
     setSubmissionState("submitting");
 
     try {
-      const response = await fetch("/", {
+      const response = await fetch(NEWSLETTER_FORM_ACTION, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
@@ -67,18 +72,18 @@ export default function NewsletterPageSignupForm({ submitButtonLabel }: Newslett
 
   return (
     <form
-      name="newsletter-signup"
+      name={NEWSLETTER_FORM_NAME}
       method="POST"
-      action="/"
+      action={NEWSLETTER_FORM_ACTION}
       data-netlify="true"
-      netlify-honeypot="bot-field"
+      data-netlify-honeypot={NEWSLETTER_HONEYPOT_FIELD}
       className="mt-10 flex w-full max-w-md flex-col gap-4 text-left"
       onSubmit={handleSubmit}
     >
-      <input type="hidden" name="form-name" value="newsletter-signup" />
+      <input type="hidden" name="form-name" value={NEWSLETTER_FORM_NAME} />
       <p className="hidden">
         <label htmlFor="newsletter-page-bot-field">
-          Do not fill this out if you are human: <input id="newsletter-page-bot-field" name="bot-field" />
+          Do not fill this out if you are human: <input id="newsletter-page-bot-field" name={NEWSLETTER_HONEYPOT_FIELD} />
         </label>
       </p>
 

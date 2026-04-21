@@ -13,6 +13,10 @@ type HomepageNewsletterSignupFormProps = {
   onSuccess?: () => void;
 };
 
+const NEWSLETTER_FORM_NAME = "newsletter-signup";
+const NEWSLETTER_FORM_ACTION = "/form.html";
+const NEWSLETTER_HONEYPOT_FIELD = "bot-field";
+
 function encodeFormData(formData: FormData): string {
   const pairs: string[] = [];
 
@@ -55,10 +59,11 @@ export default function HomepageNewsletterSignupForm({
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+    formData.set("form-name", NEWSLETTER_FORM_NAME);
     setSubmissionState("submitting");
 
     try {
-      const response = await fetch("/", {
+      const response = await fetch(NEWSLETTER_FORM_ACTION, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
@@ -82,17 +87,17 @@ export default function HomepageNewsletterSignupForm({
 
   return (
     <form
-      name="newsletter-signup"
+      name={NEWSLETTER_FORM_NAME}
       method="POST"
-      action="/"
+      action={NEWSLETTER_FORM_ACTION}
       data-netlify="true"
-      netlify-honeypot="bot-field"
+      data-netlify-honeypot={NEWSLETTER_HONEYPOT_FIELD}
       className={["mx-auto flex w-full max-w-[480px] flex-col items-center gap-4", className]
         .filter(Boolean)
         .join(" ")}
       onSubmit={handleSubmit}
     >
-      <input type="hidden" name="form-name" value="newsletter-signup" />
+      <input type="hidden" name="form-name" value={NEWSLETTER_FORM_NAME} />
       <fieldset
         disabled={isSuccess}
         aria-hidden={isSuccess}
@@ -104,7 +109,7 @@ export default function HomepageNewsletterSignupForm({
           <p className="hidden">
             <label htmlFor="homepage-newsletter-bot-field">
               Do not fill this out if you are human:
-              <input id="homepage-newsletter-bot-field" name="bot-field" />
+              <input id="homepage-newsletter-bot-field" name={NEWSLETTER_HONEYPOT_FIELD} />
             </label>
           </p>
           <div className="w-full flex gap-5 mb-2 justify-between">
