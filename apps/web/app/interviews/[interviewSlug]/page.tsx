@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import type { PortableTextBlock } from "@portabletext/types";
-import type { CSSProperties } from "react";
-import Image from "next/image";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
-import InterviewBody from "../../../components/InterviewBody";
+import InterviewPageBodyWithBgToggle from "../../../components/InterviewPageBodyWithBgToggle";
 import InterviewNewsletterModal from "../../../components/InterviewNewsletterModal";
 import { sanityTag } from "../../../lib/sanityCacheTags";
 import { formatPublishDateMmDdYyyy } from "../../../lib/formatPublishDate";
@@ -131,58 +129,21 @@ export default async function InterviewPage({ params }: InterviewPageProps) {
   const backgroundColor = colorToCss(data.backgroundColor ?? undefined);
 
   return (
-    <main className="grid grid-cols-1 md:grid-cols-2 relative">
-      {coverUrl && cover ? (
-        <div className="max-w-[270px] md:max-w-none mx-auto md:mx-0 py-28 md:py-0 w-full justify-center items-center flex flex-col md:h-screen md:sticky top-0">
-          <Image
-            src={coverUrl}
-            alt={cover.alt ?? title}
-            width={coverDisplayW}
-            height={coverDisplayH}
-            className="h-auto max-h-[75vh] max-w-[min(100%,480px)] object-contain"
-            sizes="(max-width: 768px) 100vw, 1200px"
-            priority
-          />
-        </div>
-      ) : null}
-
-      <div
-        className="mx-auto flex w-full flex-col items-center px-8 md:px-14 py-8 md:py-24 md:[background-color:var(--interview-bg)]"
-        style={
-          backgroundColor
-            ? ({ ["--interview-bg" as string]: backgroundColor } as CSSProperties)
-            : undefined
-        }
-      >
-        <h1 className="hidden">{title}</h1>
-
-        {/* {authorLine ? (
-          <p className="mt-3 max-w-prose text-center text-sm font-bold uppercase tracking-wide text-black/80">
-            {authorLine}
-          </p>
-        ) : null}
-
-        {publishedLabel ? (
-          <time
-            className="mt-2 text-base font-bold tabular-nums tracking-wide"
-            dateTime={data.release_date ?? undefined}
-          >
-            {publishedLabel}
-          </time>
-        ) : null} */}
-
-        {body?.length ? (
-          <div className="w-full text-left">
-            <InterviewBody value={body} className="whitespace-pre-line space-y-5" />
-          </div>
-        ) : null}
-
-      </div>
+    <>
+      <InterviewPageBodyWithBgToggle
+        title={title}
+        body={body}
+        coverUrl={coverUrl}
+        coverAlt={cover?.alt ?? title}
+        coverDisplayW={coverDisplayW}
+        coverDisplayH={coverDisplayH}
+        interviewBackgroundColor={backgroundColor ?? undefined}
+      />
       <InterviewNewsletterModal
         title={newsletterTitle}
         text={newsletterText}
         ctaLabel={newsletterSubmitLabel}
       />
-    </main>
+    </>
   );
 }
