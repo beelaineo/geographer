@@ -6,11 +6,25 @@ import { usePathname } from "next/navigation";
 const linkClass =
   "uppercase type-body-sans transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
 
+function isReclusInterviewDetailPath(pathname: string): boolean {
+  if (!pathname.startsWith("/reclus/")) {
+    return false;
+  }
+
+  const segment = pathname.slice("/reclus/".length).split("/")[0];
+  return Boolean(segment) && segment !== "gallery" && segment !== "index";
+}
+
 export default function ReclusNav() {
   const pathname = usePathname() ?? "";
   const onReclusIndex = pathname === "/reclus";
   const onGallery = pathname === "/reclus/gallery" || pathname.startsWith("/reclus/gallery/");
   const onIndex = pathname === "/reclus/index" || pathname.startsWith("/reclus/index/");
+  const hideOnInterviewDetail = isReclusInterviewDetailPath(pathname);
+
+  if (hideOnInterviewDetail) {
+    return null;
+  }
 
   return (
     <nav
