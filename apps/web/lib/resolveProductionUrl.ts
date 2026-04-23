@@ -42,7 +42,7 @@ export function resolveProductionUrl(document?: SanityDocumentLike | null): stri
     case "release":
       return slug ? `/releases/${slug}` : "/releases";
     case "interview":
-      return slug ? `/interviews/${slug}` : "/interviews";
+      return slug ? `/reclus/${slug}` : "/reclus";
     default:
       return DEFAULT_ROUTE;
   }

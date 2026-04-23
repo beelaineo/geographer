@@ -55,9 +55,9 @@ export default function InterviewPageBodyWithBgToggle({
             onClick={() => setIsGreyBackgroundEnabled((current) => !current)}
             role="switch"
             aria-checked={isGreyBackgroundEnabled}
-            className="absolute bottom-8 left-8 hidden uppercase type-body-sans items-center gap-3 bg-white px-3 py-2 transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 md:inline-flex"
+            className="absolute bottom-5 left-5 hidden type-body-sans items-center gap-3 bg-white transition hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 md:inline-flex"
           >
-            <span className="uppercase">
+            <span className="">
              Background
             </span>
             <span

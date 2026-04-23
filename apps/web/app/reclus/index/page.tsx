@@ -52,7 +52,7 @@ export default async function ReclusIndexPage() {
       isObfuscated: !isPublished,
       title: isPublished ? title : cipherInterviewLineValue(title, `${rowSeed}:title`),
       slug: interview.slug,
-      href: isPublished && interview.slug?.current ? `/interviews/${interview.slug.current}` : null,
+      href: isPublished && interview.slug?.current ? `/reclus/${interview.slug.current}` : null,
       leadContent: isPublished
         ? leadContent
         : cipherInterviewLineValue(leadContent, `${rowSeed}:leadContent`),

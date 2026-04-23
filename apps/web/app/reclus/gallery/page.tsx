@@ -50,7 +50,7 @@ export default async function ReclusGalleryPage() {
             const key = interview._id ?? `interview-${index}`;
             const cover = interview.cover;
             const imageUrl = cover?.asset ? urlForImageWithWidth(cover, 720).url() : null;
-            const href = isPublished && slug ? `/interviews/${slug}` : null;
+            const href = isPublished && slug ? `/reclus/${slug}` : null;
             const quote = interview.quote?.trim();
 
             const cell = (

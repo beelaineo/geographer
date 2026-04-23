@@ -22,6 +22,15 @@ type LayoutShellProps = {
   siteSettings: SITE_SETTINGS_QUERYResult;
 };
 
+function isReclusInterviewDetailPath(path: string): boolean {
+  if (!path.startsWith("/reclus/")) {
+    return false;
+  }
+
+  const segment = path.slice("/reclus/".length).split("/")[0];
+  return Boolean(segment) && segment !== "gallery" && segment !== "index";
+}
+
 export default function LayoutShell({
   children,
   siteSettings
@@ -41,8 +50,8 @@ export default function LayoutShell({
       }
     }
 
-    if (current.startsWith("/interviews/")) {
-      if (prev != null && !prev.startsWith("/interviews/")) {
+    if (isReclusInterviewDetailPath(current)) {
+      if (prev != null && !isReclusInterviewDetailPath(prev)) {
         sessionStorage.setItem(INTERVIEW_FROM_INTERNAL_NAV_STORAGE_KEY, "1");
       } else if (prev == null) {
         sessionStorage.removeItem(INTERVIEW_FROM_INTERNAL_NAV_STORAGE_KEY);
@@ -56,7 +65,7 @@ export default function LayoutShell({
     !!pathname && (pathname.includes("/collections") || pathname.includes("/projects"));
   const isAboutPage = pathname === "/about";
   const isReleasesRoute = !!pathname && pathname.includes("releases");
-  const isInterviewDetailRoute = !!pathname && pathname.startsWith("/interviews/");
+  const isInterviewDetailRoute = !!pathname && isReclusInterviewDetailPath(pathname);
   const isNewsletterRoute = pathname === "/newsletter";
   const isOverlayRoute = isReleasesRoute || isNewsletterRoute;
   const hideSiteChrome = isOverlayRoute || isInterviewDetailRoute;
