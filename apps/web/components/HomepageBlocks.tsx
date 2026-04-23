@@ -192,7 +192,7 @@ function HomepageFeaturedReleasesSection({
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-10 md:px-12">
         {block.title ? <h2 className="hidden">{block.title}</h2> : null}
         {imageUrl && image ? (
-          <Link href="/club-eden" className="group">
+          <Link href="/clubeden" className="group">
             <span className="relative block w-[380px] px-5 md:px-0 max-w-full">
               <Image
                 src={imageUrl}

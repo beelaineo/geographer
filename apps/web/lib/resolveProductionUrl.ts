@@ -25,7 +25,7 @@ export function resolveProductionUrl(document?: SanityDocumentLike | null): stri
     case "contributors":
       return "/contributors";
     case "clubEden":
-      return "/club-eden";
+      return "/clubeden";
     case "reclus":
       return "/reclus";
     case "lastTurnOurTurn":

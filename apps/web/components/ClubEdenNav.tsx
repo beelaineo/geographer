@@ -8,9 +8,9 @@ const linkClass =
 
 export default function ClubEdenNav() {
   const pathname = usePathname() ?? "";
-  const onClubEdenIndex = pathname === "/club-eden";
-  const onOrigins = pathname.startsWith("/club-eden/origins");
-  const on1992 = pathname.startsWith("/club-eden/1992");
+  const onClubEdenIndex = pathname === "/clubeden";
+  const onOrigins = pathname.startsWith("/clubeden/origins");
+  const on1992 = pathname.startsWith("/clubeden/1992");
 
   return (
     <nav
@@ -18,20 +18,20 @@ export default function ClubEdenNav() {
       className="absolute left-1/2 top-36 z-10 flex w-max -translate-x-1/2 flex-col gap-1 uppercase md:left-5 md:top-[115px] md:translate-x-0 text-center md:text-left"
     >
       <Link
-        href="/club-eden"
+        href="/clubeden"
         className={[linkClass, onClubEdenIndex ? "underline underline-offset-2" : ""].filter(Boolean).join(" ")}
       >
         Club Eden
       </Link>
       <div className="min-h-3 shrink-0 md:min-h-4" aria-hidden />
       <Link
-        href="/club-eden/origins"
+        href="/clubeden/origins"
         className={[linkClass, onOrigins ? "underline underline-offset-2" : ""].filter(Boolean).join(" ")}
       >
         Origins
       </Link>
       <Link
-        href="/club-eden/1992"
+        href="/clubeden/1992"
         className={[linkClass, on1992 ? "underline underline-offset-2" : ""].filter(Boolean).join(" ")}
       >
         1992

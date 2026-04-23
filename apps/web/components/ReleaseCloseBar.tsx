@@ -31,7 +31,7 @@ export default function ReleaseCloseBar() {
               Close
             </button>
           ) : (
-            <Link href="/club-eden" className={controlClass}>
+            <Link href="/clubeden" className={controlClass}>
               Club Eden
             </Link>
           )}

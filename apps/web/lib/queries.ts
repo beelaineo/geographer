@@ -394,7 +394,7 @@ export const COLLECTION_SLUGS_QUERY = defineQuery(`
   }
 `);
 
-/** Published collections for `/club-eden/[collectionSlug]` static paths (`published` defaults to true when unset). */
+/** Published collections for `/clubeden/[collectionSlug]` static paths (`published` defaults to true when unset). */
 export const CLUB_EDEN_COLLECTION_SLUGS_QUERY = defineQuery(`
   *[_type == "collection" && defined(slug.current) && coalesce(published, true) == true]{
     "collectionSlug": slug.current
